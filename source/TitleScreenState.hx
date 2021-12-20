@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.util.FlxTimer;
 
 class TitleScreenState extends FlxState
 {
@@ -14,7 +15,6 @@ class TitleScreenState extends FlxState
 	{
 		logo.frames = Paths.getSparrowAtlas('logoBumpin');
 		logo.animation.addByPrefix('idle', 'logo bumpin', 24, true);
-		logo.animation.play('idle');
 		logo.screenCenter(X);
 		logo.y = 55;
 		add(logo);
