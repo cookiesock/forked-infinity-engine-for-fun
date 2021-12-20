@@ -14,6 +14,12 @@ class TitleScreenState extends FlxState
 		logo.animation.addByPrefix('idle', 'logo bumpin', 24, true);
 		logo.animation.play('idle');
 		add(logo);
+		var pressAccept = new FlxSprite();
+		pressAccept.frames = FlxAtlasFrames.fromSparrow("assets/images/titleEnter.png", "assets/images/titleEnter.xml");
+		pressAccept.animation.addByPrefix('idle', 'Press Enter to Begin', 24, true);
+		pressAccept.animation.addByPrefix('pressed', 'ENTER PRESSED', 24, true);
+		pressAccept.animation.play('idle');
+		add(pressAccept);
 		super.create();
 	}
 
