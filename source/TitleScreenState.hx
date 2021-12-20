@@ -15,6 +15,7 @@ class TitleScreenState extends FlxState
 	{
 		logo.frames = Paths.getSparrowAtlas('logoBumpin');
 		logo.animation.addByPrefix('idle', 'logo bumpin', 24, true);
+		logo.animation.play('idle');
 		logo.screenCenter(X);
 		logo.y = 55;
 		add(logo);
