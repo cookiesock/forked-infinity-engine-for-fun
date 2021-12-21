@@ -1,6 +1,8 @@
 package;
 
 import flixel.FlxState;
+import lime.utils.Assets;
+import openfl.Assets;
 
 class PlayState extends FlxState
 {

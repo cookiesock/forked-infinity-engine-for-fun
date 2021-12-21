@@ -4,7 +4,7 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Project Re-Funked" file="Project-ReFunked" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app title="Project Re-Funked" file="Project-ReFunked" packageName="com.refunkedteam.projectrefunked" package="com.refunkedteam.projectrefunked" main="Main" version="0.0.1" company="ReFunkedTeam" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -29,7 +29,10 @@
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
-	<set name="BUILD_DIR" value="export" />
+	<set name="BUILD_DIR" value="export/debug" if="debug" />
+	<set name="BUILD_DIR" value="export/release" unless="debug" />
+	<set name="BUILD_DIR" value="export/32bit" if="32bit" />
+	
 	<source path="source" />
 	<assets path="assets" />
 
