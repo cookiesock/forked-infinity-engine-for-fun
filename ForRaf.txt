@@ -1,0 +1,26 @@
+This note is from swordcube
+-----------------------------------------------------------------------------
+Bro the reason why i made the Util shit is so my life can be a bit easier
+like
+default haxe shit be like:
+fromSparrow['png path', 'xml path']
+
+i mean i could do that with variables in the states but like cmon
+i wanted it so you could just do
+
+funnything.fromSparrow['file path, 'file name']
+
+hell i could have even just did a path
+
+and it could be like
+funnything.fromSparrow['assets/imfuckingstupid/killme']
+
+and it would find killme.png and killme.xml
+
+the sound function being just "funny merge string shit"
+well i was gonna remove it because i realized there's no point if you can just
+type the path in
+
+[except i myself can't because the game can't find shit in the assets folder]
+
+but i won't add util shit so i don't accidentally piss you off
