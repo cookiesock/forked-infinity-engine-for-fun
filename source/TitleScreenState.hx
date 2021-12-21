@@ -4,18 +4,18 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxGroup;
-import flixel.input.gamepad.FlxGamepad;
-import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
-import flixel.system.FlxSound;
-import flixel.text.FlxText;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import lime.app.Application;
-import openfl.Assets;
 
+/*import flixel.group.FlxGroup;
+	import flixel.input.gamepad.FlxGamepad;
+	import flixel.input.keyboard.FlxKey;
+	import flixel.system.FlxSound;
+	import flixel.text.FlxText;
+	import flixel.tweens.FlxTween;
+	import flixel.util.FlxColor;
+	import lime.app.Application;
+	import openfl.Assets; */
 class TitleScreenState extends FlxState
 {
 	var logo:FlxSprite;
@@ -24,23 +24,23 @@ class TitleScreenState extends FlxState
 
 	override public function create():Void
 	{
-		FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+		FlxG.sound.playMusic('assets/music/freakyMenu');
 		FlxG.sound.music.fadeIn(4, 0, 0.7);
 
 		logo = new FlxSprite(25, 1000);
-		logo.frames = Paths.getSparrowAtlas('logoBumpin');
+		logo.frames = FlxAtlasFrames.fromSparrow('assets/images/logoBumpin.png', 'assets/images/logoBumpin.xml');
 		logo.animation.addByPrefix('idle', 'logo bumpin', 24, true);
 		logo.animation.play('idle');
 		add(logo);
 
-		gf = new FlxSprite(25, 1000);
-		gf.frames = Paths.getSparrowAtlas('logoBumpin');
-		gf.animation.addByPrefix('idle', 'logo bumpin', 24, true);
+		gf = new FlxSprite(750, 1000);
+		gf.frames = FlxAtlasFrames.fromSparrow('assets/images/titleGF.png', 'assets/images/titleGF.xml');
+		gf.animation.addByPrefix('idle', 'titleGF', 24, true);
 		gf.animation.play('idle');
 		add(gf);
 
 		pressAccept = new FlxSprite();
-		pressAccept.frames = Paths.getSparrowAtlas('titleEnter');
+		pressAccept.frames = FlxAtlasFrames.fromSparrow('assets/images/titleEnter.png', 'assets/images/titleEnter.xml');
 		pressAccept.animation.addByPrefix('idle', 'Press Enter to Begin', 24, true);
 		pressAccept.animation.addByPrefix('pressed', 'ENTER PRESSED', 24, true);
 		pressAccept.animation.play('idle');
@@ -55,10 +55,15 @@ class TitleScreenState extends FlxState
 	{
 		if (FlxG.keys.justPressed.ENTER)
 		{
-			FlxG.switchState(new PlayState());
+			pressAccept.animation.play('pressed');
+			new FlxTimer().start(1, function(tmr:FlxTimer)
+			{
+				FlxG.switchState(new PlayState());
+			});
 		}
 
-		logo.y = FlxMath.lerp(logo.y, 150, Math.max(0, Math.min(1, elapsed * 3)));
+		logo.y = FlxMath.lerp(logo.y, 100, Math.max(0, Math.min(1, elapsed * 3)));
+		gf.y = FlxMath.lerp(gf.y, 250, Math.max(0, Math.min(1, elapsed * 3)));
 		super.update(elapsed);
 	}
 }
