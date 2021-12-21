@@ -7,15 +7,8 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 
-/*import flixel.group.FlxGroup;
-	import flixel.input.gamepad.FlxGamepad;
-	import flixel.input.keyboard.FlxKey;
-	import flixel.system.FlxSound;
-	import flixel.text.FlxText;
-	import flixel.tweens.FlxTween;
-	import flixel.util.FlxColor;
-	import lime.app.Application;
-	import openfl.Assets; */
+// no raf i don't fucking know what "from scratch" means - swordcube
+
 class TitleScreenState extends FlxState
 {
 	var logo:FlxSprite;
@@ -23,24 +16,27 @@ class TitleScreenState extends FlxState
 	var pressAccept:FlxSprite;
 
 	override public function create():Void
-	{
-		FlxG.sound.playMusic('assets/music/freakyMenu');
+	{	
+		// can someone please tell me if this shit works the music doesn't play for me
+		// i even tried replacing this with assets/music/freakyMenu
+		// and even just freakyMenu but nothing works :grief:
+		FlxG.sound.playMusic(SwagUtilShit.getSound('assets/music/', 'freakyMenu'));
 		FlxG.sound.music.fadeIn(4, 0, 0.7);
 
 		logo = new FlxSprite(25, 1000);
-		logo.frames = FlxAtlasFrames.fromSparrow('assets/images/logoBumpin.png', 'assets/images/logoBumpin.xml');
+		logo.frames = SwagUtilShit.getSparrow('assets/images/', 'logoBumpin');
 		logo.animation.addByPrefix('idle', 'logo bumpin', 24, true);
 		logo.animation.play('idle');
 		add(logo);
 
 		gf = new FlxSprite(750, 1000);
-		gf.frames = FlxAtlasFrames.fromSparrow('assets/images/titleGF.png', 'assets/images/titleGF.xml');
+		gf.frames = SwagUtilShit.getSparrow('assets/images/', 'titleGF');
 		gf.animation.addByPrefix('idle', 'titleGF', 24, true);
 		gf.animation.play('idle');
 		add(gf);
 
 		pressAccept = new FlxSprite();
-		pressAccept.frames = FlxAtlasFrames.fromSparrow('assets/images/titleEnter.png', 'assets/images/titleEnter.xml');
+		pressAccept.frames = SwagUtilShit.getSparrow('assets/images/', 'titleEnter');
 		pressAccept.animation.addByPrefix('idle', 'Press Enter to Begin', 24, true);
 		pressAccept.animation.addByPrefix('pressed', 'ENTER PRESSED', 24, true);
 		pressAccept.animation.play('idle');
@@ -56,7 +52,7 @@ class TitleScreenState extends FlxState
 		if (FlxG.keys.justPressed.ENTER)
 		{
 			pressAccept.animation.play('pressed');
-			new FlxTimer().start(1, function(tmr:FlxTimer)
+			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
 				FlxG.switchState(new PlayState());
 			});
@@ -67,3 +63,4 @@ class TitleScreenState extends FlxState
 		super.update(elapsed);
 	}
 }
+
