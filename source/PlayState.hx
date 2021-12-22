@@ -12,12 +12,17 @@ import openfl.Assets;
 class PlayState extends BPMState
 {
 	var singAnims = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+	var stage:Stage;
 	var testChar:Character;
 	var testChar2:Character;
 	var debugText:FlxText;
 	override public function create()
 	{
 		funkyBpm(100);
+
+		//add(stage);
+		//stage = new Stage('stage');
+
 		debugText = new FlxText(0,0,FlxG.width, "", 12, true);
 		debugText.color = FlxColor.WHITE;
 		add(debugText);

@@ -7,7 +7,7 @@ import flixel.util.FlxColor;
 
 class Character extends FlxSprite {
     var name = "bf";
-    var json = null;
+    var json:Dynamic;
     var anims:Array<Dynamic> = [];
     var offsetMap:Map<String, Array<Int>> = [];
     var camOffsets:Array<Int> = [0,0];
