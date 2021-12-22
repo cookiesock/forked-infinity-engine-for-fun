@@ -38,7 +38,7 @@ class Character extends FlxSprite {
             offsetMap.set(anim.anim, anim.offsets);
         }
         
-        bopLeftRight = (animation.getByName("idle") != null);
+        bopLeftRight = (animation.getByName('danceLeft') != null && animation.getByName('danceRight') != null);
 
         //playAnim('idle');
         dance();
