@@ -27,7 +27,7 @@ class MainMenuState extends FlxState
 		// IT ONLY WORKS WITH SPARROW SHIT HEBSiuhbvjgdsh
 		camFollow = new FlxObject();
 		add(camFollow);
-		FlxG.camera.follow(camFollow, FlxCameraFollowStyle.LOCKON, 9);
+		FlxG.camera.follow(camFollow, FlxCameraFollowStyle.NO_DEAD_ZONE, 9);
 		menuBG = new FlxSprite(-80).loadGraphic('assets/images/menuBG.png');
 		menuBG.scrollFactor.x = 0;
 		menuBG.scrollFactor.y = 0.18;
