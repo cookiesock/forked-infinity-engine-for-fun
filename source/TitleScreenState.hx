@@ -10,7 +10,6 @@ import lime.utils.Assets;
 import openfl.Assets;
 
 // no raf i don't fucking know what "from scratch" means - swordcube
-
 class TitleScreenState extends FlxState
 {
 	var logo:FlxSprite;
@@ -18,29 +17,29 @@ class TitleScreenState extends FlxState
 	var pressAccept:FlxSprite;
 
 	override public function create():Void
-	{	
+	{
 		// THE GAME LITERALLY CAN'T FIND SHIT FROM THE ASSETS FOLDER HELP
 		// IT ONLY WORKS WITH SPARROW SHIT HEBSiuhbvjgdsh
-		
-		FlxG.sound.playMusic(SwagUtilShit.getSound('assets/music/menus/', 'freakyMenu'), 0);
+
+		FlxG.sound.playMusic('assets/music/menus/freakyMenu' + Util.soundExt);
 		FlxG.sound.music.fadeIn(4, 0, 0.7);
 
 		logo = new FlxSprite(25, 1000);
-		logo.frames = SwagUtilShit.getSparrow('assets/images/titlescreen/', 'logoBumpin');
+		logo.frames = Util.getSparrow('titlescreen/logoBumpin');
 		logo.animation.addByPrefix('idle', 'logo bumpin', 24, true);
 		logo.animation.play('idle');
 		logo.antialiasing = true;
 		add(logo);
 
 		gf = new FlxSprite(750, 1500);
-		gf.frames = SwagUtilShit.getSparrow('assets/images/titlescreen/', 'titleGF');
+		gf.frames = Util.getSparrow('titlescreen/titleGF');
 		gf.animation.addByPrefix('idle', 'titleGF', 24, true);
 		gf.animation.play('idle');
 		gf.antialiasing = true;
 		add(gf);
 
 		pressAccept = new FlxSprite();
-		pressAccept.frames = SwagUtilShit.getSparrow('assets/images/titlescreen/', 'titleEnter');
+		pressAccept.frames = Util.getSparrow('titlescreen/titleEnter');
 		pressAccept.animation.addByPrefix('idle', 'Press Enter to Begin', 24, true);
 		pressAccept.animation.addByPrefix('pressed', 'ENTER PRESSED', 24, true);
 		pressAccept.animation.play('idle');
@@ -68,4 +67,3 @@ class TitleScreenState extends FlxState
 		super.update(elapsed);
 	}
 }
-
