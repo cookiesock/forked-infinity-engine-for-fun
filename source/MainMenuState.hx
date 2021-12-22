@@ -84,8 +84,15 @@ class MainMenuState extends FlxState
 		}
 		if (FlxG.keys.justPressed.ENTER)
 		{
-			if (swagMenuButtons[selectedMenu] == "StoryMode") {
-				FlxG.switchState(new PlayState());
+			// dont use if statements when using multiple values - ZonianDX
+			//if (swagMenuButtons[selectedMenu] == "StoryMode") {
+				//FlxG.switchState(new PlayState());
+			//}
+			switch swagMenuButtons[selectedMenu]{
+				case "StoryMode":
+					FlxG.switchState(new PlayState());
+				case "Credits":
+					FlxG.switchState(new CreditsState());
 			}
 		}
 

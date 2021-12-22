@@ -1,0 +1,22 @@
+{
+    "credTextShit": [
+        {
+			"name": "Raf",
+			"desc": "Coder, Artist, Owner",
+            "icon": "raf",
+            "link": "NOTHING.com"
+		},
+        {
+			"name": "SwordCube",
+			"desc": "Coder, Artist",
+            "icon": "cube",
+            "link": "NOTHING.com"
+		},
+        {
+			"name": "ZonianDX",
+			"desc": "Coder, Artist",
+            "icon": "zon",
+            "link": "NOTHING.com"
+		}
+    ]
+}
