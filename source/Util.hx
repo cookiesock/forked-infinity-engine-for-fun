@@ -11,6 +11,7 @@ import haxe.format.JsonParser;
 using StringTools;
 
 // i'm actually trying to write shit myself here - swordcube
+// fucking e - ZonianDX
 class Util
 {
 	static public var soundExt:String = #if web '.mp3' #else '.ogg' #end;
@@ -36,4 +37,11 @@ class Util
 	/*static public function getSongPath(songPath:String) {
 		return songPath.toLowerCase().replace(' ', '-');
 	}*/ // bruh
+}
+class LOG {
+	// do this shit later
+		//static public function log(log:String) {
+			//trace("logging "+ "log" + " to screen" );
+			//var logText
+		//}
 }

@@ -1,5 +1,7 @@
 package;
 
+import flixel.FlxCamera;
+import flixel.FlxObject;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -12,6 +14,7 @@ class MainMenuState extends FlxState
 {
 	var menuBG:FlxSprite;
 	var menuBGMagenta:FlxSprite;
+	var camFollow:FlxObject; // yaal forgir this shit lmao - ZonianDX
 
 	var selectedMenu:Int = 0;
 	var menuButtons:FlxTypedGroup<FlxSprite>;
@@ -22,7 +25,9 @@ class MainMenuState extends FlxState
 	{
 		// THE GAME LITERALLY CAN'T FIND SHIT FROM THE ASSETS FOLDER HELP
 		// IT ONLY WORKS WITH SPARROW SHIT HEBSiuhbvjgdsh
-
+		camFollow = new FlxObject();
+		add(camFollow);
+		FlxG.camera.follow(camFollow, FlxCameraFollowStyle.LOCKON, 9);
 		menuBG = new FlxSprite(-80).loadGraphic('assets/images/menuBG.png');
 		menuBG.scrollFactor.x = 0;
 		menuBG.scrollFactor.y = 0.18;
@@ -61,6 +66,7 @@ class MainMenuState extends FlxState
 		}
 		changeSelection();
 		super.create();
+		camFollow.screenCenter();
 	}
 
 	override public function update(elapsed:Float)
@@ -108,6 +114,7 @@ class MainMenuState extends FlxState
 				btn.animation.play('selected');
 				btn.offset.x = 0.15 * (btn.frameWidth / 2 + 180);
 				btn.offset.y = 0.15 * btn.frameHeight;
+				camFollow.setPosition(btn.x, btn.y);
 			}
 		}
 	}
