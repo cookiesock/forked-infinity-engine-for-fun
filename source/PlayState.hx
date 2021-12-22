@@ -11,7 +11,7 @@ import openfl.Assets;
 
 class PlayState extends BPMState
 {
-	var singAnims = ['left', 'down', 'up', 'right'];
+	var singAnims = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 	var testChar:Character;
 	var testChar2:Character;
 	var debugText:FlxText;

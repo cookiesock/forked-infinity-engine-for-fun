@@ -18,8 +18,8 @@ class MainMenuState extends FlxState
 
 	var selectedMenu:Int = 0;
 	var menuButtons:FlxTypedGroup<FlxSprite>;
-
-	var swagMenuButtons:Array<String> = ['StoryMode', 'Freeplay', 'Donate', 'Options',];
+	
+	var swagMenuButtons:Array<String> = ['StoryMode', 'Freeplay', 'Credits', 'Options',];
 
 	override public function create()
 	{
@@ -84,7 +84,9 @@ class MainMenuState extends FlxState
 		}
 		if (FlxG.keys.justPressed.ENTER)
 		{
-			FlxG.switchState(new PlayState());
+			if (swagMenuButtons[selectedMenu] == "StoryMode") {
+				FlxG.switchState(new PlayState());
+			}
 		}
 
 		super.update(elapsed);
