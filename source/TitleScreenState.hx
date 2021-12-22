@@ -1,13 +1,11 @@
 package;
 
+import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
-import lime.utils.Assets;
-import openfl.Assets;
 
 // no raf i don't fucking know what "from scratch" means - swordcube
 class TitleScreenState extends FlxState
@@ -56,6 +54,7 @@ class TitleScreenState extends FlxState
 		if (FlxG.keys.justPressed.ENTER)
 		{
 			pressAccept.animation.play('pressed');
+			FlxG.camera.flash(FlxColor.WHITE, 2);
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
 				FlxG.switchState(new MainMenuState());
