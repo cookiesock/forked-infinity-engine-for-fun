@@ -18,7 +18,7 @@
 				-19
 			],
 			"fps": 24,
-			"anim": "left",
+			"anim": "singLEFT",
 			"indices": [],
 			"name": "GF left note"
 		},
@@ -29,7 +29,7 @@
 				-20
 			],
 			"fps": 24,
-			"anim": "down",
+			"anim": "singDOWN",
 			"indices": [],
 			"name": "GF Down Note"
 		},
@@ -40,7 +40,7 @@
 				4
 			],
 			"fps": 24,
-			"anim": "up",
+			"anim": "singUP",
 			"indices": [],
 			"name": "GF Up Note"
 		},
@@ -51,7 +51,7 @@
 				-20
 			],
 			"fps": 24,
-			"anim": "right",
+			"anim": "singRIGHT",
 			"indices": [],
 			"name": "GF Right Note"
 		},
@@ -87,7 +87,7 @@
 				-9
 			],
 			"fps": 24,
-			"anim": "idleLeft",
+			"anim": "danceLeft",
 			"indices": [
 				30,
 				0,
@@ -106,7 +106,7 @@
 				13,
 				14
 			],
-			"name": "GF Dancing Beat0"
+			"name": "GF Dancing Beat"
 		},
 		{
 			"loop": false,
@@ -115,7 +115,7 @@
 				-9
 			],
 			"fps": 24,
-			"anim": "idleRight",
+			"anim": "danceRight",
 			"indices": [
 				15,
 				16,
@@ -133,7 +133,7 @@
 				28,
 				29
 			],
-			"name": "GF Dancing Beat0"
+			"name": "GF Dancing Beat"
 		},
 		{
 			"loop": true,
@@ -188,10 +188,12 @@
 		}
 	],
 	"no_antialiasing": false,
+	"image": "characters/GF_assets",
 	"position": [
 		0,
 		0
 	],
+	"healthicon": "gf",
 	"flip_x": false,
 	"healthbar_colors": [
 		165,
@@ -202,6 +204,6 @@
 		0,
 		0
 	],
-	"scale": 1,
-	"dancesLeftRight": true
+	"sing_duration": 4,
+	"scale": 1
 }

@@ -26,7 +26,6 @@ class Character extends FlxSprite {
         antialiasing = !json.no_antialiasing;
         camOffsets = json.camera_position;
         healthColor = FlxColor.fromRGB(json.healthbar_colors[0], json.healthbar_colors[1], json.healthbar_colors[2]);
-        bopLeftRight = json.dancesLeftRight;
 
         anims = json.animations;
         for (anim in anims) {
@@ -38,6 +37,9 @@ class Character extends FlxSprite {
 
             offsetMap.set(anim.anim, anim.offsets);
         }
+        
+        bopLeftRight = (animation.getByName("idle") != null);
+
         //playAnim('idle');
         dance();
     }
@@ -51,9 +53,9 @@ class Character extends FlxSprite {
     public function dance() {
         if (bopLeftRight == true) {
             if (bopDirection == 0) {
-                playAnim('idleLeft', true);
+                playAnim('danceLeft', true);
             } else {
-                playAnim('idleRight', true);
+                playAnim('danceRight', true);
             }
             bopDirection = (bopDirection + 1) % 2;
         }
