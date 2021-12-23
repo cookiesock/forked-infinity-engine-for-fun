@@ -36,7 +36,7 @@ class CreditsState extends BasicState{
             credits = json.credTextShit;
 
             for (i in 0...credits.length) {
-                var text = new AlphabetText(FlxG.width / 6 + i * 5, 100 + i * 70, false, credits[i].name);
+                var text = new AlphabetText(FlxG.width / 6 + i * 5, 100 + i * 70, true, credits[i].name);
                 text.ID = i;
                 add(text);
 

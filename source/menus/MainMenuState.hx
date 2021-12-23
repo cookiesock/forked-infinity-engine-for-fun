@@ -28,7 +28,7 @@ class MainMenuState extends BasicState
 		camFollow = new FlxObject();
 		add(camFollow);
 		FlxG.camera.follow(camFollow, FlxCameraFollowStyle.NO_DEAD_ZONE, 9);
-		menuBG = new FlxSprite(-80).loadGraphic('assets/images/menuBG.png');
+		menuBG = new FlxSprite(-80).loadGraphic(Util.getImage('menuBG'));
 		menuBG.scrollFactor.x = 0;
 		menuBG.scrollFactor.y = 0.18;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.175));
@@ -37,7 +37,7 @@ class MainMenuState extends BasicState
 		menuBG.antialiasing = true;
 		add(menuBG);
 
-		menuBGMagenta = new FlxSprite(-80).loadGraphic('assets/images/menuBGMagenta.png');
+		menuBGMagenta = new FlxSprite(-80).loadGraphic(Util.getImage('menuDesat'));
 		menuBGMagenta.scrollFactor.x = 0;
 		menuBGMagenta.scrollFactor.y = 0.18;
 		menuBGMagenta.setGraphicSize(Std.int(menuBGMagenta.width * 1.175));
@@ -45,7 +45,7 @@ class MainMenuState extends BasicState
 		menuBGMagenta.screenCenter();
 		menuBGMagenta.visible = false;
 		menuBGMagenta.antialiasing = true;
-		menuBGMagenta.color = 0xFFfd719b;
+		menuBGMagenta.color = 0xFFfd719b; // <<<<< this is here for a reason, changed the image back to menuDesat because of this
 		add(menuBGMagenta);
 
 		menuButtons = new FlxTypedGroup<FlxSprite>();
