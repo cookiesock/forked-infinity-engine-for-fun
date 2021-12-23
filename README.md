@@ -9,3 +9,6 @@ made by 3 people out of boredom
 - ZonianDX - codr gamr 3rd artist ([GitHub](https://github.com/timeless13GH)) ([Twitter](https://twitter.com/ZonianDX)) ([GameBanana](https://gamebanana.com/members/2029461))
 
 we are all artists lmao -- ZonianDX
+
+hey so leather wants to maybe contribute to this shit so i made the code public
+i pray to god you won't scream at me raf :grief: -- swordcube
