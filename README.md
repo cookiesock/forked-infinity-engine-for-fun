@@ -17,8 +17,8 @@ Made by 3 people literally out of pure boredom, Aiming to recreate the entirety 
 V = Done
 
 - Add funny intro quotes in the title screen [i think raf wants this to not fucking exist but man idc i'm gonna add it at some point, i ithink]
-- Make Main Menu background tween smoothly instead of just snapping places
-- Make Gameplay work
+> Make Main Menu background tween smoothly instead of just snapping places
+> Make Gameplay work
 
 ## Stupid Shit
 
