@@ -8,7 +8,7 @@ import flixel.FlxState;
 
 class CreditsState extends BasicState{
     var menuBG:FlxSprite;
-    var Description:FlxText;
+    var description:FlxText;
     var curSelected:Int;
     var credits:Array<Dynamic>;
     var creditGroup:FlxTypedGroup<FlxText>;
@@ -20,7 +20,7 @@ class CreditsState extends BasicState{
             // fix later
             creditGroup = new FlxTypedGroup();
             curSelected = 1;
-            Description = new FlxText(FlxG.width / 2, FlxG.height - 100, 0, "FUCKIN", 64 );
+            description = new FlxText(FlxG.width / 2, FlxG.height - 100, 0, "FUCKIN", 64 );
             menuBG = new FlxSprite(-80).loadGraphic('assets/images/menuBG.png');
             menuBG.scrollFactor.x = 0;
             menuBG.scrollFactor.y = 0.18;
@@ -34,12 +34,12 @@ class CreditsState extends BasicState{
             credits = json.credTextShit;
             for (i in 0...credits.length) {
                 //credits[i]
-                var Text = new FlxText(FlxG.width / 6 + i * 5, 100 + i * 70, 0, credits[i].name, 64);
-                add(Text);
-                Text.ID = i;
-                creditGroup.add(Text);
+                var text = new FlxText(FlxG.width / 6 + i * 5, 100 + i * 70, 0, credits[i].name, 64);
+                add(text);
+                text.ID = i;
+                creditGroup.add(text);
             }
-            add(Description);
+            add(description);
             updateDesc();
         }
     
