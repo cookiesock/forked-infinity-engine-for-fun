@@ -47,12 +47,12 @@ class CreditsState extends BasicState{
         {
 		if (FlxG.keys.justPressed.BACKSPACE)
 		{
-			FlxG.switchState(new MainMenuState());
+			FlxG.switchState(new menus.MainMenuState());
 		} // temporary way to go back to menus without restarting the game
 		
             super.update(elapsed);
         }
         function updateDesc() {
-            Description.text = credits[curSelected].desc;
+            description.text = credits[curSelected].desc;
         }
 }
