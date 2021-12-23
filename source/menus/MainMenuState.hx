@@ -23,6 +23,8 @@ class MainMenuState extends BasicState
 
 	override public function create()
 	{
+		TitleScreenState.hasAlreadyAccepted = true;
+		
 		camFollow = new FlxObject();
 		add(camFollow);
 		FlxG.camera.follow(camFollow, FlxCameraFollowStyle.NO_DEAD_ZONE, 9);

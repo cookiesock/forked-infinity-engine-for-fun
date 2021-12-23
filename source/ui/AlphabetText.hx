@@ -33,10 +33,10 @@ class AlphabetText extends FlxSpriteGroup
                 var alphabetChar:AlphabetCharacter = new AlphabetCharacter(character, i, bold, startingX);
                 add(alphabetChar);
 
-                startingX += alphabetChar.width + 4;
+                startingX += alphabetChar.width * 1.1 + 4;
             }
             else
-                startingX += 24;
+                startingX += 24 * 1.1;
         }
     }
 

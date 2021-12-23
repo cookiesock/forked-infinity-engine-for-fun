@@ -11,14 +11,20 @@ import flixel.util.FlxTimer;
 // no raf i don't fucking know what "from scratch" means - swordcube
 class TitleScreenState extends BasicState
 {
+	// regular vars
 	var logo:FlxSprite;
 	var gf:FlxSprite;
 	var pressAccept:FlxSprite;
+	
+	// static vars
+	static public var hasAlreadyAccepted:Bool = false;
 
 	override public function create():Void
 	{
-		FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
-		FlxG.sound.music.fadeIn(4, 0, 0.7);
+		if(!hasAlreadyAccepted) {
+			FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false), 0);
+			FlxG.sound.music.fadeIn(4, 0, 0.7);
+		}
 
 		logo = new FlxSprite(25, 1000);
 		logo.frames = Util.getSparrow('titlescreen/logoBumpin');
@@ -56,6 +62,8 @@ class TitleScreenState extends BasicState
 		if (FlxG.keys.justPressed.ENTER)
 		{
 			FlxG.sound.play(Util.getSound("menus/confirmMenu", true));
+			hasAlreadyAccepted = true; // prevents title music from restarting if it's already playing
+			// there's probably a better way to do this but i don't give a shi
 
 			pressAccept.animation.play('pressed');
 			FlxG.camera.flash(FlxColor.WHITE, 2);
