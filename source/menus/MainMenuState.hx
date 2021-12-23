@@ -1,4 +1,4 @@
-package;
+package menus;
 
 import flixel.FlxCamera;
 import flixel.FlxObject;
@@ -10,11 +10,11 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
-class MainMenuState extends FlxState
+class MainMenuState extends BasicState
 {
 	var menuBG:FlxSprite;
 	var menuBGMagenta:FlxSprite;
-	var camFollow:FlxObject; // yaal forgir this shit lmao - ZonianDX
+	var camFollow:FlxObject;
 
 	var selectedMenu:Int = 0;
 	var menuButtons:FlxTypedGroup<FlxSprite>;
@@ -23,8 +23,6 @@ class MainMenuState extends FlxState
 
 	override public function create()
 	{
-		// THE GAME LITERALLY CAN'T FIND SHIT FROM THE ASSETS FOLDER HELP
-		// IT ONLY WORKS WITH SPARROW SHIT HEBSiuhbvjgdsh
 		camFollow = new FlxObject();
 		add(camFollow);
 		FlxG.camera.follow(camFollow, FlxCameraFollowStyle.NO_DEAD_ZONE, 9);
@@ -89,9 +87,9 @@ class MainMenuState extends FlxState
 			
 			switch swagMenuButtons[selectedMenu]{
 				case "StoryMode":
-					FlxG.switchState(new PlayState());
+					FlxG.switchState(new game.PlayState());
 				case "Credits":
-					FlxG.switchState(new CreditsState());
+					FlxG.switchState(new menus.CreditsState());
 			}
 		}
 		

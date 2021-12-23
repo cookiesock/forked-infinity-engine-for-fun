@@ -1,10 +1,12 @@
+package menus;
+
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.FlxState;
 
-class CreditsState extends FlxState{
+class CreditsState extends BasicState{
     var menuBG:FlxSprite;
     var Description:FlxText;
     var curSelected:Int;

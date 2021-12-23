@@ -5,8 +5,9 @@ import flixel.util.FlxTimer;
 import lime.utils.Assets;
 import openfl.Assets;
 
-class BPMState extends FlxState
+class BasicState extends FlxState
 {
+	//bpm and step
 	var curStep:Int = 0;
 	var curBeat:Int = 0;
 	public function stepHit(timer:FlxTimer) {curStep++;}
@@ -30,4 +31,6 @@ class BPMState extends FlxState
 		theTimerButStep.destroy();
 		theTimerButStep = null;
 	}
+
+	var transitionEnd = false
 }
