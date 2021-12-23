@@ -14,10 +14,10 @@
 	<SubTexture name="%0001" x="157" y="0" width="46" height="52"/>
 	<SubTexture name="%0002" x="203" y="0" width="45" height="52" frameX="0" frameY="0" frameWidth="46" frameHeight="52"/>
 	<SubTexture name="%0003" x="203" y="0" width="45" height="52" frameX="0" frameY="0" frameWidth="46" frameHeight="52"/>
-	<SubTexture name="&0000" x="248" y="0" width="36" height="58"/>
-	<SubTexture name="&0001" x="248" y="0" width="36" height="58"/>
-	<SubTexture name="&0002" x="284" y="0" width="36" height="58"/>
-	<SubTexture name="&0003" x="284" y="0" width="36" height="58"/>
+	<SubTexture name="and symbol0000" x="248" y="0" width="36" height="58"/>
+	<SubTexture name="and symbol0001" x="248" y="0" width="36" height="58"/>
+	<SubTexture name="and symbol0002" x="284" y="0" width="36" height="58"/>
+	<SubTexture name="and symbol0003" x="284" y="0" width="36" height="58"/>
 	<SubTexture name="(0000" x="320" y="0" width="26" height="57"/>
 	<SubTexture name="(0001" x="320" y="0" width="26" height="57"/>
 	<SubTexture name="(0002" x="346" y="0" width="26" height="56" frameX="0" frameY="0" frameWidth="26" frameHeight="57"/>
@@ -150,10 +150,10 @@
 	<SubTexture name="END PARENTHESES bold0001" x="677" y="134" width="38" height="47"/>
 	<SubTexture name="END PARENTHESES bold0002" x="715" y="134" width="38" height="47"/>
 	<SubTexture name="END PARENTHESES bold0003" x="715" y="134" width="38" height="47"/>
-	<SubTexture name="EXCLAMATION POINT bold0000" x="753" y="134" width="23" height="79"/>
-	<SubTexture name="EXCLAMATION POINT bold0001" x="753" y="134" width="23" height="79"/>
-	<SubTexture name="EXCLAMATION POINT bold0002" x="776" y="134" width="23" height="78" frameX="0" frameY="0" frameWidth="23" frameHeight="79"/>
-	<SubTexture name="EXCLAMATION POINT bold0003" x="776" y="134" width="23" height="78" frameX="0" frameY="0" frameWidth="23" frameHeight="79"/>
+	<SubTexture name="bold !0000" x="753" y="134" width="23" height="79"/>
+	<SubTexture name="bold !0001" x="753" y="134" width="23" height="79"/>
+	<SubTexture name="bold !0002" x="776" y="134" width="23" height="78" frameX="0" frameY="0" frameWidth="23" frameHeight="79"/>
+	<SubTexture name="bold !0003" x="776" y="134" width="23" height="78" frameX="0" frameY="0" frameWidth="23" frameHeight="79"/>
 	<SubTexture name="F bold0000" x="799" y="134" width="43" height="67"/>
 	<SubTexture name="F bold0001" x="799" y="134" width="43" height="67"/>
 	<SubTexture name="F bold0002" x="842" y="134" width="43" height="67"/>
@@ -242,10 +242,10 @@
 	<SubTexture name="P capital0001" x="570" y="283" width="35" height="51"/>
 	<SubTexture name="P capital0002" x="605" y="283" width="35" height="51"/>
 	<SubTexture name="P capital0003" x="605" y="283" width="35" height="51"/>
-	<SubTexture name="PERIOD bold0000" x="640" y="283" width="17" height="17"/>
-	<SubTexture name="PERIOD bold0001" x="640" y="283" width="17" height="17"/>
-	<SubTexture name="PERIOD bold0002" x="657" y="283" width="17" height="17"/>
-	<SubTexture name="PERIOD bold0003" x="657" y="283" width="17" height="17"/>
+	<SubTexture name="bold .0000" x="640" y="283" width="17" height="17"/>
+	<SubTexture name="bold .0001" x="640" y="283" width="17" height="17"/>
+	<SubTexture name="bold .0002" x="657" y="283" width="17" height="17"/>
+	<SubTexture name="bold .0003" x="657" y="283" width="17" height="17"/>
 	<SubTexture name="Q bold0000" x="674" y="283" width="52" height="67"/>
 	<SubTexture name="Q bold0001" x="674" y="283" width="52" height="67"/>
 	<SubTexture name="Q bold0002" x="726" y="283" width="52" height="67"/>
@@ -254,10 +254,10 @@
 	<SubTexture name="Q capital0001" x="778" y="283" width="41" height="51"/>
 	<SubTexture name="Q capital0002" x="819" y="283" width="41" height="51"/>
 	<SubTexture name="Q capital0003" x="819" y="283" width="41" height="51"/>
-	<SubTexture name="QUESTION MARK bold0000" x="860" y="283" width="44" height="73"/>
-	<SubTexture name="QUESTION MARK bold0001" x="860" y="283" width="44" height="73"/>
-	<SubTexture name="QUESTION MARK bold0002" x="904" y="283" width="44" height="73"/>
-	<SubTexture name="QUESTION MARK bold0003" x="904" y="283" width="44" height="73"/>
+	<SubTexture name="bold ?0000" x="860" y="283" width="44" height="73"/>
+	<SubTexture name="bold ?0001" x="860" y="283" width="44" height="73"/>
+	<SubTexture name="bold ?0002" x="904" y="283" width="44" height="73"/>
+	<SubTexture name="bold ?0003" x="904" y="283" width="44" height="73"/>
 	<SubTexture name="R bold0000" x="948" y="283" width="47" height="66"/>
 	<SubTexture name="R bold0001" x="948" y="283" width="47" height="66"/>
 	<SubTexture name="R bold0002" x="0" y="356" width="47" height="66"/>

@@ -2,21 +2,27 @@
     "credTextShit": [
         {
 			"name": "Raf",
-			"desc": "Coder, Artist, Owner",
+			"desc": "Coder Artist Owner",
             "icon": "raf",
             "link": "NOTHING.com"
 		},
         {
 			"name": "SwordCube",
-			"desc": "Coder, Artist",
+			"desc": "Coder Artist",
             "icon": "cube",
             "link": "NOTHING.com"
 		},
         {
 			"name": "ZonianDX",
-			"desc": "Coder, Artist",
+			"desc": "Coder Artist",
             "icon": "zon",
             "link": "NOTHING.com"
+		},
+        {
+			"name": "Leather128",
+			"desc": "Coder",
+            "icon": "leather",
+            "link": "https://www.youtube.com/channel/UCbCtO-ghipZessWaOBx8u1g"
 		}
     ]
 }

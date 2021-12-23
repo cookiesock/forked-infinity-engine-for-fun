@@ -10,8 +10,10 @@ class BasicState extends FlxState
 	//bpm and step
 	var curStep:Int = 0;
 	var curBeat:Int = 0;
+	
 	public function stepHit(timer:FlxTimer) {curStep++;}
 	public function beatHit(timer:FlxTimer) {curBeat++;}
+
 	var theTimer:FlxTimer;
 	var theTimerButStep:FlxTimer;
 

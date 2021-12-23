@@ -14,9 +14,12 @@ class Character extends FlxSprite {
     var healthColor:Int = FlxColor.WHITE;
     var bopLeftRight:Bool = false;
     var bopDirection:Int = 0;
-    public function new(x, y, name) {
+
+    public function new(x, y, name)
+    {
         super(x, y);
         this.name = name;
+
         json = Util.getJsonContents('assets/characters/$name.json');
         frames = Util.getSparrow('assets/characters/images/$name/assets', false);
 
@@ -28,6 +31,7 @@ class Character extends FlxSprite {
         healthColor = FlxColor.fromRGB(json.healthbar_colors[0], json.healthbar_colors[1], json.healthbar_colors[2]);
 
         anims = json.animations;
+        
         for (anim in anims) {
             if (anim.indices == null || anim.indices.length < 1) {
                 animation.addByPrefix(anim.anim, anim.name, anim.fps, anim.loop);

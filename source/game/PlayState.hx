@@ -16,6 +16,7 @@ class PlayState extends BasicState
 	var testChar:Character;
 	var testChar2:Character;
 	var debugText:FlxText;
+
 	override public function create()
 	{
 		funkyBpm(100);
@@ -26,11 +27,14 @@ class PlayState extends BasicState
 		debugText = new FlxText(0,0,FlxG.width, "", 12, true);
 		debugText.color = FlxColor.WHITE;
 		add(debugText);
+
 		testChar2 = new Character(100, 120, "gf");
 		testChar2.screenCenter();
 		add(testChar2);
-		testChar = new Character(testChar2.x+300, testChar2.y+100, "bf");
+
+		testChar = new Character(testChar2.x + 300, testChar2.y + 100, "bf");
 		add(testChar);
+
 		super.create();
 	}
 
@@ -38,7 +42,7 @@ class PlayState extends BasicState
 	{
 		debugText.text = curBeat + "\n" + curStep;
 		
-		if (FlxG.keys.justPressed.BACKSPACE)
+		if(FlxG.keys.justPressed.BACKSPACE)
 		{
 			FlxG.switchState(new menus.MainMenuState());
 		} // temporary way to go back to menus without restarting the game

@@ -15,17 +15,19 @@ using StringTools;
 class Util
 {
 	static public var soundExt:String = #if web '.mp3' #else '.ogg' #end;
+
 	static public function getJsonContents(path:String) {
 		return Json.parse(Assets.getText(path));
 	}
+
 	static public function getSparrow(filePath:String, ?fromImagesFolder:Bool = true, ?xmlPath:String)
 	{
 		var png = filePath;
 		var xml = xmlPath;
+
 		if (xml == null)
-		{
 			xml = png;
-		}
+
 		if (fromImagesFolder)
 		{
 			png = "assets/images/" + png;
@@ -34,10 +36,33 @@ class Util
 
 		return FlxAtlasFrames.fromSparrow(png + ".png", xml + ".xml");
 	}
+
+	static public function getSound(filePath:String, ?fromSoundsFolder:Bool = true)
+	{
+		var base:String = "assets/";
+
+		if(fromSoundsFolder)
+			base += "sounds/";
+		else
+			base += "music/";
+
+		return base + filePath + soundExt;
+	}
+
 	/*static public function getSongPath(songPath:String) {
 		return songPath.toLowerCase().replace(' ', '-');
 	}*/ // bruh
+
+	public static function openURL(url:String)
+	{
+		#if linux
+		Sys.command('/usr/bin/xdg-open', [url, "&"]);
+		#else
+		FlxG.openURL(url);
+		#end
+	}
 }
+
 class LOG {
 	// do this shit later
 		//static public function log(log:String) {

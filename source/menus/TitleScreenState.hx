@@ -1,5 +1,6 @@
 package menus;
 
+import ui.AlphabetText;
 import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -16,7 +17,7 @@ class TitleScreenState extends BasicState
 
 	override public function create():Void
 	{
-		FlxG.sound.playMusic('assets/music/menus/freakyMenu' + Util.soundExt);
+		FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
 		FlxG.sound.music.fadeIn(4, 0, 0.7);
 
 		logo = new FlxSprite(25, 1000);
@@ -43,6 +44,10 @@ class TitleScreenState extends BasicState
 		pressAccept.antialiasing = true;
 		add(pressAccept);
 
+		add(new AlphabetText(0, 0, true, "the quick brown fox jumps over the lazy dog"));
+		add(new AlphabetText(0, 60, true, "1234567890"));
+		add(new AlphabetText(0, 120, true, "!?.-"));
+
 		super.create();
 	}
 
@@ -50,9 +55,11 @@ class TitleScreenState extends BasicState
 	{
 		if (FlxG.keys.justPressed.ENTER)
 		{
-			FlxG.sound.play('assets/sounds/menus/confirmMenu' + Util.soundExt);
+			FlxG.sound.play(Util.getSound("menus/confirmMenu", true));
+
 			pressAccept.animation.play('pressed');
 			FlxG.camera.flash(FlxColor.WHITE, 2);
+
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
 				FlxG.switchState(new MainMenuState());
@@ -61,6 +68,7 @@ class TitleScreenState extends BasicState
 
 		logo.y = FlxMath.lerp(logo.y, 100, Math.max(0, Math.min(1, elapsed * 3)));
 		gf.y = FlxMath.lerp(gf.y, 250, Math.max(0, Math.min(1, elapsed * 3)));
+		
 		super.update(elapsed);
 	}
 }
