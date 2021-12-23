@@ -28,5 +28,6 @@ Made by 3 people literally out of pure boredom, Aiming to recreate the entirety 
 
 **hi stupid notes n shit go here for now Lol**
 
-hey so leather wants to maybe contribute to this shit so i made the code public
-i pray to god you won't scream at me raf :grief: -- swordcube
+hey so leather wants to maybe contribute to this shit so i made the code public i pray to god you won't scream at me raf :grief: -- swordcube
+
+i am going to scream at you for making this public  and not adding leather as a member of CubeSword instead -- raf
