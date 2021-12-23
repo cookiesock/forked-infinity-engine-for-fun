@@ -5,9 +5,11 @@
 Made by 3 people literally out of pure boredom, Aiming to recreate the entirety of FNF [mostly lmao] from [scratch](https://scratch.mit.edu).
 
 ## Credits
-- Raf - Project Owner, Secondary Coder and Artist ([GitHub](https://github.com/RafaelGiacom)) ([GameJolt](https://gamejolt.com/@RafaelGiacom)) ([GameBanana](https://gamebanana.com/members/1739332))
-- SwordCube - idiot and also secondary artist([GitHub](https://github.com/swordcube)) ([GameJolt](https://gamejolt.com/@swordcube)) ([Twitter](https://twitter.com/swordcube))
-- ZonianDX - Coder, Gamer 😎, 3rd Artist ([GitHub](https://github.com/timeless13GH)) ([Twitter](https://twitter.com/ZonianDX)) ([GameBanana](https://gamebanana.com/members/2029461))
+- Raf - Project Owner, Coder and Artist ([GitHub](https://github.com/RafaelGiacom)) ([GameJolt](https://gamejolt.com/@RafaelGiacom)) ([GameBanana](https://gamebanana.com/members/1739332))
+- SwordCube - idiot, Artist ([GitHub](https://github.com/swordcube)) ([GameJolt](https://gamejolt.com/@swordcube)) ([Twitter](https://twitter.com/swordcube))
+- ZonianDX - Coder, Gamer 😎, Artist ([GitHub](https://github.com/timeless13GH)) ([Twitter](https://twitter.com/ZonianDX)) ([GameBanana](https://gamebanana.com/members/2029461))
+- Leather128 - Coder but the best out of the 3 ([GitHub](https://github.com/Leather128))
+
 
 ## To-Do List
 ``> = Working on it``
