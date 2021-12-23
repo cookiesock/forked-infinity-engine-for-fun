@@ -6,7 +6,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.util.FlxColor;
 
 class Character extends FlxSprite {
-    var name = "bf";
+    public var name = "bf";
     var json:Dynamic;
     var anims:Array<Dynamic> = [];
     var offsetMap:Map<String, Array<Int>> = [];
