@@ -10,19 +10,19 @@ Made by 3 people literally out of pure boredom, Aiming to recreate the entirety 
 - ZonianDX - Coder, Gamer 😎, 3rd Artist ([GitHub](https://github.com/timeless13GH)) ([Twitter](https://twitter.com/ZonianDX)) ([GameBanana](https://gamebanana.com/members/2029461))
 
 ## To-Do List
-`> = Working on it
+``> = Working on it``
 
-- = Planned
+``- = Planned``
 
-V = Done`
+``V = Done``
 
 --------------------------------------------------------------------
 
-`- Add funny intro quotes in the title screen [i think raf wants this to not fucking exist but man idc i'm gonna add it at some point, i ithink]
-- 
-> Make Main Menu background tween smoothly instead of just snapping places
-> 
-> Make Gameplay work`
+``- Add funny intro quotes in the title screen [i think raf wants this to not fucking exist but man idc i'm gonna add it at some point, i ithink]``
+
+``> Make Main Menu background tween smoothly instead of just snapping places``
+
+``> Make Gameplay work``
 
 ## Stupid Shit
 
