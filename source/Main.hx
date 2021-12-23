@@ -21,7 +21,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		addChild(new FlxGame(1280, 720, TitleScreenState, 1, framerate, framerate, true, false));
+		addChild(new FlxGame(1280, 720, menus.TitleScreenState, 1, framerate, framerate, true, false));
 		
 		#if !mobile
 		fpsVar = new FPS(10, 3, 0xFFFFFF);

@@ -1,4 +1,4 @@
-package;
+package menus;
 
 import flixel.util.FlxColor;
 import flixel.FlxG;
@@ -8,7 +8,7 @@ import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 
 // no raf i don't fucking know what "from scratch" means - swordcube
-class TitleScreenState extends FlxState
+class TitleScreenState extends BasicState
 {
 	var logo:FlxSprite;
 	var gf:FlxSprite;
@@ -16,9 +16,6 @@ class TitleScreenState extends FlxState
 
 	override public function create():Void
 	{
-		// THE GAME LITERALLY CAN'T FIND SHIT FROM THE ASSETS FOLDER HELP
-		// IT ONLY WORKS WITH SPARROW SHIT HEBSiuhbvjgdsh
-
 		FlxG.sound.playMusic('assets/music/menus/freakyMenu' + Util.soundExt);
 		FlxG.sound.music.fadeIn(4, 0, 0.7);
 

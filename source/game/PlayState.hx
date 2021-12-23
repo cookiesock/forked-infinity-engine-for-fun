@@ -1,4 +1,4 @@
-package;
+package game;
 
 import flixel.util.FlxTimer;
 import flixel.FlxG;
@@ -9,10 +9,10 @@ import flixel.text.FlxText;
 import lime.utils.Assets;
 import openfl.Assets;
 
-class PlayState extends BPMState
+class PlayState extends BasicState
 {
 	var singAnims = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
-	var stage:Stage;
+	//var stage:Stage;
 	var testChar:Character;
 	var testChar2:Character;
 	var debugText:FlxText;
