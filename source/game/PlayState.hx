@@ -40,7 +40,7 @@ class PlayState extends BasicState
 		
 		if (FlxG.keys.justPressed.BACKSPACE)
 		{
-			FlxG.switchState(new MainMenuState());
+			FlxG.switchState(new menus.MainMenuState());
 		} // temporary way to go back to menus without restarting the game
 		// THIS WILL BE REPLACED WITH PAUSE MENU WHEN ALPHABET.HX IS EXIST!!!
 		
