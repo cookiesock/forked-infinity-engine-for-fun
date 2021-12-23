@@ -32,5 +32,5 @@ class BasicState extends FlxState
 		theTimerButStep = null;
 	}
 
-	var transitionEnd = false
+	var transitionEnd = false;
 }
