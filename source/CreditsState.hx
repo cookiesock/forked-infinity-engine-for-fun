@@ -43,6 +43,11 @@ class CreditsState extends FlxState{
     
         override public function update(elapsed:Float)
         {
+		if (FlxG.keys.justPressed.BACKSPACE)
+		{
+			FlxG.switchState(new MainMenuState());
+		} // temporary way to go back to menus without restarting the game
+		
             super.update(elapsed);
         }
         function updateDesc() {

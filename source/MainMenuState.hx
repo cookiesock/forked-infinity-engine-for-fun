@@ -84,10 +84,9 @@ class MainMenuState extends FlxState
 		}
 		if (FlxG.keys.justPressed.ENTER)
 		{
-			// dont use if statements when using multiple values - ZonianDX
-			//if (swagMenuButtons[selectedMenu] == "StoryMode") {
-				//FlxG.switchState(new PlayState());
-			//}
+			// seriously pls use switch cases for shit like this - swordcmube
+			FlxG.sound.play('assets/sounds/menus/confirmMenu' + Util.soundExt);
+			
 			switch swagMenuButtons[selectedMenu]{
 				case "StoryMode":
 					FlxG.switchState(new PlayState());
@@ -95,6 +94,11 @@ class MainMenuState extends FlxState
 					FlxG.switchState(new CreditsState());
 			}
 		}
+		
+		if (FlxG.keys.justPressed.BACKSPACE)
+		{
+			FlxG.switchState(new TitleScreenState());
+		} // temporary way to go back to menus without restarting the game
 
 		super.update(elapsed);
 	}
@@ -124,5 +128,7 @@ class MainMenuState extends FlxState
 				camFollow.setPosition(btn.x, btn.y);
 			}
 		}
+		
+		FlxG.sound.play('assets/sounds/menus/scrollMenu' + Util.soundExt);
 	}
 }

@@ -32,6 +32,13 @@ class PlayState extends BPMState
 	override public function update(elapsed:Float)
 	{
 		debugText.text = curBeat + "\n" + curStep;
+		
+		if (FlxG.keys.justPressed.BACKSPACE)
+		{
+			FlxG.switchState(new MainMenuState());
+		} // temporary way to go back to menus without restarting the game
+		// THIS WILL BE REPLACED WITH PAUSE MENU WHEN ALPHABET.HX IS EXIST!!!
+		
 		super.update(elapsed);
 	}
 
