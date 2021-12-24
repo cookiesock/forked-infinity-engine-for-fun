@@ -57,8 +57,8 @@ class PlayState extends BasicState
 	var opponentIcon:FlxSprite;
 	var playerIcon:FlxSprite;
 	
-	var opponentHealthColor:Int = 0xFFFFFFFF;
-	var playerHealthColor:Int = 0xFFFFFFFF;
+	var opponentHealthColor:Int = 0xFFAF66CE;
+	var playerHealthColor:Int = 0xFF31B0D1;
 	
 	// countdown shit
 	var countdownStarted:Bool = true;
@@ -86,16 +86,16 @@ class PlayState extends BasicState
 		// commented out speakers/gf because my pc sucks rn - swordcube
 		// that should hopefully no longer be the case on christmas - also swordcube
 		
-		//opponent = new Character(100, 120, "dad");
-		//opponent.screenCenter();
-		//add(opponent);
+		opponent = new Character(100, 120, "dad");
+		opponent.screenCenter();
+		add(opponent);
 		
 		//speakers = new Character(100, 120, "gf");
 		//speakers.screenCenter(X);
 		//add(speakers);
 
-		//player = new Character(player.x + 300, player.y + 100, "bf");
-		//add(player);
+		player = new Character(opponent.x + 300, opponent.y + 100, "bf");
+		add(player);
 		
 		// bpm init shit
 		bpm = 100;
@@ -143,7 +143,7 @@ class PlayState extends BasicState
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
 		healthBar.scrollFactor.set();
-		healthBar.createFilledBar(opponentHealthColor, playerHealthColor);
+		healthBar.createFilledBar(opponent.healthColor, player.healthColor);
 		add(healthBar);
 		
 		// health bar icons
@@ -277,11 +277,13 @@ class PlayState extends BasicState
 					add(countdown1);
 				case 4:
 					countdownStarted = false;
+					FlxG.sound.playMusic(Util.getInst("tutorial"));
 			}
 		}
 		
-		/*opponent.dance();
-		player.dance();*/
+		opponent.dance();
+		player.dance();
+
 		super.beatHit(timer);
 	}
 	

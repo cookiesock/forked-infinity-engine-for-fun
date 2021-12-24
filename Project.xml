@@ -39,6 +39,7 @@
 	<assets path="assets/music" />
 	<assets path="assets/stages" />
 	<assets path="assets/characters" />
+	<assets path="assets/songs" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 

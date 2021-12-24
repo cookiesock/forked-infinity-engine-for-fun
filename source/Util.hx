@@ -51,14 +51,17 @@ class Util
 		return png + '.png';
 	}
 
-	static public function getSound(filePath:String, ?fromSoundsFolder:Bool = true)
+	static public function getSound(filePath:String, ?fromSoundsFolder:Bool = true, ?useUrOwnFolderLmfao:Bool = false)
 	{
 		var base:String = "assets/";
 
-		if(fromSoundsFolder)
-			base += "sounds/";
-		else
-			base += "music/";
+		if(!useUrOwnFolderLmfao)
+		{
+			if(fromSoundsFolder)
+				base += "sounds/";
+			else
+				base += "music/";
+		}
 
 		return base + filePath + soundExt;
 	}
@@ -67,6 +70,14 @@ class Util
 	static public function getFont(fileName:String, ?fileExtension:String = "ttf")
 	{
 		return "assets/fonts/" + fileName + "." + fileExtension;
+	}
+
+	static public function getInst(songName:String) {
+		return getSound("songs/" + songName.toLowerCase() + "/Inst", false, true);
+	}
+
+	static public function getVoices(songName:String) {
+		return getSound("songs/" + songName.toLowerCase() + "/Voices", false, true);
 	}
 
 	/*static public function getSongPath(songPath:String) {
