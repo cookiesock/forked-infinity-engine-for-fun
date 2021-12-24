@@ -80,6 +80,11 @@ class Util
 		return getSound("songs/" + songName.toLowerCase() + "/Voices", false, true);
 	}
 
+	static public function getCharacterIcons(charName:String, ?haveAssetsLol:Bool = false)
+	{
+		return (haveAssetsLol ? "assets/" : "") + 'characters/images/$charName/icons';
+	}
+
 	/*static public function getSongPath(songPath:String) {
 		return songPath.toLowerCase().replace(' ', '-');
 	}*/ // bruh

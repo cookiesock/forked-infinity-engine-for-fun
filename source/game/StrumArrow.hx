@@ -95,11 +95,19 @@ class StrumArrow extends FlxSprite {
 	public function playAnim(anim:String, ?force:Bool = false) {
 		animation.play(anim, force);
 		
-		updateHitbox();
-
 		centerOrigin();
 
 		if(!isPixel)
+		{
+			offset.x = frameWidth / 2;
+			offset.y = frameHeight / 2;
+	
+			var scale = 0.7;
+	
+			offset.x -= 156 * scale / 2;
+			offset.y -= 156 * scale / 2;
+		}
+		else
 			centerOffsets();
 	}
 	
@@ -110,10 +118,6 @@ class StrumArrow extends FlxSprite {
 				playAnim('strum');
 				resetAnim = 0;
 			}
-		}
-
-		if(animation.curAnim.name == 'confirm' && !isPixel) {
-			centerOrigin();
 		}
 		
 		super.update(elapsed);

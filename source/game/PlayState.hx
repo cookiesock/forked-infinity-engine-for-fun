@@ -127,6 +127,7 @@ class PlayState extends BasicState
 		// arrow shit
 		strumArea = new FlxSprite(0, 50);
 		strumArea.visible = false;
+		//strumArea.makeGraphic(FlxG.width, 25, FlxColor.WHITE);
 
 		if(downscroll)
 			strumArea.y = FlxG.height - 150;
@@ -173,11 +174,11 @@ class PlayState extends BasicState
 		add(healthBar);
 		
 		// health bar icons
-		opponentIcon = new Icon('characters/images/dad/icons', false);
+		opponentIcon = new Icon(Util.getCharacterIcons("dad"), false);
 		opponentIcon.y = healthBar.y - (opponentIcon.height / 2);
 		add(opponentIcon);
 		
-		playerIcon = new Icon('characters/images/bf/icons', true);
+		playerIcon = new Icon(Util.getCharacterIcons("bf"), true);
 		playerIcon.y = healthBar.y - (playerIcon.height / 2);
 		add(playerIcon);
 		
@@ -257,7 +258,7 @@ class PlayState extends BasicState
 			}
 		}
 
-		debugText.text = curBeat + "\n" + curStep + "\n" + Conductor.songPosition + "\n" + FlxG.sound.music.time + "\n" + vocals.time;
+		debugText.text = curBeat + "\n" + curStep + "\n" + Conductor.songPosition + "\n" + FlxG.sound.music.time;
 		
 		if(FlxG.keys.justPressed.BACKSPACE)
 		{

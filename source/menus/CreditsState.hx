@@ -1,7 +1,6 @@
 package menus;
 
 import ui.Icon;
-import hud.CharIcon;
 import ui.AlphabetText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
