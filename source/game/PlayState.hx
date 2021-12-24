@@ -75,8 +75,8 @@ class PlayState extends BasicState
 	var countdownStarted:Bool = true;
 	var countdownNum:Int = -1;
 
-	var downscroll:Bool = false;
-	var botplay:Bool = false;
+	var downscroll:Bool = Options.DOWNSCROLL;
+	var botplay:Bool = Options.BOTPLAY;
 
 	var speed:Float = 1;
 
@@ -276,7 +276,7 @@ class PlayState extends BasicState
 		{
 			for(songNotes in section.sectionNotes)
 			{
-				var daStrumTime:Float = songNotes[0] + song.chartOffset;
+				var daStrumTime:Float = songNotes[0] + song.chartOffset + Options.SONG_OFFSET;
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 
 				var gottaHitNote:Bool = section.mustHitSection;
@@ -569,37 +569,48 @@ class PlayState extends BasicState
 
 	function inputFunction()
 	{
-		var testBinds:Array<String> = ["LEFT","DOWN","UP","RIGHT"];
-		var testBindsAlt:Array<String> = ["D","F","J","K"];
+		var testBinds:Array<String> = Options.MAIN_BINDS;
+		var testBindsAlt:Array<String> = Options.ALT_BINDS;
 
 		var justPressed:Array<Bool> = [false, false, false, false];
 		var pressed:Array<Bool> = [false, false, false, false];
 		var released:Array<Bool> = [false, false, false, false];
 
-		for(i in 0...testBinds.length)
+		if(!botplay)
 		{
-			justPressed[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBinds[i]), FlxInputState.JUST_PRESSED);
-			pressed[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBinds[i]), FlxInputState.PRESSED);
-			released[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBinds[i]), FlxInputState.RELEASED);
-
-			if(released[i] == true)
+			for(i in 0...testBinds.length)
 			{
-				justPressed[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBindsAlt[i]), FlxInputState.JUST_PRESSED);
-				pressed[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBindsAlt[i]), FlxInputState.PRESSED);
-				released[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBindsAlt[i]), FlxInputState.RELEASED);
+				justPressed[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBinds[i]), FlxInputState.JUST_PRESSED);
+				pressed[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBinds[i]), FlxInputState.PRESSED);
+				released[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBinds[i]), FlxInputState.RELEASED);
+	
+				if(released[i] == true)
+				{
+					justPressed[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBindsAlt[i]), FlxInputState.JUST_PRESSED);
+					pressed[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBindsAlt[i]), FlxInputState.PRESSED);
+					released[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBindsAlt[i]), FlxInputState.RELEASED);
+				}
+			}
+	
+			for(i in 0...justPressed.length)
+			{
+				if(justPressed[i])
+					playerStrumArrows.members[i].playAnim("tap", true);
+			}
+	
+			for(i in 0...released.length)
+			{
+				if(released[i])
+					playerStrumArrows.members[i].playAnim("strum");
 			}
 		}
-
-		for(i in 0...justPressed.length)
+		else
 		{
-			if(justPressed[i])
-				playerStrumArrows.members[i].playAnim("tap", true);
-		}
-
-		for(i in 0...released.length)
-		{
-			if(released[i])
-				playerStrumArrows.members[i].playAnim("strum");
+			for(i in 0...released.length)
+			{
+				if(playerStrumArrows.members[i].animation.curAnim.name == "confirm" && playerStrumArrows.members[i].animation.curAnim.finished)
+					playerStrumArrows.members[i].playAnim("strum");
+			}
 		}
 
 		var possibleNotes:Array<Note> = [];
@@ -608,8 +619,16 @@ class PlayState extends BasicState
 		{
 			note.calculateCanBeHit();
 
-			if(note.canBeHit && note.mustPress && !note.tooLate && !note.isSustainNote)
-				possibleNotes.push(note);
+			if(!botplay)
+			{
+				if(note.canBeHit && note.mustPress && !note.tooLate && !note.isSustainNote)
+					possibleNotes.push(note);
+			}
+			else
+			{
+				if(Conductor.songPosition - note.strum >= 0 && note.mustPress)
+					possibleNotes.push(note);
+			}
 		}
 
 		possibleNotes.sort((a, b) -> Std.int(a.strum - b.strum));
@@ -623,7 +642,7 @@ class PlayState extends BasicState
 			{
 				var note = possibleNotes[i];
 
-				if(justPressed[note.noteID] && !dontHitTheseDirectionsLol[note.noteID])
+				if(((justPressed[note.noteID] && !dontHitTheseDirectionsLol[note.noteID]) && !botplay) || botplay)
 				{
 					var noteMs = Conductor.songPosition - note.strum;
 					trace(noteMs + " ms");
@@ -633,10 +652,6 @@ class PlayState extends BasicState
 					if(vocals != null)
 						vocals.volume = 1;
 
-					notes.remove(note);
-					note.kill();
-					note.destroy();
-
 					playerStrumArrows.members[note.noteID].playAnim("confirm", true);
 					dontHitTheseDirectionsLol[note.noteID] = true;
 
@@ -644,6 +659,12 @@ class PlayState extends BasicState
 
 					player.holdTimer = 0;
 					player.playAnim(singAnims[note.noteID % 4], true);
+
+					pressed[note.noteID] = true;
+
+					notes.remove(note);
+					note.kill();
+					note.destroy();
 				}
 			}
 
