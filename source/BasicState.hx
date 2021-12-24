@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.util.FlxTimer;
 import lime.utils.Assets;
@@ -34,5 +35,10 @@ class BasicState extends FlxState
 		theTimerButStep = null;
 	}
 
-	var transitionEnd = false;
+	//transition
+	var transitionSpr:FlxSprite = new FlxSprite(0, 0, 'assets/images/transition');
+	public function transitionState(close:Bool)
+	{
+
+	}
 }

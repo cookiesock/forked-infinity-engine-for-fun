@@ -2,21 +2,21 @@
     "credTextShit": [
         {
 			"name": "Raf",
-			"desc": "Coder Artist Owner",
+			"desc": "Coder, Artist, Owner",
             "icon": "raf",
-            "link": "NOTHING.com"
+            "link": "https://github.com/RafaelGiacom"
 		},
         {
 			"name": "SwordCube",
-			"desc": "Coder Artist",
+			"desc": "Coder, Artist",
             "icon": "cube",
-            "link": "NOTHING.com"
+            "link": "https://github.com/swordcube"
 		},
         {
 			"name": "ZonianDX",
-			"desc": "Coder Artist",
+			"desc": "Coder, Artist",
             "icon": "zon",
-            "link": "NOTHING.com"
+            "link": "https://github.com/timeless13GH"
 		},
         {
 			"name": "Leather128",
