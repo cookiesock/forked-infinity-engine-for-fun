@@ -214,11 +214,11 @@ class PlayState extends BasicState
 		add(healthBar);
 		
 		// health bar icons
-		opponentIcon = new Icon(Util.getCharacterIcons(opponent.name.toLowerCase()), false);
+		opponentIcon = new Icon(Util.getCharacterIcons(opponent.healthIcon), false);
 		opponentIcon.y = healthBar.y - (opponentIcon.height / 2);
 		add(opponentIcon);
 		
-		playerIcon = new Icon(Util.getCharacterIcons(player.name.toLowerCase()), true);
+		playerIcon = new Icon(Util.getCharacterIcons(player.healthIcon), true);
 		playerIcon.y = healthBar.y - (playerIcon.height / 2);
 		add(playerIcon);
 		

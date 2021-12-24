@@ -16,6 +16,7 @@ class Character extends FlxSprite {
     public var bopDirection:Int = 0;
     public var isPlayer:Bool = false;
     public var holdTimer:Float = 0;
+    public var healthIcon:String = "bf";
 
     public function new(x, y, name)
     {
@@ -24,7 +25,11 @@ class Character extends FlxSprite {
         this.name = name;
 
         json = Util.getJsonContents('assets/characters/$name.json');
-        frames = Util.getSparrow('assets/characters/images/$name/assets', false);
+
+        if(json.packerLol != true)
+            frames = Util.getSparrow('assets/characters/images/$name/assets', false);
+        else
+            frames = Util.getPacker('assets/characters/images/$name/assets', false);
 
         scale.set(json.scale, json.scale);
         updateHitbox();
@@ -35,6 +40,11 @@ class Character extends FlxSprite {
         healthColor = FlxColor.fromRGB(json.healthbar_colors[0], json.healthbar_colors[1], json.healthbar_colors[2]);
 
         anims = json.animations;
+
+        if(json.healthicon != null)
+            healthIcon = json.healthicon;
+        else
+            healthIcon = name;
         
         for (anim in anims) {
             if (anim.indices == null || anim.indices.length < 1) {
@@ -64,7 +74,7 @@ class Character extends FlxSprite {
             if(name == 'dad')
                 dadVar = 6.1;
             
-            if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
+            if(holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
             {
                 dance();
                 holdTimer = 0;

@@ -41,6 +41,156 @@
             ]
         },
         {
+            "name": "Spookeez",
+            "icon": "spooky",
+            "bgColor": "#D57E00",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "South",
+            "icon": "spooky",
+            "bgColor": "#D57E00",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Monster",
+            "icon": "monster",
+            "bgColor": "#F3FF6E",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Pico",
+            "icon": "pico",
+            "bgColor": "#B7D855",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Philly Nice",
+            "icon": "pico",
+            "bgColor": "#B7D855",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Blammed",
+            "icon": "pico",
+            "bgColor": "#B7D855",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Satin Panties",
+            "icon": "mom",
+            "bgColor": "#D8558E",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "High",
+            "icon": "mom",
+            "bgColor": "#D8558E",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "M.I.L.F",
+            "icon": "mom",
+            "bgColor": "#D8558E",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Cocoa",
+            "icon": "parents-christmas",
+            "bgColor": "#D8558E",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Eggnog",
+            "icon": "parents-christmas",
+            "bgColor": "#D8558E",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Winter Horrorland",
+            "icon": "monster",
+            "bgColor": "#F3FF6E",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Senpai",
+            "icon": "senpai",
+            "bgColor": "#FFAA6F",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Roses",
+            "icon": "senpai",
+            "bgColor": "#FFAA6F",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Thorns",
+            "icon": "spirit",
+            "bgColor": "#FF3C6E",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
             "name": "Freedom Dive",
             "icon": "bf",
             "bgColor": "#31B0D1",

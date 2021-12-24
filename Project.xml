@@ -36,10 +36,18 @@
 	<source path="source" />
 	<assets path="assets" />
 	<assets path="assets/images" />
-	<assets path="assets/music" />
 	<assets path="assets/stages" />
 	<assets path="assets/characters" />
-	<assets path="assets/songs" />
+
+	<assets path="assets/songs" exclude="*.ogg" if="web"/>
+	<assets path="assets/songs" exclude="*.mp3" unless="web"/>
+
+	<assets path="assets/music" exclude="*.ogg" if="web"/>
+	<assets path="assets/music" exclude="*.mp3" unless="web"/>
+
+	<assets path="assets/sounds" exclude="*.ogg" if="web"/>
+	<assets path="assets/sounds" exclude="*.mp3" unless="web"/>
+
 	<assets path="assets/data" />
 
 	<assets path="assets/fonts" embed='true'/>

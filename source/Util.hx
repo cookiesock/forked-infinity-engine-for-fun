@@ -36,6 +36,23 @@ class Util
 
 		return FlxAtlasFrames.fromSparrow(png + ".png", xml + ".xml");
 	}
+
+	static public function getPacker(filePath:String, ?fromImagesFolder:Bool = true, ?xmlPath:String)
+	{
+		var png = filePath;
+		var xml = xmlPath;
+
+		if (xml == null)
+			xml = png;
+
+		if (fromImagesFolder)
+		{
+			png = "assets/images/" + png;
+			xml = "assets/images/" + xml;
+		}
+
+		return FlxAtlasFrames.fromSpriteSheetPacker(png + ".png", xml + ".txt");
+	}
 	
 	static public function getImage(filePath:String, ?fromImagesFolder:Bool = true)
 	// this is so i can grab images without having to rembr that i have to put a .png at the end
