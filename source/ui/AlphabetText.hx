@@ -11,7 +11,6 @@ class AlphabetText extends FlxSpriteGroup
     // Private Variables //
     private var bold:Bool = true;
 
-    private var splitText:Array<String> = [];
     private var splitLines:Array<String> = [];
 
     public function new(?x:Float = 0.0, ?y:Float = 0.0, ?bold_Param:Bool = true, ?text_Param:String = "coolswag", ?size:Float = 70/*, ?typed:Bool = false temporarily disabled until i wanna make it work lol*/)
@@ -20,32 +19,31 @@ class AlphabetText extends FlxSpriteGroup
 
         text = (bold_Param ? text_Param.toLowerCase() : text_Param);
         bold = bold_Param;
-        splitText = text.split("");
+
+        splitLines = text.split("\n");
 
         var startingX:Float = 0;
-        var curLine:Int = 0;
 
-        for(i in 0...splitText.length)
+        for(i2 in 0...splitLines.length)
         {
-            var character:String = splitText[i];
+            startingX = 0;
+            
+            var splitText = splitLines[i2].split("");
 
-            if(character != " " && character != "")
+            for(i in 0...splitText.length)
             {
-                var alphabetChar:AlphabetCharacter = new AlphabetCharacter(character, i, bold, curLine, startingX, size);
-                add(alphabetChar);
+                var character:String = splitText[i];
 
-                startingX += alphabetChar.width + 8*(size/70);
-            } else if (character == "\n") {
-                curLine ++;
-                startingX = 0;
-
-                var alphabetChar:AlphabetCharacter = new AlphabetCharacter(character, i, bold, curLine, startingX, size);
-                add(alphabetChar);
-
-                startingX += alphabetChar.width + 8*(size/70);
+                if(character != " " && character != "")
+                {
+                    var alphabetChar:AlphabetCharacter = new AlphabetCharacter(character, i, bold, i2, startingX, size);
+                    add(alphabetChar);
+    
+                    startingX += alphabetChar.width + 8*(size/70);
+                }
+                else
+                    startingX += (size*(size/70))/2;
             }
-            else
-                startingX += (size*(size/70))/2;
         }
     }
 
