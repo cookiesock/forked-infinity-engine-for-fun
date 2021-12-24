@@ -30,8 +30,8 @@ typedef Song =
 
 	var player1:String;
 	var player2:String;
-	var gf:String;
-	var stage:String;
+	var gf:Null<String>;
+	var stage:Null<String>;
 	var validScore:Bool;
 
 	var modchartPath:String;

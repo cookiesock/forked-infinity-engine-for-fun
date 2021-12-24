@@ -1,10 +1,9 @@
 package;
 
+import game.Conductor;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.util.FlxTimer;
-import lime.utils.Assets;
-import openfl.Assets;
 
 class BasicState extends FlxState
 {
@@ -25,6 +24,8 @@ class BasicState extends FlxState
 		var delayTimeStep = delayTime/4; // makes delay time to steps
 		theTimer = new FlxTimer().start(delayTime, beatHit, 0);
 		theTimerButStep = new FlxTimer().start(delayTimeStep, stepHit, 0);
+
+		Conductor.changeBPM(BPM);
 	}
 
 	public function destroyFunkyBPM()
@@ -37,6 +38,7 @@ class BasicState extends FlxState
 
 	//transition
 	var transitionSpr:FlxSprite = new FlxSprite(0, 0, 'assets/images/transition');
+
 	public function transitionState(close:Bool)
 	{
 

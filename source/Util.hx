@@ -16,7 +16,7 @@ class Util
 {
 	static public var soundExt:String = #if web '.mp3' #else '.ogg' #end;
 
-	static public function getJsonContents(path:String) {
+	static public function getJsonContents(path:String):Dynamic {
 		return Json.parse(Assets.getText(path));
 	}
 
@@ -85,6 +85,11 @@ class Util
 		return (haveAssetsLol ? "assets/" : "") + 'characters/images/$charName/icons';
 	}
 
+	static public function getJsonPath(path:String)
+	{
+		return "assets/" + path + ".json";
+	}
+
 	/*static public function getSongPath(songPath:String) {
 		return songPath.toLowerCase().replace(' ', '-');
 	}*/ // bruh
@@ -97,11 +102,15 @@ class Util
 		FlxG.openURL(url);
 		#end
 	}
-	
+
 	public static function boundTo(value:Float, min:Float, max:Float):Float {
 		var newValue:Float = value;
-		if(newValue < min) newValue = min;
-		else if(newValue > max) newValue = max;
+
+		if(newValue < min)
+			newValue = min;
+		else if(newValue > max)
+			newValue = max;
+		
 		return newValue;
 	}
 }

@@ -3,6 +3,8 @@ package game;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 
+using StringTools;
+
 class Character extends FlxSprite {
     public var name = "bf";
     public var json:Dynamic;
@@ -12,6 +14,8 @@ class Character extends FlxSprite {
     public var healthColor:Int = FlxColor.WHITE;
     public var bopLeftRight:Bool = false;
     public var bopDirection:Int = 0;
+    public var isPlayer:Bool = false;
+    public var holdTimer:Float = 0;
 
     public function new(x, y, name)
     {
@@ -49,6 +53,23 @@ class Character extends FlxSprite {
     }
     override public function update(elapsed) {
         super.update(elapsed);
+
+        if(animation.curAnim.name.startsWith('sing'))
+            holdTimer += elapsed;
+
+        if(!isPlayer)
+        {
+            var dadVar:Float = 4;
+
+            if(name == 'dad')
+                dadVar = 6.1;
+            
+            if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
+            {
+                dance();
+                holdTimer = 0;
+            }
+        }
     }
 
     public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0) {

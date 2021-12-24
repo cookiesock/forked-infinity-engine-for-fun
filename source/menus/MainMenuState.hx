@@ -109,6 +109,8 @@ class MainMenuState extends BasicState
 					FlxG.switchState(new game.PlayState());
 				case "Credits":
 					FlxG.switchState(new menus.CreditsState());
+				case "Freeplay":
+					FlxG.switchState(new menus.FreeplayMenuState());
 			}
 		}
 		

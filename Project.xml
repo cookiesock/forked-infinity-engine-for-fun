@@ -40,6 +40,7 @@
 	<assets path="assets/stages" />
 	<assets path="assets/characters" />
 	<assets path="assets/songs" />
+	<assets path="assets/data" />
 
 	<assets path="assets/fonts" embed='true'/>
 	<!-- _______________________________ Libraries ______________________________ -->

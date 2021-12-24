@@ -1,5 +1,6 @@
 package game;
 
+import flixel.FlxObject;
 import flixel.system.FlxSound;
 import flixel.util.FlxSort;
 import ui.Icon;
@@ -30,6 +31,10 @@ class PlayState extends BasicState
 	static public var bpm:Float = 0;
 
 	public var vocals:FlxSound;
+
+	public static var song:Song;
+
+	private var camFollow:FlxObject;
 	
 	// stage shit
 	static public var stageCamZoom:Float = 0.9;
@@ -70,16 +75,29 @@ class PlayState extends BasicState
 	var countdownStarted:Bool = true;
 	var countdownNum:Int = -1;
 
-	var song:Song;
-
-	var downscroll:Bool = true;
+	var downscroll:Bool = false;
 
 	var speed:Float = 1;
 
+	public function new(?songName:String, ?difficulty:String)
+	{
+		super();
+
+		if(songName != null)
+		{
+			songName = songName.toLowerCase();
+			
+			if(difficulty != null)
+				difficulty = difficulty.toLowerCase();
+			else
+				difficulty = "normal";
+	
+			song = Util.getJsonContents('assets/songs/$songName/$difficulty.json').song;
+		}
+	}
+
 	override public function create()
 	{
-		Conductor.songPosition = 0;
-
 		if (FlxG.sound.music != null) {
 			FlxG.sound.music.stop();
 		}
@@ -97,27 +115,50 @@ class PlayState extends BasicState
 		FlxCamera.defaultCameras = [gameCam];
 		FlxG.camera.zoom = stageCamZoom;
 
-		song = Util.getJsonContents('assets/songs/test/normal.json').song;
-
 		speed = song.speed;
 		
 		// commented out speakers/gf because my pc sucks rn - swordcube
 		// that should hopefully no longer be the case on christmas - also swordcube
-		
-		opponent = new Character(100, 120, "dad");
-		opponent.screenCenter();
-		add(opponent);
-		
-		//speakers = new Character(100, 120, "gf");
-		//speakers.screenCenter(X);
-		//add(speakers);
 
-		player = new Character(opponent.x + 300, opponent.y + 100, "bf");
+		if(song.gf == null)
+			song.gf = "gf";
+
+		if(!song.player2.startsWith("gf"))
+		{
+			speakers = new Character(100, 120, song.gf);
+			speakers.screenCenter(X);
+			speakers.scrollFactor.set(0.95, 0.95);
+			add(speakers);
+
+			opponent = new Character(100, 120, song.player2);
+			opponent.screenCenter();
+			add(opponent);
+		}
+		else
+		{
+			opponent = new Character(100, 120, song.gf);
+			opponent.screenCenter(X);
+			opponent.scrollFactor.set(0.95, 0.95);
+			add(opponent);
+		}
+
+		player = new Character(opponent.x + 350, opponent.y + 200, song.player1);
+		player.flipX = !player.flipX;
+		player.isPlayer = true;
 		add(player);
 		
 		// bpm init shit
 		bpm = song.bpm;
 		funkyBpm(bpm);
+
+		camFollow = new FlxObject(0, 0, 1, 1);
+
+		camFollow.setPosition(opponent.getMidpoint().x + 150 + opponent.camOffsets[0], opponent.getMidpoint().y - 100 + opponent.camOffsets[1]);
+
+		add(camFollow);
+
+		FlxG.camera.follow(camFollow, LOCKON, 0.04 * (60 / Main.display.currentFPS));
+		FlxG.camera.focusOn(camFollow.getPosition());
 
 		// stage shit
 		//add(stage);
@@ -173,11 +214,11 @@ class PlayState extends BasicState
 		add(healthBar);
 		
 		// health bar icons
-		opponentIcon = new Icon(Util.getCharacterIcons("dad"), false);
+		opponentIcon = new Icon(Util.getCharacterIcons(opponent.name.toLowerCase()), false);
 		opponentIcon.y = healthBar.y - (opponentIcon.height / 2);
 		add(opponentIcon);
 		
-		playerIcon = new Icon(Util.getCharacterIcons("bf"), true);
+		playerIcon = new Icon(Util.getCharacterIcons(player.name.toLowerCase()), true);
 		playerIcon.y = healthBar.y - (playerIcon.height / 2);
 		add(playerIcon);
 		
@@ -230,29 +271,39 @@ class PlayState extends BasicState
 		}
 
 		notes.sort(sortByShit);
+
+		Conductor.songPosition = -1 * (Conductor.crochet * 5);
 		
 		super.create();
 	}
 
 	override public function update(elapsed:Float)
 	{
+		Conductor.songPosition += elapsed * 1000;
+
 		if(!countdownStarted)
-			Conductor.songPosition += elapsed * 1000;
-
-		if(FlxG.sound.music.active) // resync song pos lol
 		{
-			if(FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
+			if(FlxG.sound.music != null) // resync song pos lol
 			{
-				Conductor.songPosition = FlxG.sound.music.time;
-			}
-
-			if(vocals.active)
-			{
-				if(vocals.time > FlxG.sound.music.time + 20 || vocals.time < FlxG.sound.music.time - 20)
+				if(FlxG.sound.music.active) // resync song pos lol
 				{
-					vocals.pause();
-					vocals.time = FlxG.sound.music.time;
-					vocals.play();
+					if(FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
+					{
+						Conductor.songPosition = FlxG.sound.music.time;
+					}
+	
+					if(vocals != null)
+					{
+						if(vocals.active)
+						{
+							if(vocals.time > FlxG.sound.music.time + 20 || vocals.time < FlxG.sound.music.time - 20)
+							{
+								vocals.pause();
+								vocals.time = FlxG.sound.music.time;
+								vocals.play();
+							}
+						}
+					}
 				}
 			}
 		}
@@ -311,7 +362,7 @@ class PlayState extends BasicState
 				opponentIcon.animation.curAnim.curFrame = 2;
 			else
 				opponentIcon.animation.curAnim.curFrame = 0;
-		
+
 		for(note in notes)
 		{
 			if(note.mustPress)
@@ -328,38 +379,53 @@ class PlayState extends BasicState
 				else
 					note.y = opponentStrumArrows.members[note.noteID].y - (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
 
-				if(Conductor.songPosition >= note.strum)
+				if(!countdownStarted)
 				{
-					vocals.volume = 1;
+					if(Conductor.songPosition >= note.strum)
+					{
+						if(vocals != null)
+							vocals.volume = 1;
+
+						opponent.playAnim(singAnims[note.noteID % 4], true);
+						opponent.holdTimer = 0;
+
+						notes.remove(note);
+						note.kill();
+						note.destroy();
+
+						opponentStrumArrows.members[note.noteID].playAnim("confirm", true);
+
+						opponentStrumArrows.members[note.noteID].animation.finishCallback = function(name:String) {
+							if(name == "confirm")
+								opponentStrumArrows.members[note.noteID].playAnim("strum", true);
+						};
+					}
+				}
+			}
+
+			if(!countdownStarted)
+			{
+				if(Conductor.songPosition - Conductor.safeZoneOffset > note.strum && note != null)
+				{
+					if(note.mustPress)
+					{
+						if(vocals != null)
+							vocals.volume = 0;
+
+						changeHealth(false);
+						player.playAnim(singAnims[note.noteID % 4] + "miss", true);
+						player.holdTimer = 0;
+					}
 
 					notes.remove(note);
 					note.kill();
 					note.destroy();
-
-					opponentStrumArrows.members[note.noteID].playAnim("confirm", true);
-
-					opponentStrumArrows.members[note.noteID].animation.finishCallback = function(name:String) {
-						if(name == "confirm")
-							opponentStrumArrows.members[note.noteID].playAnim("strum", true);
-					};
 				}
-			}
-
-			if(Conductor.songPosition - Conductor.safeZoneOffset > note.strum && note != null)
-			{
-				if(note.mustPress)
-				{
-					vocals.volume = 0;
-					changeHealth(false);
-				}
-
-				notes.remove(note);
-				note.kill();
-				note.destroy();
 			}
 		}
 
-		inputFunction();
+		if(!countdownStarted)
+			inputFunction();
 		
 		super.update(elapsed);
 	}
@@ -407,13 +473,13 @@ class PlayState extends BasicState
 				case 4:
 					countdownStarted = false;
 
-					FlxG.sound.playMusic(Util.getInst("test"), 1, false);
+					FlxG.sound.playMusic(Util.getInst(song.song.toLowerCase()), 1, false);
 
 					if(song.needsVoices)
 					{
 						FlxG.sound.music.pause();
 
-						vocals = FlxG.sound.play(Util.getVoices("test"));
+						vocals = FlxG.sound.play(Util.getVoices(song.song.toLowerCase()));
 
 						vocals.pause();
 
@@ -434,8 +500,23 @@ class PlayState extends BasicState
 			}
 		}
 		
-		opponent.dance();
-		player.dance();
+		if(opponent.active)
+		{
+			if((opponent.animation.curAnim.name.startsWith("sing") && opponent.animation.curAnim.finished || !opponent.animation.curAnim.name.startsWith("sing")))
+				opponent.dance();
+		}
+
+		if(player.active)
+		{
+			if(!player.animation.curAnim.name.startsWith("sing"))
+				player.dance();
+		}
+
+		if(speakers != null)
+		{
+			if(speakers.active)
+				speakers.dance();
+		}
 
 		super.beatHit(timer);
 	}
@@ -512,9 +593,13 @@ class PlayState extends BasicState
 
 				if(justPressed[note.noteID] && !dontHitTheseDirectionsLol[note.noteID])
 				{
+					var noteMs = Conductor.songPosition - note.strum;
+					trace(noteMs + " ms");
+
 					noteDataTimes[note.noteID] = note.strum;
 
-					vocals.volume = 1;
+					if(vocals != null)
+						vocals.volume = 1;
 
 					notes.remove(note);
 					note.kill();
@@ -524,6 +609,9 @@ class PlayState extends BasicState
 					dontHitTheseDirectionsLol[note.noteID] = true;
 
 					changeHealth(true);
+
+					player.playAnim(singAnims[note.noteID % 4], true);
+					player.holdTimer = 0;
 				}
 			}
 
@@ -542,5 +630,9 @@ class PlayState extends BasicState
 				}
 			}
 		}
+
+		if(player.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !pressed.contains(true))
+			if(player.animation.curAnim.name.startsWith('sing'))
+				player.dance();
 	}
 }

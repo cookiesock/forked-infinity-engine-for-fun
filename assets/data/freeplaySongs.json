@@ -1,0 +1,60 @@
+{
+    "songs": [
+        {
+            "name": "Tutorial",
+            "icon": "gf",
+            "bgColor": "#A5004D",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Bopeebo",
+            "icon": "dad",
+            "bgColor": "#AF66CE",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Fresh",
+            "icon": "dad",
+            "bgColor": "#AF66CE",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Dad Battle",
+            "icon": "dad",
+            "bgColor": "#AF66CE",
+            "difficulties": [
+                "Easy",
+                "Normal",
+                "Hard"
+            ]
+        },
+        {
+            "name": "Freedom Dive",
+            "icon": "bf",
+            "bgColor": "#31B0D1",
+            "difficulties": [
+                "Normal"
+            ]
+        },
+        {
+            "name": "Test",
+            "icon": "bf-pixel",
+            "bgColor": "#31B0D1",
+            "difficulties": [
+                "Normal"
+            ]
+        }
+    ]
+}

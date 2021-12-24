@@ -1,5 +1,7 @@
 package ui;
 
+import flixel.FlxG;
+import flixel.math.FlxMath;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 
@@ -7,6 +9,14 @@ class AlphabetText extends FlxSpriteGroup
 {
     // Public Variables //
     public var text:String = "coolswag";
+
+    public var targetY:Int = 0;
+    public var isMenuItem:Bool = false;
+
+    public var forceX:Float = Math.NEGATIVE_INFINITY;
+	public var yMult:Float = 120;
+	public var xAdd:Float = 0;
+	public var yAdd:Float = 0;
 
     // Private Variables //
     private var bold:Bool = true;
@@ -39,7 +49,7 @@ class AlphabetText extends FlxSpriteGroup
                     var alphabetChar:AlphabetCharacter = new AlphabetCharacter(character, i, bold, i2, startingX, size);
                     add(alphabetChar);
     
-                    startingX += alphabetChar.width + 8*(size/70);
+                    startingX += alphabetChar.width + 4*(size/70);
                 }
                 else
                     startingX += (size*(size/70))/2;
@@ -47,9 +57,25 @@ class AlphabetText extends FlxSpriteGroup
         }
     }
 
-    override function update(elapsed:Float) {
-        super.update(elapsed);
-    }
+	override function update(elapsed:Float)
+	{
+		if(isMenuItem)
+		{
+			var scaledY = FlxMath.remapToRange(targetY, 0, 1, 0, 1.3);
+
+			var lerpVal:Float = Util.boundTo(elapsed * 9.6, 0, 1);
+			
+			y = FlxMath.lerp(y, (scaledY * yMult) + (FlxG.height * 0.48) + yAdd, lerpVal);
+
+			if(forceX != Math.NEGATIVE_INFINITY) {
+				x = forceX;
+			} else {
+				x = FlxMath.lerp(x, (targetY * 20) + 90 + xAdd, lerpVal);
+			}
+		}
+
+		super.update(elapsed);
+	}
 }
 
 class AlphabetCharacter extends FlxSprite
