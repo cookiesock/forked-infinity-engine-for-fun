@@ -44,7 +44,7 @@ class AlphabetText extends FlxSpriteGroup
                 var alphabetChar:AlphabetCharacter = new AlphabetCharacter(character, i, bold, curLine, startingX, size);
                 add(alphabetChar);
 
-                startingX += alphabetChar.width + 8*(size/70);
+                startingX += alphabetChar.width + 4*(size/70);
             } else if (character == "\n") {
                 curLine ++;
                 startingX = 0;
@@ -52,7 +52,7 @@ class AlphabetText extends FlxSpriteGroup
                 var alphabetChar:AlphabetCharacter = new AlphabetCharacter(character, i, bold, curLine, startingX, size);
                 add(alphabetChar);
 
-                startingX += alphabetChar.width + 8*(size/70);
+                startingX += alphabetChar.width + 4*(size/70);
             }
             else
                 startingX += (size*(size/70))/2;
