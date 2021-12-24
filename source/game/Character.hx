@@ -88,6 +88,8 @@ class Character extends FlxSprite {
     }
 
     public function dance() {
+        holdTimer = 0;
+        
         if (bopLeftRight == true) {
             if (bopDirection == 0) {
                 playAnim('danceLeft', true);

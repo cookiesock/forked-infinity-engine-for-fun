@@ -38,7 +38,7 @@ class PlayState extends BasicState
 	
 	// stage shit
 	static public var stageCamZoom:Float = 0.9;
-	static public var pixelStage:Bool = false;
+	public var pixelStage:Bool = false;
 	static public var pixelAssetZoom:Float = 6.1;
 	//var stage:Stage;
 	
@@ -76,6 +76,7 @@ class PlayState extends BasicState
 	var countdownNum:Int = -1;
 
 	var downscroll:Bool = false;
+	var botplay:Bool = false;
 
 	var speed:Float = 1;
 
@@ -120,8 +121,38 @@ class PlayState extends BasicState
 		// commented out speakers/gf because my pc sucks rn - swordcube
 		// that should hopefully no longer be the case on christmas - also swordcube
 
-		if(song.gf == null)
-			song.gf = "gf";
+		switch(song.song.toLowerCase()) // gf char
+		{
+			case "satin panties" | "high" | "m.i.l.f":
+				if(song.gf == null)
+					song.gf = "gf-car";
+			case "cocoa" | "eggnog" | "winter horrorland":
+				if(song.gf == null)
+					song.gf = "gf-christmas";
+			case "senpai" | "roses" | "thorns":
+				if(song.gf == null)
+					song.gf = "gf-pixel";
+
+				pixelStage = true;
+			default:
+				if(song.gf == null)
+					song.gf = "gf";
+			
+				if(song.ui_Skin == null)
+					song.ui_Skin = "default";
+		}
+
+		switch(song.song.toLowerCase()) // song skin
+		{
+			case "senpai" | "roses" | "thorns":
+				if(song.ui_Skin == null)
+					song.ui_Skin = "default-pixel";
+
+				pixelStage = true;
+			default:
+				if(song.ui_Skin == null)
+					song.ui_Skin = "default";
+		}
 
 		if(!song.player2.startsWith("gf"))
 		{
@@ -188,7 +219,7 @@ class PlayState extends BasicState
 				funnyArrowX += 242;
 			}
 			
-			var theRealStrumArrow:StrumArrow = new StrumArrow(funnyArrowX + i * 112, strumArea.y - (i % 4 + 1) * (7 + i * 1), i, 'default');
+			var theRealStrumArrow:StrumArrow = new StrumArrow(funnyArrowX + i * 112, strumArea.y - (i % 4 + 1) * (7 + i * 1), i, song.ui_Skin);
 			theRealStrumArrow.alpha = 0;
 			
 			if(!isPlayerArrow) {
@@ -261,7 +292,7 @@ class PlayState extends BasicState
 				else
 					oldNote = null;*/
 
-				var swagNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime, gottaHitNote);
+				var swagNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime, gottaHitNote, song.ui_Skin);
 				swagNote.scrollFactor.set(0,0);
 				swagNote.cameras = [hudCam];
 				add(swagNote);
@@ -386,8 +417,8 @@ class PlayState extends BasicState
 						if(vocals != null)
 							vocals.volume = 1;
 
-						opponent.playAnim(singAnims[note.noteID % 4], true);
 						opponent.holdTimer = 0;
+						opponent.playAnim(singAnims[note.noteID % 4], true);
 
 						notes.remove(note);
 						note.kill();
@@ -413,8 +444,9 @@ class PlayState extends BasicState
 							vocals.volume = 0;
 
 						changeHealth(false);
-						player.playAnim(singAnims[note.noteID % 4] + "miss", true);
+
 						player.holdTimer = 0;
+						player.playAnim(singAnims[note.noteID % 4] + "miss", true);
 					}
 
 					notes.remove(note);
@@ -610,8 +642,8 @@ class PlayState extends BasicState
 
 					changeHealth(true);
 
-					player.playAnim(singAnims[note.noteID % 4], true);
 					player.holdTimer = 0;
+					player.playAnim(singAnims[note.noteID % 4], true);
 				}
 			}
 

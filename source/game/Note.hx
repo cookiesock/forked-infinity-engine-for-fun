@@ -79,19 +79,19 @@ class Note extends FlxSprite {
 			switch(Math.abs(noteID % 4))
 			{
 				case 0:
-					animation.add('strum', [0]);
+					animation.add('strum', [4]);
 					animation.add('tap', [4, 8], 12, false);
 					animation.add('confirm', [12, 16], 24, false);
 				case 1:
-					animation.add('strum', [1]);
+					animation.add('strum', [5]);
 					animation.add('tap', [5, 9], 12, false);
 					animation.add('confirm', [13, 17], 24, false);
 				case 2:
-					animation.add('strum', [2]);
+					animation.add('strum', [6]);
 					animation.add('tap', [6, 10], 12, false);
 					animation.add('confirm', [14, 18], 12, false);
 				case 3:
-					animation.add('strum', [3]);
+					animation.add('strum', [7]);
 					animation.add('tap', [7, 11], 12, false);
 					animation.add('confirm', [15, 19], 24, false);
 			}

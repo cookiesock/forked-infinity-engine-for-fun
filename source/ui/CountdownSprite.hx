@@ -11,9 +11,8 @@ class CountdownSprite extends FlxSprite {
 	{
 		super();
 
-		if(pixel) {
+		if(pixel)
 			filePath = 'countdown/pixel/';
-		}
 
 		loadGraphic(Util.getImage(filePath + countdownStr));
 		screenCenter();
@@ -26,6 +25,9 @@ class CountdownSprite extends FlxSprite {
 				this.destroy();
 			}
 		});
+
+		if(pixel)
+			scale.set(game.PlayState.pixelAssetZoom, game.PlayState.pixelAssetZoom);
 	}
 	
 	override public function update(elapsed) {
