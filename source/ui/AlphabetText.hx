@@ -11,6 +11,7 @@ class AlphabetText extends FlxSpriteGroup
     // Private Variables //
     private var bold:Bool = true;
 
+    private var splitText:Array<String> = [];
     private var splitLines:Array<String> = [];
 
     public function new(?x:Float = 0.0, ?y:Float = 0.0, ?bold_Param:Bool = true, ?text_Param:String = "coolswag", ?size:Float = 70/*, ?typed:Bool = false temporarily disabled until i wanna make it work lol*/)
@@ -19,31 +20,32 @@ class AlphabetText extends FlxSpriteGroup
 
         text = (bold_Param ? text_Param.toLowerCase() : text_Param);
         bold = bold_Param;
-
-        splitLines = text.split("\n");
+        splitText = text.split("");
 
         var startingX:Float = 0;
+        var curLine:Int = 0;
 
-        for(i2 in 0...splitLines.length)
+        for(i in 0...splitText.length)
         {
-            startingX = 0;
-            
-            var splitText = splitLines[i2].split("");
+            var character:String = splitText[i];
 
-            for(i in 0...splitText.length)
+            if(character != " " && character != "")
             {
-                var character:String = splitText[i];
+                var alphabetChar:AlphabetCharacter = new AlphabetCharacter(character, i, bold, curLine, startingX, size);
+                add(alphabetChar);
 
-                if(character != " " && character != "")
-                {
-                    var alphabetChar:AlphabetCharacter = new AlphabetCharacter(character, i, bold, i2, startingX, size);
-                    add(alphabetChar);
-    
-                    startingX += alphabetChar.width + 8*(size/70);
-                }
-                else
-                    startingX += (size*(size/70))/2;
+                startingX += alphabetChar.width + 8*(size/70);
+            } else if (character == "\n") {
+                curLine ++;
+                startingX = 0;
+
+                var alphabetChar:AlphabetCharacter = new AlphabetCharacter(character, i, bold, curLine, startingX, size);
+                add(alphabetChar);
+
+                startingX += alphabetChar.width + 8*(size/70);
             }
+            else
+                startingX += (size*(size/70))/2;
         }
     }
 

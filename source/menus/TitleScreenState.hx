@@ -56,7 +56,7 @@ class TitleScreenState extends BasicState
 		pressAccept.antialiasing = true;
 		add(pressAccept);
 
-		add(new AlphabetText(0, 0, true, "the quick brown fox jumps over the lazy dog\n1234567890\n!?.-"));
+		add(new AlphabetText(0, 0, true, "the quick brown fox jumps \nover the lazy dog\n\n1234567890\n\n!?.-", 35));
 
 		super.create();
 	}

@@ -1,6 +1,7 @@
 package menus;
 
 import ui.Icon;
+import ui.TrackerSprite;
 import ui.AlphabetText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
@@ -16,7 +17,7 @@ class CreditsState extends BasicState{
     var curSelected:Int;
     var credits:Array<Dynamic>;
     var creditGroup:FlxTypedGroup<AlphabetText>;
-    var creditIconGroup:FlxTypedGroup<Icon>;
+    var creditIconGroup:FlxTypedGroup<TrackerSprite>;
 
 	override public function create()
         {
@@ -46,8 +47,9 @@ class CreditsState extends BasicState{
                 add(text);
                 creditGroup.add(text);
 
-                var icon = new Icon("credits/icons/" + credits[i].icon, creditGroup.members[i], false, 10, -30, LEFT);
+                var icon = new TrackerSprite(creditGroup.members[i], 10, -30, LEFT);
                 icon.ID = i;
+                icon.loadGraphic('assets/credits/icons/' + credits[i].icon + '.png');
                 add(icon);
                 creditIconGroup.add(icon);
             }
