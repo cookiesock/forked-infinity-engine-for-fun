@@ -1,5 +1,6 @@
 package game;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 
 using StringTools;
@@ -16,6 +17,11 @@ class Note extends FlxSprite {
 
 	public var strum:Float = 0.0;
 	public var mustPress:Bool = false;
+	public var isSustainNote:Bool = false;
+
+	public var canBeHit:Bool = false;
+	public var tooLate:Bool = false;
+	public var wasGoodHit:Bool = false;
 
 	public function new(x, y, noteID:Int = 0, ?strum:Float, ?mustPress:Bool, ?noteskin:String = 'default')
 	{
@@ -115,5 +121,41 @@ class Note extends FlxSprite {
 		}
 
 		super.update(elapsed);
+	}
+
+	public function calculateCanBeHit()
+	{
+		if(this != null)
+		{
+			if(mustPress)
+			{
+				if (isSustainNote)
+				{
+					if (strum > Conductor.songPosition - (Conductor.safeZoneOffset * 1.5)
+						&& strum < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
+						canBeHit = true;
+					else
+						canBeHit = false;
+				}
+				else
+				{
+					if (strum > Conductor.songPosition - Conductor.safeZoneOffset
+						&& strum < Conductor.songPosition + Conductor.safeZoneOffset)
+						canBeHit = true;
+					else
+						canBeHit = false;
+				}
+	
+				if (strum < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
+					tooLate = true;
+			}
+			else
+			{
+				canBeHit = false;
+	
+				if (strum <= Conductor.songPosition)
+					wasGoodHit = true;
+			}
+		}
 	}
 }

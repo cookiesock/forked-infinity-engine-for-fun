@@ -22,6 +22,11 @@ class TitleScreenState extends BasicState
 
 	override public function create():Void
 	{
+		persistentUpdate = true;
+		persistentDraw = true;
+
+		FlxG.fixedTimestep = false;
+		
 		if(!hasAlreadyAccepted) {
 			FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false), 0);
 			FlxG.sound.music.fadeIn(4, 0, 0.7);

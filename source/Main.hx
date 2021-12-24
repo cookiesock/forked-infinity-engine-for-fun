@@ -13,8 +13,7 @@ import openfl.display.Sprite;
 
 class Main extends Sprite
 {
-	var fpsVar:FPS;
-	var framerate:Int = 60;
+	var framerate:Int = 120;
 
 	public static var display:SimpleInfoDisplay;
 	

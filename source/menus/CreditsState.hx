@@ -1,5 +1,6 @@
 package menus;
 
+import ui.Icon;
 import hud.CharIcon;
 import ui.AlphabetText;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -16,7 +17,7 @@ class CreditsState extends BasicState{
     var curSelected:Int;
     var credits:Array<Dynamic>;
     var creditGroup:FlxTypedGroup<AlphabetText>;
-    var creditIconGroup:FlxTypedGroup<CharIcon>;
+    var creditIconGroup:FlxTypedGroup<Icon>;
 
 	override public function create()
         {
@@ -46,11 +47,8 @@ class CreditsState extends BasicState{
                 add(text);
                 creditGroup.add(text);
 
-                var icon = new CharIcon("bf");
+                var icon = new Icon("credits/icons/" + credits[i].icon, creditGroup.members[i], false, 10, -30, LEFT);
                 icon.ID = i;
-                icon.changeTexture('assets/credits/icons/' + credits[i].icon + '.png');
-                icon.tracker = creditGroup.members[i];
-                icon.trackerLeft = true;
                 add(icon);
                 creditIconGroup.add(icon);
             }
@@ -92,25 +90,25 @@ class CreditsState extends BasicState{
         }
 
         function updateDesc(elapsed:Float) {
+            var funnyLerpValue = 0.08 / (Main.display.currentFPS / 60);
+
             for(credit in 0...creditGroup.members.length) {
                 if(credit == curSelected)
                 {
-                    creditGroup.members[credit].x = FlxMath.lerp(creditGroup.members[credit].x, FlxG.width / 6 + credit * 5 + 96, Math.max(0, Math.min(1, elapsed * 6)));
+                    creditGroup.members[credit].x = FlxMath.lerp(creditGroup.members[credit].x, FlxG.width / 6 + credit * 5 + 96, funnyLerpValue);
                     creditGroup.members[credit].alpha = 1;
                     creditIconGroup.members[credit].alpha = 1;
                 }
                 else
                 {
-                    creditGroup.members[credit].x = FlxMath.lerp(creditGroup.members[credit].x, FlxG.width / 6 + credit * 5, Math.max(0, Math.min(1, elapsed * 6)));
+                    creditGroup.members[credit].x = FlxMath.lerp(creditGroup.members[credit].x, FlxG.width / 6 + credit * 5, funnyLerpValue);
                     creditGroup.members[credit].alpha = 0.6;
                     creditIconGroup.members[credit].alpha = 0.6;
                 }
             }
 
             if(credits[curSelected].desc != null)
-            {
-                trace(credits[curSelected].desc);
-                
+            { 
                 if(description != null) // cleanup stuff
                 {
                     remove(description);

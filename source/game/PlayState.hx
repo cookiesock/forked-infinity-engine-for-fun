@@ -1,5 +1,6 @@
 package game;
 
+import flixel.system.FlxSound;
 import flixel.util.FlxSort;
 import flixel.util.FlxSort;
 import ui.Icon;
@@ -28,6 +29,8 @@ class PlayState extends BasicState
 	var singAnims:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 	var cameraZooms:Bool = true;
 	static public var bpm:Float = 0;
+
+	public var vocals:FlxSound;
 	
 	// stage shit
 	static public var stageCamZoom:Float = 0.9;
@@ -72,8 +75,12 @@ class PlayState extends BasicState
 
 	var downscroll:Bool = true;
 
+	var speed:Float = 1;
+
 	override public function create()
 	{
+		Conductor.songPosition = 0;
+
 		if (FlxG.sound.music != null) {
 			FlxG.sound.music.stop();
 		}
@@ -91,7 +98,9 @@ class PlayState extends BasicState
 		FlxCamera.defaultCameras = [gameCam];
 		FlxG.camera.zoom = stageCamZoom;
 
-		song = Util.getJsonContents('assets/songs/freedom dive/normal.json').song;
+		song = Util.getJsonContents('assets/songs/test/normal.json').song;
+
+		speed = song.speed;
 		
 		// commented out speakers/gf because my pc sucks rn - swordcube
 		// that should hopefully no longer be the case on christmas - also swordcube
@@ -108,7 +117,7 @@ class PlayState extends BasicState
 		add(player);
 		
 		// bpm init shit
-		bpm = 100;
+		bpm = song.bpm;
 		funkyBpm(bpm);
 
 		// stage shit
@@ -227,7 +236,28 @@ class PlayState extends BasicState
 
 	override public function update(elapsed:Float)
 	{
-		debugText.text = curBeat + "\n" + curStep;
+		if(!countdownStarted)
+			Conductor.songPosition += elapsed * 1000;
+
+		if(FlxG.sound.music.active) // resync song pos lol
+		{
+			if(FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
+			{
+				Conductor.songPosition = FlxG.sound.music.time;
+			}
+
+			if(vocals.active)
+			{
+				if(vocals.time > FlxG.sound.music.time + 20 || vocals.time < FlxG.sound.music.time - 20)
+				{
+					vocals.pause();
+					vocals.time = FlxG.sound.music.time;
+					vocals.play();
+				}
+			}
+		}
+
+		debugText.text = curBeat + "\n" + curStep + "\n" + Conductor.songPosition + "\n" + FlxG.sound.music.time + "\n" + vocals.time;
 		
 		if(FlxG.keys.justPressed.BACKSPACE)
 		{
@@ -281,30 +311,27 @@ class PlayState extends BasicState
 				opponentIcon.animation.curAnim.curFrame = 2;
 			else
 				opponentIcon.animation.curAnim.curFrame = 0;
-
-		// coolness B)
-		inputFunction();
-
-		var speed = song.speed;
-
+		
 		for(note in notes)
 		{
 			if(note.mustPress)
 			{
 				if(downscroll)
-					note.y = playerStrumArrows.members[note.noteID].y + (0.45 * (FlxG.sound.music.time - note.strum) * FlxMath.roundDecimal(speed, 2));
+					note.y = playerStrumArrows.members[note.noteID].y + (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
 				else
-					note.y = playerStrumArrows.members[note.noteID].y - (0.45 * (FlxG.sound.music.time - note.strum) * FlxMath.roundDecimal(speed, 2));
+					note.y = playerStrumArrows.members[note.noteID].y - (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
 			}
 			else
 			{
 				if(downscroll)
-					note.y = opponentStrumArrows.members[note.noteID].y + (0.45 * (FlxG.sound.music.time - note.strum) * FlxMath.roundDecimal(speed, 2));
+					note.y = opponentStrumArrows.members[note.noteID].y + (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
 				else
-					note.y = opponentStrumArrows.members[note.noteID].y - (0.45 * (FlxG.sound.music.time - note.strum) * FlxMath.roundDecimal(speed, 2));
+					note.y = opponentStrumArrows.members[note.noteID].y - (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
 
-				if(FlxG.sound.music.time >= note.strum)
+				if(Conductor.songPosition >= note.strum)
 				{
+					vocals.volume = 1;
+
 					notes.remove(note);
 					note.kill();
 					note.destroy();
@@ -318,16 +345,21 @@ class PlayState extends BasicState
 				}
 			}
 
-			if(FlxG.sound.music.time - (166 * 2) >= note.strum)
+			if(Conductor.songPosition - Conductor.safeZoneOffset > note.strum && note != null)
 			{
 				if(note.mustPress)
+				{
+					vocals.volume = 0;
 					changeHealth(false);
+				}
 
 				notes.remove(note);
 				note.kill();
 				note.destroy();
 			}
 		}
+
+		inputFunction();
 		
 		super.update(elapsed);
 	}
@@ -374,7 +406,31 @@ class PlayState extends BasicState
 					add(countdown1);
 				case 4:
 					countdownStarted = false;
-					FlxG.sound.playMusic(Util.getInst("freedom dive"));
+
+					FlxG.sound.playMusic(Util.getInst("test"), 1, false);
+
+					if(song.needsVoices)
+					{
+						FlxG.sound.music.pause();
+
+						vocals = FlxG.sound.play(Util.getVoices("test"));
+
+						vocals.pause();
+
+						FlxG.sound.music.time = 0;
+						vocals.time = 0;
+	
+						FlxG.sound.music.play();
+						vocals.play();
+					}
+					else 
+						vocals = new FlxSound();
+
+					FlxG.sound.music.onComplete = function()
+					{
+						FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
+						FlxG.switchState(new menus.MainMenuState());
+					};
 			}
 		}
 		
@@ -403,9 +459,9 @@ class PlayState extends BasicState
 		var testBinds:Array<String> = ["LEFT","DOWN","UP","RIGHT"];
 		var testBindsAlt:Array<String> = ["D","F","J","K"];
 
-		var justPressed:Array<Bool> = [];
-		var pressed:Array<Bool> = [];
-		var released:Array<Bool> = [];
+		var justPressed:Array<Bool> = [false, false, false, false];
+		var pressed:Array<Bool> = [false, false, false, false];
+		var released:Array<Bool> = [false, false, false, false];
 
 		for(i in 0...testBinds.length)
 		{
@@ -433,25 +489,55 @@ class PlayState extends BasicState
 				playerStrumArrows.members[i].playAnim("strum");
 		}
 
-		var dontHitTheseDirectionsLol:Array<Bool> = [false, false, false, false];
+		var possibleNotes:Array<Note> = [];
 
 		for(note in notes)
 		{
-			if(note.mustPress)
+			note.calculateCanBeHit();
+
+			if(note.canBeHit && note.mustPress && !note.tooLate && !note.isSustainNote)
+				possibleNotes.push(note);
+		}
+
+		possibleNotes.sort((a, b) -> Std.int(a.strum - b.strum));
+
+		if(possibleNotes.length > 0)
+		{
+			var dontHitTheseDirectionsLol:Array<Bool> = [false, false, false, false];
+			var noteDataTimes:Array<Float> = [-1, -1, -1, -1];
+
+			for(i in 0...possibleNotes.length)
 			{
-				if(FlxG.sound.music.time >= note.strum - 166)
+				var note = possibleNotes[i];
+
+				if(justPressed[note.noteID] && !dontHitTheseDirectionsLol[note.noteID])
 				{
-					if(justPressed[note.noteID] && !dontHitTheseDirectionsLol[note.noteID])
+					noteDataTimes[note.noteID] = note.strum;
+
+					vocals.volume = 1;
+
+					notes.remove(note);
+					note.kill();
+					note.destroy();
+
+					playerStrumArrows.members[note.noteID].playAnim("confirm", true);
+					dontHitTheseDirectionsLol[note.noteID] = true;
+
+					changeHealth(true);
+				}
+			}
+
+			if(possibleNotes.length > 0)
+			{
+				for(i in 0...possibleNotes.length)
+				{
+					var note = possibleNotes[i];
+
+					if(note.strum == noteDataTimes[note.noteID] && dontHitTheseDirectionsLol[note.noteID])
 					{
 						notes.remove(note);
 						note.kill();
 						note.destroy();
-
-						playerStrumArrows.members[note.noteID].playAnim("confirm", true);
-
-						dontHitTheseDirectionsLol[note.noteID] = true;
-
-						changeHealth(true);
 					}
 				}
 			}
