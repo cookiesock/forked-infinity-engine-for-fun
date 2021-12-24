@@ -1,5 +1,7 @@
 package game;
 
+import ui.Icon;
+import flixel.input.FlxInput.FlxInputState;
 import flixel.util.FlxTimer;
 import flixel.FlxG;
 import flixel.FlxBasic;
@@ -14,7 +16,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import lime.utils.Assets;
 import openfl.Assets;
 import game.StrumArrow;
-import ui.HealthIcon;
+import ui.Icon;
 import ui.CountdownSprite;
 
 using StringTools;
@@ -96,7 +98,7 @@ class PlayState extends BasicState
 		//add(player);
 		
 		// bpm init shit
-		bpm = 190;	
+		bpm = 100;
 		funkyBpm(bpm);
 
 		// stage shit
@@ -145,18 +147,19 @@ class PlayState extends BasicState
 		add(healthBar);
 		
 		// health bar icons
-		opponentIcon = new HealthIcon('dad', false);
+		opponentIcon = new Icon('characters/images/dad/icons', false);
 		opponentIcon.y = healthBar.y - (opponentIcon.height / 2);
 		add(opponentIcon);
 		
-		playerIcon = new HealthIcon('bf', true);
+		playerIcon = new Icon('characters/images/bf/icons', true);
 		playerIcon.y = healthBar.y - (playerIcon.height / 2);
 		add(playerIcon);
 		
 		// debug shit
 
-		debugText = new FlxText(0,0,FlxG.width, "", 12, true);
+		debugText = new FlxText(0,0,FlxG.width, "", 32, true);
 		debugText.color = FlxColor.WHITE;
+		debugText.font = Util.getFont("vcr");
 		add(debugText);
 		
 		// camera shit
@@ -227,6 +230,9 @@ class PlayState extends BasicState
 				opponentIcon.animation.curAnim.curFrame = 2;
 			else
 				opponentIcon.animation.curAnim.curFrame = 0;
+
+		// coolness B)
+		inputFunction();
 		
 		super.update(elapsed);
 	}
@@ -285,6 +291,42 @@ class PlayState extends BasicState
 			health += 0.023; // health you gain for hitting a note
 		} else { 
 			health -= 0.0475; // health you lose for getting a "SHIT" rating or missing a note
+		}
+	}
+
+	function inputFunction()
+	{
+		var testBinds:Array<String> = ["LEFT","DOWN","UP","RIGHT"];
+		var testBindsAlt:Array<String> = ["A","S","W","D"];
+
+		var justPressed:Array<Bool> = [];
+		var pressed:Array<Bool> = [];
+		var released:Array<Bool> = [];
+
+		for(i in 0...testBinds.length)
+		{
+			justPressed[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBinds[i]), FlxInputState.JUST_PRESSED);
+			pressed[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBinds[i]), FlxInputState.PRESSED);
+			released[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBinds[i]), FlxInputState.RELEASED);
+
+			if(released[i] == true)
+			{
+				justPressed[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBindsAlt[i]), FlxInputState.JUST_PRESSED);
+				pressed[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBindsAlt[i]), FlxInputState.PRESSED);
+				released[i] = FlxG.keys.checkStatus(FlxKey.fromString(testBindsAlt[i]), FlxInputState.RELEASED);
+			}
+		}
+
+		for(i in 0...justPressed.length)
+		{
+			if(justPressed[i])
+				playerStrumArrows.members[i].playAnim("tap", true);
+		}
+
+		for(i in 0...released.length)
+		{
+			if(released[i])
+				playerStrumArrows.members[i].playAnim("strum");
 		}
 	}
 }

@@ -1,6 +1,5 @@
 package ui;
 
-import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -11,9 +10,11 @@ class CountdownSprite extends FlxSprite {
 	public function new(countdownStr:String, pixel:Bool = false)
 	{
 		super();
+
 		if(pixel) {
 			filePath = 'countdown/pixel/';
 		}
+
 		loadGraphic(Util.getImage(filePath + countdownStr));
 		screenCenter();
 		scrollFactor.set();

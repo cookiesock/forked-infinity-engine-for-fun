@@ -1,11 +1,9 @@
 
 package;
 
+import ui.SimpleInfoDisplay;
 import flixel.FlxG;
 import flixel.FlxGame;
-import flixel.FlxState;
-import openfl.Assets;
-import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 
@@ -17,6 +15,8 @@ class Main extends Sprite
 {
 	var fpsVar:FPS;
 	var framerate:Int = 60;
+
+	public static var display:SimpleInfoDisplay;
 	
 	public function new()
 	{
@@ -24,8 +24,8 @@ class Main extends Sprite
 		addChild(new FlxGame(1280, 720, menus.TitleScreenState, 1, framerate, framerate, true, false));
 		
 		#if !mobile
-		fpsVar = new FPS(10, 3, 0xFFFFFF);
-		addChild(fpsVar);
+		display = new SimpleInfoDisplay(10, 3, 0xFFFFFF, "_sans");
+		addChild(display);
 		#end
 		
 		#if html5

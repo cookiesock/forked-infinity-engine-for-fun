@@ -91,7 +91,9 @@ class StrumArrow extends FlxSprite {
 	
 	public function playAnim(anim:String, ?force:Bool = false) {
 		animation.play(anim, force);
+		
 		centerOffsets();
+
 		if(animation.curAnim.name == 'confirm' && !isPixel) {
 			centerOrigin();
 		}

@@ -44,9 +44,9 @@ class Util
 		var png = filePath;
 		
 		if (fromImagesFolder)
-		{
 			png = "assets/images/" + png;
-		}
+		else
+			png = "assets/" + png;
 
 		return png + '.png';
 	}
@@ -61,6 +61,12 @@ class Util
 			base += "music/";
 
 		return base + filePath + soundExt;
+	}
+
+	// haha leather goes coding---
+	static public function getFont(fileName:String, ?fileExtension:String = "ttf")
+	{
+		return "assets/fonts/" + fileName + "." + fileExtension;
 	}
 
 	/*static public function getSongPath(songPath:String) {
