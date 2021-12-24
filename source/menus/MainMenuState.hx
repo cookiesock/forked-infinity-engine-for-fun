@@ -106,7 +106,7 @@ class MainMenuState extends BasicState
 			
 			switch swagMenuButtons[selectedMenu]{
 				case "StoryMode":
-					FlxG.switchState(new game.PlayState());
+					FlxG.switchState(new game.PlayState("test", "normal"));
 				case "Credits":
 					FlxG.switchState(new menus.CreditsState());
 				case "Freeplay":
