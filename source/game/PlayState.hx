@@ -2,7 +2,6 @@ package game;
 
 import flixel.system.FlxSound;
 import flixel.util.FlxSort;
-import flixel.util.FlxSort;
 import ui.Icon;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.util.FlxTimer;
