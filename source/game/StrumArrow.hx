@@ -35,6 +35,7 @@ class StrumArrow extends FlxSprite {
 			
 			antialiasing = true;
 			setGraphicSize(Std.int(width * 0.7));
+			updateHitbox();
 			
 			switch(Math.abs(noteID % 4))
 			{
@@ -63,6 +64,7 @@ class StrumArrow extends FlxSprite {
 			
 			antialiasing = false;
 			setGraphicSize(Std.int(width * PlayState.pixelAssetZoom));
+			updateHitbox();
 			
 			switch(Math.abs(noteID % 4))
 			{
@@ -85,7 +87,6 @@ class StrumArrow extends FlxSprite {
 			}
 		}
 		
-		updateHitbox();
 		playAnim('strum', true);
 
 		scrollFactor.set(0,0);
@@ -94,11 +95,12 @@ class StrumArrow extends FlxSprite {
 	public function playAnim(anim:String, ?force:Bool = false) {
 		animation.play(anim, force);
 		
-		centerOffsets();
+		updateHitbox();
 
-		if(animation.curAnim.name == 'confirm' && !isPixel) {
-			centerOrigin();
-		}
+		centerOrigin();
+
+		if(!isPixel)
+			centerOffsets();
 	}
 	
 	override public function update(elapsed:Float) {
@@ -109,9 +111,11 @@ class StrumArrow extends FlxSprite {
 				resetAnim = 0;
 			}
 		}
+
 		if(animation.curAnim.name == 'confirm' && !isPixel) {
 			centerOrigin();
 		}
+		
 		super.update(elapsed);
 	}
 }

@@ -12,14 +12,19 @@ class Note extends FlxSprite {
 	var resetAnim:Float = 0;
 	var noteskin:String = 'default';
 	var isPixel:Bool = false;
-	var noteID:Int = 0;
+	public var noteID:Int = 0;
 
-	public function new(x, y, noteID:Int = 0, ?noteskin:String = 'default')
+	public var strum:Float = 0.0;
+	public var mustPress:Bool = false;
+
+	public function new(x, y, noteID:Int = 0, ?strum:Float, ?mustPress:Bool, ?noteskin:String = 'default')
 	{
 		super(x, y);
 
 		this.noteskin = noteskin;
 		this.noteID = noteID;
+		this.strum = strum;
+		this.mustPress = mustPress;
 		
 		loadNoteShit(this.noteskin);
 	}
@@ -34,6 +39,7 @@ class Note extends FlxSprite {
 			
 			antialiasing = true;
 			setGraphicSize(Std.int(width * 0.7));
+			updateHitbox();
 			
 			switch(Math.abs(noteID % 4))
 			{
@@ -62,6 +68,7 @@ class Note extends FlxSprite {
 			
 			antialiasing = false;
 			setGraphicSize(Std.int(width * PlayState.pixelAssetZoom));
+			updateHitbox();
 			
 			switch(Math.abs(noteID % 4))
 			{
@@ -84,18 +91,14 @@ class Note extends FlxSprite {
 			}
 		}
 		
-		updateHitbox();
 		playAnim('strum', true);
 	}
 	
 	public function playAnim(anim:String, ?force:Bool = false) {
 		animation.play(anim, force);
 		
-		centerOffsets();
-
-		if(animation.curAnim.name == 'confirm' && !isPixel) {
-			centerOrigin();
-		}
+		//centerOrigin();
+		//centerOffsets();
 	}
 	
 	override public function update(elapsed:Float) {

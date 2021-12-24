@@ -1,5 +1,7 @@
 package game;
 
+import flixel.util.FlxSort;
+import flixel.util.FlxSort;
 import ui.Icon;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.util.FlxTimer;
@@ -42,6 +44,8 @@ class PlayState extends BasicState
 	// arrow shit
 	var opponentStrumArrows:FlxTypedGroup<StrumArrow>;
 	var playerStrumArrows:FlxTypedGroup<StrumArrow>;
+	var notes:Array<Note> = [];
+
 	var strumArea:FlxSprite;
 	
 	// camera shit
@@ -66,6 +70,8 @@ class PlayState extends BasicState
 
 	var song:Song;
 
+	var downscroll:Bool = true;
+
 	override public function create()
 	{
 		if (FlxG.sound.music != null) {
@@ -85,7 +91,7 @@ class PlayState extends BasicState
 		FlxCamera.defaultCameras = [gameCam];
 		FlxG.camera.zoom = stageCamZoom;
 
-		song = Util.getJsonContents('assets/songs/tutorial/hard.json').song;
+		song = Util.getJsonContents('assets/songs/freedom dive/normal.json').song;
 		
 		// commented out speakers/gf because my pc sucks rn - swordcube
 		// that should hopefully no longer be the case on christmas - also swordcube
@@ -112,6 +118,10 @@ class PlayState extends BasicState
 		// arrow shit
 		strumArea = new FlxSprite(0, 50);
 		strumArea.visible = false;
+
+		if(downscroll)
+			strumArea.y = FlxG.height - 150;
+
 		add(strumArea);
 		
 		opponentStrumArrows = new FlxTypedGroup<StrumArrow>();
@@ -139,10 +149,13 @@ class PlayState extends BasicState
 		}
 		
 		// health bar shit
-		healthBarBG = new FlxSprite(0, FlxG.height - 90).loadGraphic(Util.getImage('healthBar'));
+		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Util.getImage('healthBar'));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
+
+		if(downscroll)
+			healthBarBG.y = 60;
 		
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
@@ -175,6 +188,9 @@ class PlayState extends BasicState
 		playerIcon.cameras = [hudCam];
 		debugText.cameras = [otherCam];
 
+		if(song.chartOffset == null)
+			song.chartOffset = 0;
+
 		for(section in song.notes)
 		{
 			for(songNotes in section.sectionNotes)
@@ -195,11 +211,16 @@ class PlayState extends BasicState
 				else
 					oldNote = null;*/
 
-				var swagNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData);
+				var swagNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime, gottaHitNote);
 				swagNote.scrollFactor.set(0,0);
+				swagNote.cameras = [hudCam];
 				add(swagNote);
+
+				notes.push(swagNote);
 			}
 		}
+
+		notes.sort(sortByShit);
 		
 		super.create();
 	}
@@ -263,6 +284,50 @@ class PlayState extends BasicState
 
 		// coolness B)
 		inputFunction();
+
+		var speed = song.speed;
+
+		for(note in notes)
+		{
+			if(note.mustPress)
+			{
+				if(downscroll)
+					note.y = playerStrumArrows.members[note.noteID].y + (0.45 * (FlxG.sound.music.time - note.strum) * FlxMath.roundDecimal(speed, 2));
+				else
+					note.y = playerStrumArrows.members[note.noteID].y - (0.45 * (FlxG.sound.music.time - note.strum) * FlxMath.roundDecimal(speed, 2));
+			}
+			else
+			{
+				if(downscroll)
+					note.y = opponentStrumArrows.members[note.noteID].y + (0.45 * (FlxG.sound.music.time - note.strum) * FlxMath.roundDecimal(speed, 2));
+				else
+					note.y = opponentStrumArrows.members[note.noteID].y - (0.45 * (FlxG.sound.music.time - note.strum) * FlxMath.roundDecimal(speed, 2));
+
+				if(FlxG.sound.music.time >= note.strum)
+				{
+					notes.remove(note);
+					note.kill();
+					note.destroy();
+
+					opponentStrumArrows.members[note.noteID].playAnim("confirm", true);
+
+					opponentStrumArrows.members[note.noteID].animation.finishCallback = function(name:String) {
+						if(name == "confirm")
+							opponentStrumArrows.members[note.noteID].playAnim("strum", true);
+					};
+				}
+			}
+
+			if(FlxG.sound.music.time - (166 * 2) >= note.strum)
+			{
+				if(note.mustPress)
+					changeHealth(false);
+
+				notes.remove(note);
+				note.kill();
+				note.destroy();
+			}
+		}
 		
 		super.update(elapsed);
 	}
@@ -309,7 +374,7 @@ class PlayState extends BasicState
 					add(countdown1);
 				case 4:
 					countdownStarted = false;
-					FlxG.sound.playMusic(Util.getInst("tutorial"));
+					FlxG.sound.playMusic(Util.getInst("freedom dive"));
 			}
 		}
 		
@@ -328,10 +393,15 @@ class PlayState extends BasicState
 		}
 	}
 
+	function sortByShit(Obj1:Note, Obj2:Note):Int
+	{
+		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strum, Obj2.strum);
+	}
+
 	function inputFunction()
 	{
 		var testBinds:Array<String> = ["LEFT","DOWN","UP","RIGHT"];
-		var testBindsAlt:Array<String> = ["A","S","W","D"];
+		var testBindsAlt:Array<String> = ["D","F","J","K"];
 
 		var justPressed:Array<Bool> = [];
 		var pressed:Array<Bool> = [];
@@ -361,6 +431,30 @@ class PlayState extends BasicState
 		{
 			if(released[i])
 				playerStrumArrows.members[i].playAnim("strum");
+		}
+
+		var dontHitTheseDirectionsLol:Array<Bool> = [false, false, false, false];
+
+		for(note in notes)
+		{
+			if(note.mustPress)
+			{
+				if(FlxG.sound.music.time >= note.strum - 166)
+				{
+					if(justPressed[note.noteID] && !dontHitTheseDirectionsLol[note.noteID])
+					{
+						notes.remove(note);
+						note.kill();
+						note.destroy();
+
+						playerStrumArrows.members[note.noteID].playAnim("confirm", true);
+
+						dontHitTheseDirectionsLol[note.noteID] = true;
+
+						changeHealth(true);
+					}
+				}
+			}
 		}
 	}
 }
