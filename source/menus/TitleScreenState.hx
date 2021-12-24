@@ -22,6 +22,8 @@ class TitleScreenState extends BasicState
 
 	override public function create():Void
 	{
+		Options.init();
+		
 		persistentUpdate = true;
 		persistentDraw = true;
 
