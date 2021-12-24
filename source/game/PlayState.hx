@@ -64,6 +64,8 @@ class PlayState extends BasicState
 	var countdownStarted:Bool = true;
 	var countdownNum:Int = -1;
 
+	var song:Song;
+
 	override public function create()
 	{
 		if (FlxG.sound.music != null) {
@@ -82,6 +84,8 @@ class PlayState extends BasicState
 
 		FlxCamera.defaultCameras = [gameCam];
 		FlxG.camera.zoom = stageCamZoom;
+
+		song = Util.getJsonContents('assets/songs/tutorial/hard.json').song;
 		
 		// commented out speakers/gf because my pc sucks rn - swordcube
 		// that should hopefully no longer be the case on christmas - also swordcube
@@ -170,6 +174,32 @@ class PlayState extends BasicState
 		opponentIcon.cameras = [hudCam];
 		playerIcon.cameras = [hudCam];
 		debugText.cameras = [otherCam];
+
+		for(section in song.notes)
+		{
+			for(songNotes in section.sectionNotes)
+			{
+				var daStrumTime:Float = songNotes[0] + song.chartOffset;
+				var daNoteData:Int = Std.int(songNotes[1] % 4);
+
+				var gottaHitNote:Bool = section.mustHitSection;
+
+				if(songNotes[1] >= 4)
+					gottaHitNote = !section.mustHitSection;
+
+				/*
+				var oldNote:Note;
+
+				if (unspawnNotes.length > 0)
+					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+				else
+					oldNote = null;*/
+
+				var swagNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData);
+				swagNote.scrollFactor.set(0,0);
+				add(swagNote);
+			}
+		}
 		
 		super.create();
 	}
@@ -253,7 +283,9 @@ class PlayState extends BasicState
 			opponentIcon.updateHitbox();
 		} else {
 			countdownNum += 1;
+
 			var filePath:String = 'countdown/normal/';
+
 			if(pixelStage) filePath = 'countdown/pixel/';
 			
 			switch(countdownNum)
