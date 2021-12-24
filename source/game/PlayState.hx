@@ -2,6 +2,7 @@ package game;
 
 import flixel.util.FlxSort;
 import flixel.util.FlxSort;
+import ui.Icon;
 import flixel.input.FlxInput.FlxInputState;
 import flixel.util.FlxTimer;
 import flixel.FlxG;
@@ -17,7 +18,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import lime.utils.Assets;
 import openfl.Assets;
 import game.StrumArrow;
-import hud.CharIcon;
+import ui.Icon;
 import ui.CountdownSprite;
 
 using StringTools;
@@ -163,13 +164,12 @@ class PlayState extends BasicState
 		add(healthBar);
 		
 		// health bar icons
-		opponentIcon = new CharIcon('dad');
+		opponentIcon = new Icon('characters/images/dad/icons', false);
 		opponentIcon.y = healthBar.y - (opponentIcon.height / 2);
 		add(opponentIcon);
 		
-		playerIcon = new CharIcon('bf');
+		playerIcon = new Icon('characters/images/bf/icons', true);
 		playerIcon.y = healthBar.y - (playerIcon.height / 2);
-		playerIcon.flipX = true;
 		add(playerIcon);
 		
 		// debug shit
