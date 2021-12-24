@@ -9,12 +9,15 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.math.FlxMath;
 
 class MainMenuState extends BasicState
 {
 	var menuBG:FlxSprite;
 	var menuBGMagenta:FlxSprite;
+	
 	var camFollow:FlxObject;
+	var camFollowPos:FlxObject;
 
 	var selectedMenu:Int = 0;
 	var menuButtons:FlxTypedGroup<FlxSprite>;
@@ -25,10 +28,9 @@ class MainMenuState extends BasicState
 	{
 		TitleScreenState.hasAlreadyAccepted = true;
 		
-		camFollow = new FlxObject();
+		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
-		FlxG.camera.follow(camFollow, FlxCameraFollowStyle.NO_DEAD_ZONE, 9);
-		menuBG = new FlxSprite(-80).loadGraphic('assets/images/menuBG.png');
+		menuBG = new FlxSprite(-80).loadGraphic(Util.getImage('menuBG'));
 		menuBG.scrollFactor.x = 0;
 		menuBG.scrollFactor.y = 0.18;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.175));
@@ -37,7 +39,7 @@ class MainMenuState extends BasicState
 		menuBG.antialiasing = true;
 		add(menuBG);
 
-		menuBGMagenta = new FlxSprite(-80).loadGraphic('assets/images/menuBGMagenta.png');
+		menuBGMagenta = new FlxSprite(-80).loadGraphic(Util.getImage('menuDesat'));
 		menuBGMagenta.scrollFactor.x = 0;
 		menuBGMagenta.scrollFactor.y = 0.18;
 		menuBGMagenta.setGraphicSize(Std.int(menuBGMagenta.width * 1.175));
@@ -45,7 +47,7 @@ class MainMenuState extends BasicState
 		menuBGMagenta.screenCenter();
 		menuBGMagenta.visible = false;
 		menuBGMagenta.antialiasing = true;
-		menuBGMagenta.color = 0xFFfd719b;
+		menuBGMagenta.color = 0xFFfd719b; // <<<<< this is here for a reason, changed the image back to menuDesat because of this
 		add(menuBGMagenta);
 
 		menuButtons = new FlxTypedGroup<FlxSprite>();
@@ -65,12 +67,27 @@ class MainMenuState extends BasicState
 			menuButtons.add(menuButton);
 		}
 		changeSelection();
+		
+		camFollow = new FlxObject(0, 0, 1, 1);
+		camFollowPos = new FlxObject(0, 0, 1, 1);
+		add(camFollow);
+		add(camFollowPos);
+		
+		FlxG.camera.follow(camFollowPos, null, 1);
+	
 		super.create();
-		camFollow.screenCenter();
 	}
 
 	override public function update(elapsed:Float)
 	{
+		if (FlxG.sound.music.volume < 0.8)
+		{
+			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
+		}
+		
+		var lerpVal:Float = Util.boundTo(elapsed * 5.6, 0, 1);
+		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
+		
 		for (i in 0...swagMenuButtons.length)
 		{
 			var btn:FlxSprite = menuButtons.members[i];
@@ -125,7 +142,7 @@ class MainMenuState extends BasicState
 				btn.animation.play('selected');
 				btn.offset.x = 0.15 * (btn.frameWidth / 2 + 180);
 				btn.offset.y = 0.15 * btn.frameHeight;
-				camFollow.setPosition(btn.x, btn.y);
+				camFollow.setPosition(btn.getGraphicMidpoint().x, btn.getGraphicMidpoint().y);
 			}
 		}
 		

@@ -17,7 +17,8 @@ class TitleScreenState extends BasicState
 	var pressAccept:FlxSprite;
 	
 	// static vars
-	static public var hasAlreadyAccepted:Bool = false;
+	static public var hasAlreadyAccepted:Bool = false; // controls music
+	var accepted:Bool = false; // controls the ability to spam enter lol
 
 	override public function create():Void
 	{
@@ -57,10 +58,11 @@ class TitleScreenState extends BasicState
 
 	override public function update(elapsed:Float):Void
 	{
-		if (FlxG.keys.justPressed.ENTER)
+		if (FlxG.keys.justPressed.ENTER && !accepted)
 		{
 			FlxG.sound.play(Util.getSound("menus/confirmMenu", true));
 			hasAlreadyAccepted = true; // prevents title music from restarting if it's already playing
+			accepted = true; // prevents spamming enter
 			// there's probably a better way to do this but i don't give a shi
 
 			pressAccept.animation.play('pressed');

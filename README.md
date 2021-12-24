@@ -8,7 +8,7 @@ Made by 3 people literally out of pure boredom, Aiming to recreate the entirety 
 - Raf - Project Owner, Coder and Artist ([GitHub](https://github.com/RafaelGiacom)) ([GameJolt](https://gamejolt.com/@RafaelGiacom)) ([GameBanana](https://gamebanana.com/members/1739332))
 - SwordCube - idiot, Artist ([GitHub](https://github.com/swordcube)) ([GameJolt](https://gamejolt.com/@swordcube)) ([Twitter](https://twitter.com/swordcube))
 - ZonianDX - Coder, Gamer 😎, Artist ([GitHub](https://github.com/timeless13GH)) ([Twitter](https://twitter.com/ZonianDX)) ([GameBanana](https://gamebanana.com/members/2029461))
-- Leather128 - Coder but the best out of the 3 ([GitHub](https://github.com/Leather128)) ([GameBanana](https://gamebanana.com/members/1799813)) ([Itch.io](https://leather128.itch.io/))
+- Leather128 - Coder but the best out of the 3 ([GitHub](https://github.com/Leather128)) ([GameBanana](https://gamebanana.com/members/1799813)) ([Itch.io](https://leather128.itch.io/)) ([YouTube](https://www.youtube.com/channel/UCbCtO-ghipZessWaOBx8u1g))
 
 
 ## To-Do List

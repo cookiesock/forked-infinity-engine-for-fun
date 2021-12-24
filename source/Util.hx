@@ -36,17 +36,48 @@ class Util
 
 		return FlxAtlasFrames.fromSparrow(png + ".png", xml + ".xml");
 	}
+	
+	static public function getImage(filePath:String, ?fromImagesFolder:Bool = true)
+	// this is so i can grab images without having to rembr that i have to put a .png at the end
+	// - swordcube
+	{
+		var png = filePath;
+		
+		if (fromImagesFolder)
+			png = "assets/images/" + png;
+		else
+			png = "assets/" + png;
 
-	static public function getSound(filePath:String, ?fromSoundsFolder:Bool = true)
+		return png + '.png';
+	}
+
+	static public function getSound(filePath:String, ?fromSoundsFolder:Bool = true, ?useUrOwnFolderLmfao:Bool = false)
 	{
 		var base:String = "assets/";
 
-		if(fromSoundsFolder)
-			base += "sounds/";
-		else
-			base += "music/";
+		if(!useUrOwnFolderLmfao)
+		{
+			if(fromSoundsFolder)
+				base += "sounds/";
+			else
+				base += "music/";
+		}
 
 		return base + filePath + soundExt;
+	}
+
+	// haha leather goes coding---
+	static public function getFont(fileName:String, ?fileExtension:String = "ttf")
+	{
+		return "assets/fonts/" + fileName + "." + fileExtension;
+	}
+
+	static public function getInst(songName:String) {
+		return getSound("songs/" + songName.toLowerCase() + "/Inst", false, true);
+	}
+
+	static public function getVoices(songName:String) {
+		return getSound("songs/" + songName.toLowerCase() + "/Voices", false, true);
 	}
 
 	/*static public function getSongPath(songPath:String) {
@@ -60,6 +91,13 @@ class Util
 		#else
 		FlxG.openURL(url);
 		#end
+	}
+	
+	public static function boundTo(value:Float, min:Float, max:Float):Float {
+		var newValue:Float = value;
+		if(newValue < min) newValue = min;
+		else if(newValue > max) newValue = max;
+		return newValue;
 	}
 }
 

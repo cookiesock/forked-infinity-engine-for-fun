@@ -78,12 +78,24 @@ class AlphabetCharacter extends FlxSprite
 
         frames = Util.getSparrow("Alphabet");
 
-        if(numbers.split("").contains(character))
-            animation.addByPrefix("default", (bold ? "bold" : "") + character.toUpperCase() + "0", 24);
-        else if(alphabet.split("").contains(character))
-            animation.addByPrefix("default", character.toUpperCase() + (bold ? " bold0" : "0"), 24);
+        if(bold)
+        {
+            if(numbers.split("").contains(character))
+                animation.addByPrefix("default", "bold" + character.toUpperCase() + "0", 24);
+            else if(alphabet.split("").contains(character))
+                animation.addByPrefix("default", character.toUpperCase() + " bold0", 24);
+            else
+                animation.addByPrefix("default", "bold " + character.toUpperCase() + "0", 24);
+        }
         else
-            animation.addByPrefix("default", (bold ? "bold " : "") + character.toUpperCase() + "0", 24);
+        {
+            var lowercase = character.toLowerCase() == character;
+
+            if(alphabet.split("").contains(character.toLowerCase()))
+                animation.addByPrefix("default", character + (lowercase ? " lowercase0" : " capital0"), 24);
+            else
+                animation.addByPrefix("default", character + "0", 24);
+        }
 
         animation.play("default", true);
 

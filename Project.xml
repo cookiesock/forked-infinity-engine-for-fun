@@ -39,6 +39,7 @@
 	<assets path="assets/music" />
 	<assets path="assets/stages" />
 	<assets path="assets/characters" />
+	<assets path="assets/songs" />
 
 	<assets path="assets/fonts" embed='true'/>
 	<!-- _______________________________ Libraries ______________________________ -->
@@ -51,7 +52,6 @@
 
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
-	<haxelib name="faxe" if='switch'/>
 	<haxelib name="polymod"/>
 
 	<!--In case you want to use nape with flixel-->

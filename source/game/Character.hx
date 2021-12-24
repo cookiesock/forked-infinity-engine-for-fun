@@ -1,23 +1,22 @@
 package game;
 
-import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.util.FlxColor;
 
 class Character extends FlxSprite {
-    var name = "bf";
-    var json:Dynamic;
-    var anims:Array<Dynamic> = [];
-    var offsetMap:Map<String, Array<Int>> = [];
-    var camOffsets:Array<Int> = [0,0];
-    var healthColor:Int = FlxColor.WHITE;
-    var bopLeftRight:Bool = false;
-    var bopDirection:Int = 0;
+    public var name = "bf";
+    public var json:Dynamic;
+    public var anims:Array<Dynamic> = [];
+    public var offsetMap:Map<String, Array<Int>> = [];
+    public var camOffsets:Array<Int> = [0,0];
+    public var healthColor:Int = FlxColor.WHITE;
+    public var bopLeftRight:Bool = false;
+    public var bopDirection:Int = 0;
 
     public function new(x, y, name)
     {
         super(x, y);
+
         this.name = name;
 
         json = Util.getJsonContents('assets/characters/$name.json');
@@ -25,6 +24,7 @@ class Character extends FlxSprite {
 
         scale.set(json.scale, json.scale);
         updateHitbox();
+
         flipX = json.flip_x;
         antialiasing = !json.no_antialiasing;
         camOffsets = json.camera_position;
@@ -50,10 +50,12 @@ class Character extends FlxSprite {
     override public function update(elapsed) {
         super.update(elapsed);
     }
+
     public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0) {
         animation.play(AnimName, Force, Reversed, Frame);
         offset.set(offsetMap[AnimName][0], offsetMap[AnimName][1]);
     }
+
     public function dance() {
         if (bopLeftRight == true) {
             if (bopDirection == 0) {
@@ -61,10 +63,12 @@ class Character extends FlxSprite {
             } else {
                 playAnim('danceRight', true);
             }
+
             bopDirection = (bopDirection + 1) % 2;
         }
+
         if (bopLeftRight == false) {
-            playAnim('idle', true);
+            playAnim('idle');
         }
     }
 }
