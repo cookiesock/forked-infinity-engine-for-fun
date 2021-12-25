@@ -26,10 +26,7 @@ class Character extends FlxSprite {
 
         json = Util.getJsonContents('assets/characters/$name.json');
 
-        if(json.packerLol != true)
-            frames = Util.getSparrow('assets/characters/images/$name/assets', false);
-        else
-            frames = Util.getPacker('assets/characters/images/$name/assets', false);
+        frames = Util.getSparrow('assets/characters/images/$name/assets', false);
 
         scale.set(json.scale, json.scale);
         updateHitbox();

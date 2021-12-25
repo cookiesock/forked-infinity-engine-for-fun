@@ -76,7 +76,7 @@ class FreeplayMenuState extends BasicState
         add(box);
 
         scoreText = new FlxText(0,0,0,"PERSONAL BEST: 0", 32);
-        scoreText.setFormat(Util.getFont("vcr"), 32, FlxColor.WHITE, RIGHT);
+        scoreText.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, RIGHT);
         add(scoreText);
 
         difText = new FlxText(0, scoreText.y + scoreText.height + 2, 0, "> Normal <", 24);
@@ -94,7 +94,7 @@ class FreeplayMenuState extends BasicState
         {
             var songData = songs[songDataIndex];
 
-            var alphabet = new AlphabetText(0, 0, true, songData.songName);
+            var alphabet = new AlphabetText(0, 0, songData.songName);
             alphabet.targetY = songDataIndex;
             alphabet.isMenuItem = true;
 

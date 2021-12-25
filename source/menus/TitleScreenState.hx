@@ -7,6 +7,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
+using flixel.util.FlxSpriteUtil;
 
 // no raf i don't fucking know what "from scratch" means - swordcube
 class TitleScreenState extends BasicState
@@ -22,6 +23,11 @@ class TitleScreenState extends BasicState
 
 	override public function create():Void
 	{
+		var sprite = new FlxSprite();
+		sprite.makeGraphic(15, 15, FlxColor.TRANSPARENT);
+		sprite.drawCircle();
+		FlxG.mouse.load(sprite.pixels);
+
 		Options.init();
 		
 		persistentUpdate = true;
@@ -58,14 +64,15 @@ class TitleScreenState extends BasicState
 		pressAccept.antialiasing = true;
 		add(pressAccept);
 
-		add(new AlphabetText(0, 0, true, "the quick brown fox jumps \nover the lazy dog\n\n1234567890\n\n!?.-", 35));
+		add(new AlphabetText(0, 100, '"the quick brown fox jumps \nover the lazy dog"\n\n1234567890\n\n!?.-+()*><&_\'', 35));
+		//add(new AlphabetText(0, 0, "&", 35));
 
 		super.create();
 	}
 
 	override public function update(elapsed:Float):Void
 	{
-		if (FlxG.keys.justPressed.ENTER && !accepted)
+		if (FlxG.keys.justPressed.ENTER && !accepted || Util.mouseOverlappingSprite(pressAccept) && FlxG.mouse.justPressed)
 		{
 			FlxG.sound.play(Util.getSound("menus/confirmMenu", true));
 			hasAlreadyAccepted = true; // prevents title music from restarting if it's already playing

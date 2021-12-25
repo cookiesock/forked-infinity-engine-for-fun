@@ -1,6 +1,7 @@
 
 package;
 
+import flixel.FlxSprite;
 import ui.SimpleInfoDisplay;
 import flixel.FlxG;
 import flixel.FlxGame;
@@ -29,7 +30,7 @@ class Main extends Sprite
 		
 		#if html5
 		FlxG.autoPause = false;
-		FlxG.mouse.visible = false;
+		//FlxG.mouse.visible = false;
 		#end
 	}
 }

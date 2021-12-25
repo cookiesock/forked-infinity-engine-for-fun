@@ -36,23 +36,6 @@ class Util
 
 		return FlxAtlasFrames.fromSparrow(png + ".png", xml + ".xml");
 	}
-
-	static public function getPacker(filePath:String, ?fromImagesFolder:Bool = true, ?xmlPath:String)
-	{
-		var png = filePath;
-		var xml = xmlPath;
-
-		if (xml == null)
-			xml = png;
-
-		if (fromImagesFolder)
-		{
-			png = "assets/images/" + png;
-			xml = "assets/images/" + xml;
-		}
-
-		return FlxAtlasFrames.fromSpriteSheetPacker(png + ".png", xml + ".txt");
-	}
 	
 	static public function getImage(filePath:String, ?fromImagesFolder:Bool = true)
 	// this is so i can grab images without having to rembr that i have to put a .png at the end
@@ -84,10 +67,6 @@ class Util
 	}
 
 	// haha leather goes coding---
-	static public function getFont(fileName:String, ?fileExtension:String = "ttf")
-	{
-		return "assets/fonts/" + fileName + "." + fileExtension;
-	}
 
 	static public function getInst(songName:String) {
 		return getSound("songs/" + songName.toLowerCase() + "/Inst", false, true);
@@ -129,6 +108,13 @@ class Util
 			newValue = max;
 		
 		return newValue;
+	}
+
+	public static function mouseOverlappingSprite(spr:FlxSprite) {
+		if (FlxG.mouse.x > spr.x && FlxG.mouse.x < spr.x+spr.width && FlxG.mouse.y > spr.y && FlxG.mouse.y < spr.y+spr.height)
+			return true;
+		else
+			return false;
 	}
 }
 

@@ -37,7 +37,7 @@ class BasicState extends FlxState
 	}
 
 	//transition
-	var transitionSpr:FlxSprite = new FlxSprite(0, 0, 'assets/images/transition');
+	var transitionSpr:FlxSprite = new FlxSprite(0, 0, 'assets/images/transition.png');
 
 	public function transitionState(close:Bool)
 	{

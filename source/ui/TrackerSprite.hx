@@ -38,19 +38,14 @@ class TrackerSprite extends FlxSprite
 	 * @param   Direction The `TrackerDirection` that the Tracker Sprite uses to determine what direction to track to.
 	 *
 	*/
-    public function new(?tracker:FlxSprite, ?xOff:Float, ?yOff:Float, ?dir:TrackerDirection)
+    public function new(?tracker:FlxSprite, ?xOff:Float = 10, ?yOff:Float = -30, ?dir:TrackerDirection = RIGHT)
     {
         if(tracker != null)
             sprTracker = tracker;
 
-        if(xOff != null)
-            xOffset = xOff;
-
-        if(yOff != null)
-            yOffset = yOff;
-
-        if(dir != null)
-            direction = dir;
+        xOffset = xOff;
+        yOffset = yOff;
+        direction = dir;
 
         super(x,y);
     }

@@ -257,7 +257,7 @@ class PlayState extends BasicState
 
 		debugText = new FlxText(0,0,FlxG.width, "", 32, true);
 		debugText.color = FlxColor.WHITE;
-		debugText.font = Util.getFont("vcr");
+		debugText.font = "assets/fonts/vcr.ttf";
 		add(debugText);
 		
 		// camera shit

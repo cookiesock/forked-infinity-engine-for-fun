@@ -13,6 +13,9 @@ import flixel.math.FlxMath;
 
 class MainMenuState extends BasicState
 {
+	var mouseOverlapped = false;
+	var mouseOverlappedBefore = false;
+
 	var menuBG:FlxSprite;
 	var menuBGMagenta:FlxSprite;
 	
@@ -67,7 +70,7 @@ class MainMenuState extends BasicState
 			menuButtons.add(menuButton);
 		}
 		changeSelection();
-		
+
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollowPos = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
@@ -122,7 +125,7 @@ class MainMenuState extends BasicState
 		super.update(elapsed);
 	}
 
-	function changeSelection(change:Int = 0)
+	function changeSelection(change:Int = 0, ?playsound = true)
 	{
 		selectedMenu += change;
 
@@ -148,6 +151,7 @@ class MainMenuState extends BasicState
 			}
 		}
 		
-		FlxG.sound.play('assets/sounds/menus/scrollMenu' + Util.soundExt);
+		if (playsound)
+			FlxG.sound.play('assets/sounds/menus/scrollMenu' + Util.soundExt);
 	}
 }
