@@ -5,11 +5,12 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.FlxG;
 
-var stupidY:Float = 0;
-var dumbPath:String = 'normal/';
-var isComboText:Bool = false;
+class ComboSprite extends FlxSprite
+{
+	public var stupidY:Float = 0;
+	var dumbPath:String = 'normal/';
+	var isComboText:Bool = false;
 
-class ComboSprite extends FlxSprite {
 	public function new(?x = 0, ?y = 0, ?isComboTextB:Bool = false)
 	{
 		stupidY = y;

@@ -259,9 +259,9 @@ class PlayState extends BasicState
 		for(i in 0...4) {
 			
 			var newComboNum:ComboSprite = new ComboSprite();
-			newComboNum.screenCenter();
 			newComboNum.x = funnyRating.x + 80 + i * 50;
-			newComboNum.y -= funnyRating.y;
+			newComboNum.y = funnyRating.y + 2;
+			newComboNum.stupidY = newComboNum.y;
 			newComboNum.alpha = 0;
 
 			comboGroup.add(newComboNum);
@@ -403,7 +403,7 @@ class PlayState extends BasicState
 		else
 			comboArray = [r.split(comboString)[2], r.split(comboString)[3], r.split(comboString)[4]];
 
-		debugText.text = curBeat + "\n" + curStep + "\n" + Conductor.songPosition + "\n" + FlxG.sound.music.time + '\nCombo: ' + comboArray[0] + comboArray[1] + comboArray[2] + comboArray[3];
+		debugText.text = curBeat + "\n" + curStep + "\n" + Conductor.songPosition + "\n" + FlxG.sound.music.time + '\nCombo: ' + comboArray[0] + comboArray[1] + comboArray[2];
 		
 		if(FlxG.keys.justPressed.BACKSPACE)
 		{
@@ -694,7 +694,7 @@ class PlayState extends BasicState
 			}
 			else
 			{
-				if(Conductor.songPosition - note.strum >= 0 && note.mustPress)
+				if(Conductor.songPosition * 1.5 - note.strum >= 0 && note.mustPress)
 					possibleNotes.push(note);
 			}
 		}
@@ -717,13 +717,13 @@ class PlayState extends BasicState
 
 					var sussyBallsRating:String = 'sick';
 
-					if(Math.abs(noteMs) > 100)
+					if(Math.abs(noteMs) > 50)
 						sussyBallsRating = 'good';
 
-					if(Math.abs(noteMs) > 150)
+					if(Math.abs(noteMs) > 70)
 						sussyBallsRating = 'bad';
 
-					if(Math.abs(noteMs) > 200)
+					if(Math.abs(noteMs) > 100)
 						sussyBallsRating = 'shit';
 
 					switch(sussyBallsRating) {
@@ -784,7 +784,7 @@ class PlayState extends BasicState
 				{
 					var note = possibleNotes[i];
 
-					if(note.strum >= noteDataTimes[note.noteID] && dontHitTheseDirectionsLol[note.noteID])
+					if(note.strum == noteDataTimes[note.noteID] && dontHitTheseDirectionsLol[note.noteID])
 					{
 						notes.remove(note);
 						note.kill();

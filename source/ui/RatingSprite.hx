@@ -4,10 +4,11 @@ import flixel.FlxSprite;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
-var stupidY:Float = 0;
-var dumbPath:String = 'normal/';
+class RatingSprite extends FlxSprite
+{
+	var stupidY:Float = 0;
+	var dumbPath:String = 'normal/';
 
-class RatingSprite extends FlxSprite {
 	public function new(x, y)
 	{
 		stupidY = y;
