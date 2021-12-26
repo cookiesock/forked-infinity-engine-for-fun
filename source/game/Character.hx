@@ -26,7 +26,13 @@ class Character extends FlxSprite {
 
         json = Util.getJsonContents('assets/characters/$name.json');
 
-        frames = Util.getSparrow('assets/characters/images/$name/assets', false);
+        if(!json.packerLol)
+            frames = Util.getSparrow('assets/characters/images/$name/assets', false);
+        else
+            frames = Util.getPacker('assets/characters/images/$name/assets', false); 
+
+        // SPIRIT FUCKING CRASHES THE GAME IF THIS IS REMOVED, EITHER RE-EXPORT HIM AS AN XML
+        // OR LEAVE HIM AS IS NOW, OTHERWISE THE GAME WILL CRASH
 
         scale.set(json.scale, json.scale);
         updateHitbox();

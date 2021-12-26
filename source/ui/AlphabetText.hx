@@ -58,7 +58,7 @@ class AlphabetText extends FlxSpriteGroup
                     startingX = 0;
 
                 case " ":
-                    startingX += (size*(size/70))*2;
+                    startingX += (size*(size/70))*0.5;
 
                 case "":
                     startingX += (size*(size/70))*100;
@@ -67,17 +67,17 @@ class AlphabetText extends FlxSpriteGroup
                     if (quoteAmount == Math.floor(quoteAmount/2)*2) {
                         var alphabetChar:AlphabetCharacter = new AlphabetCharacter('quoteb', curLine, i, startingX, size);
                         add(alphabetChar);
-                        startingX += alphabetChar.width + 8*(size/70);
+                        startingX += alphabetChar.width + 2.5*(size/70);
                     } else {
                         var alphabetChar:AlphabetCharacter = new AlphabetCharacter('quotea', curLine, i, startingX, size);
                         add(alphabetChar);
-                        startingX += alphabetChar.width + 8*(size/70);
+                        startingX += alphabetChar.width + 2.5*(size/70);
                     }
                     quoteAmount ++;
                 default:
                     var alphabetChar:AlphabetCharacter = new AlphabetCharacter(character, curLine, i, startingX, size);
                     add(alphabetChar);
-                    startingX += alphabetChar.width + 8*(size/70);
+                    startingX += alphabetChar.width + 2.5*(size/70);
             }
             /*
             if (character == "\n") {

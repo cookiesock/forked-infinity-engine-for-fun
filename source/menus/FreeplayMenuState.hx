@@ -114,6 +114,14 @@ class FreeplayMenuState extends BasicState
         if(FlxG.keys.justPressed.BACKSPACE)
             FlxG.switchState(new menus.MainMenuState());
 
+        if(FlxG.keys.justPressed.SPACE) {
+            if (FlxG.sound.music != null) {
+                FlxG.sound.music.stop();
+            }
+
+            // ples insert code here i can't be bothered rn
+        }
+
         var up = FlxG.keys.justPressed.UP;
         var down = FlxG.keys.justPressed.DOWN;
 
@@ -143,7 +151,7 @@ class FreeplayMenuState extends BasicState
         }
 
         if(FlxG.keys.justPressed.ENTER)
-            FlxG.switchState(new game.PlayState(songs[selectedSong].songName, selectedDifficulty));
+            FlxG.switchState(new game.PlayState(songs[selectedSong].songName.toLowerCase(), selectedDifficulty));
 
         var funnyObject:FlxText = scoreText;
 

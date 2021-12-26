@@ -1,5 +1,6 @@
 package game;
 
+import ui.RatingSprite;
 import flixel.FlxObject;
 import flixel.system.FlxSound;
 import flixel.util.FlxSort;
@@ -21,6 +22,7 @@ import openfl.Assets;
 import game.StrumArrow;
 import ui.Icon;
 import ui.CountdownSprite;
+import ui.RatingSprite;
 
 using StringTools;
 
@@ -38,7 +40,7 @@ class PlayState extends BasicState
 	
 	// stage shit
 	static public var stageCamZoom:Float = 0.9;
-	public var pixelStage:Bool = false;
+	static public var pixelStage:Bool = false;
 	static public var pixelAssetZoom:Float = 6.1;
 	//var stage:Stage;
 	
@@ -77,6 +79,9 @@ class PlayState extends BasicState
 
 	var downscroll:Bool = Options.DOWNSCROLL;
 	var botplay:Bool = Options.BOTPLAY;
+
+	// rating shit
+	var funnyRating:RatingSprite;
 
 	var speed:Float = 1;
 
@@ -132,8 +137,6 @@ class PlayState extends BasicState
 			case "senpai" | "roses" | "thorns":
 				if(song.gf == null)
 					song.gf = "gf-pixel";
-
-				pixelStage = true;
 			default:
 				if(song.gf == null)
 					song.gf = "gf";
@@ -152,6 +155,8 @@ class PlayState extends BasicState
 			default:
 				if(song.ui_Skin == null)
 					song.ui_Skin = "default";
+
+				pixelStage = false;
 		}
 
 		if(!song.player2.startsWith("gf"))
@@ -228,6 +233,10 @@ class PlayState extends BasicState
 				playerStrumArrows.add(theRealStrumArrow);
 			}
 		}
+
+		funnyRating = new RatingSprite(FlxG.width * 0.55, 100);
+		funnyRating.alpha = 0;
+		add(funnyRating);
 		
 		// health bar shit
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Util.getImage('healthBar'));
@@ -267,6 +276,7 @@ class PlayState extends BasicState
 		healthBar.cameras = [hudCam];
 		opponentIcon.cameras = [hudCam];
 		playerIcon.cameras = [hudCam];
+		funnyRating.cameras = [hudCam];
 		debugText.cameras = [otherCam];
 
 		if(song.chartOffset == null)
@@ -436,7 +446,7 @@ class PlayState extends BasicState
 
 			if(!countdownStarted)
 			{
-				if(Conductor.songPosition - Conductor.safeZoneOffset > note.strum && note != null)
+				if(Conductor.songPosition - Conductor.safeZoneOffset * 1.5 > note.strum && note != null)
 				{
 					if(note.mustPress)
 					{
@@ -647,6 +657,20 @@ class PlayState extends BasicState
 					var noteMs = Conductor.songPosition - note.strum;
 					trace(noteMs + " ms");
 
+					var sussyBallsRating:String = 'sick';
+
+					if(Math.abs(noteMs) > 100)
+						sussyBallsRating = 'good';
+
+					if(Math.abs(noteMs) > 150)
+						sussyBallsRating = 'bad';
+
+					if(Math.abs(noteMs) > 200)
+						sussyBallsRating = 'shit';
+
+					funnyRating.loadRating(sussyBallsRating);
+					funnyRating.tweenRating();
+
 					noteDataTimes[note.noteID] = note.strum;
 
 					if(vocals != null)
@@ -674,7 +698,7 @@ class PlayState extends BasicState
 				{
 					var note = possibleNotes[i];
 
-					if(note.strum == noteDataTimes[note.noteID] && dontHitTheseDirectionsLol[note.noteID])
+					if(note.strum >= noteDataTimes[note.noteID] && dontHitTheseDirectionsLol[note.noteID])
 					{
 						notes.remove(note);
 						note.kill();
