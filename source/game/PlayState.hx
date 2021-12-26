@@ -23,6 +23,7 @@ import game.StrumArrow;
 import ui.Icon;
 import ui.CountdownSprite;
 import ui.RatingSprite;
+import ui.ComboSprite;
 
 using StringTools;
 
@@ -72,6 +73,13 @@ class PlayState extends BasicState
 	
 	var opponentHealthColor:Int = 0xFFAF66CE;
 	var playerHealthColor:Int = 0xFF31B0D1;
+
+	// score shit
+	static public var score:Int = 0;
+	static public var misses:Int = 0;
+	static public var combo:Int = 0;
+
+	static public var comboArray:Array<Dynamic> = [];
 	
 	// countdown shit
 	var countdownStarted:Bool = true;
@@ -82,7 +90,9 @@ class PlayState extends BasicState
 
 	// rating shit
 	var funnyRating:RatingSprite;
+	var comboGroup:FlxTypedGroup<ComboSprite>;
 
+	// song config shit
 	var speed:Float = 1;
 
 	public function new(?songName:String, ?difficulty:String)
@@ -107,6 +117,10 @@ class PlayState extends BasicState
 		if (FlxG.sound.music != null) {
 			FlxG.sound.music.stop();
 		}
+
+		score = 0;
+		misses = 0;
+		combo = 0;
 			
 		gameCam = new FlxCamera();
 		hudCam = new FlxCamera();
@@ -118,7 +132,8 @@ class PlayState extends BasicState
 		FlxG.cameras.add(hudCam);
 		FlxG.cameras.add(otherCam);
 
-		FlxCamera.defaultCameras = [gameCam];
+		FlxCamera.defaultCameras = [gameCam]; //- deprecated but needs to be used
+		//FlxG.cameras.setDefaultDrawTarget(gameCam, false); // not deprecated but literally breaks everything
 		FlxG.camera.zoom = stageCamZoom;
 
 		speed = song.speed;
@@ -234,9 +249,23 @@ class PlayState extends BasicState
 			}
 		}
 
-		funnyRating = new RatingSprite(FlxG.width * 0.55, 100);
+		funnyRating = new RatingSprite(FlxG.width * 0.55, 300);
 		funnyRating.alpha = 0;
 		add(funnyRating);
+
+		comboGroup = new FlxTypedGroup<ComboSprite>();
+		add(comboGroup);
+
+		for(i in 0...4) {
+			
+			var newComboNum:ComboSprite = new ComboSprite();
+			newComboNum.screenCenter();
+			newComboNum.x = funnyRating.x + 80 + i * 50;
+			newComboNum.y -= funnyRating.y;
+			newComboNum.alpha = 0;
+
+			comboGroup.add(newComboNum);
+		}
 		
 		// health bar shit
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Util.getImage('healthBar'));
@@ -349,7 +378,32 @@ class PlayState extends BasicState
 			}
 		}
 
-		debugText.text = curBeat + "\n" + curStep + "\n" + Conductor.songPosition + "\n" + FlxG.sound.music.time;
+		// for combo counter :D
+
+		var comboString1:String = Std.string(combo);
+
+		var comboString:String = '';
+
+		if(comboString1.length == 1)
+			comboString = '000' + comboString1;
+		else
+			if(comboString1.length == 2)
+				comboString = '00' + comboString1;
+		else
+			if(comboString1.length == 3)
+				comboString = '0' + comboString1;
+		else
+			if(comboString1.length == 4)
+				comboString = comboString1;
+
+		var r = ~//g;
+
+		if(comboString1.length > 3)
+			comboArray = [r.split(comboString)[1], r.split(comboString)[2], r.split(comboString)[3], r.split(comboString)[4]];
+		else
+			comboArray = [r.split(comboString)[2], r.split(comboString)[3], r.split(comboString)[4]];
+
+		debugText.text = curBeat + "\n" + curStep + "\n" + Conductor.songPosition + "\n" + FlxG.sound.music.time + '\nCombo: ' + comboArray[0] + comboArray[1] + comboArray[2] + comboArray[3];
 		
 		if(FlxG.keys.justPressed.BACKSPACE)
 		{
@@ -457,6 +511,10 @@ class PlayState extends BasicState
 
 						player.holdTimer = 0;
 						player.playAnim(singAnims[note.noteID % 4] + "miss", true);
+
+						score -= 10;
+						misses += 1;
+						combo = 0;
 					}
 
 					notes.remove(note);
@@ -668,6 +726,24 @@ class PlayState extends BasicState
 					if(Math.abs(noteMs) > 200)
 						sussyBallsRating = 'shit';
 
+					switch(sussyBallsRating) {
+						case 'sick':
+							score += 350;
+						case 'good':
+							score += 200;
+						case 'bad':
+							score += 100;
+						case 'shit':
+							score += 50;
+					}
+
+					switch(sussyBallsRating) {
+						default:
+							changeHealth(true);
+						case 'bad' | 'shit': // anti spam...kinda
+							health -= 0.275;
+					}
+
 					funnyRating.loadRating(sussyBallsRating);
 					funnyRating.tweenRating();
 
@@ -679,12 +755,22 @@ class PlayState extends BasicState
 					playerStrumArrows.members[note.noteID].playAnim("confirm", true);
 					dontHitTheseDirectionsLol[note.noteID] = true;
 
-					changeHealth(true);
-
 					player.holdTimer = 0;
 					player.playAnim(singAnims[note.noteID % 4], true);
 
 					pressed[note.noteID] = true;
+
+					combo += 1;
+
+					if(combo > 9999)
+						combo = 9999; // you should never be able to get a combo this high, if you do, you're nuts.
+
+					for(i in 0...comboArray.length) {
+						if(combo >= 10 || combo == 0) {
+							comboGroup.members[i].loadCombo(comboArray[i]);
+							comboGroup.members[i].tweenSprite();
+						}
+					}
 
 					notes.remove(note);
 					note.kill();

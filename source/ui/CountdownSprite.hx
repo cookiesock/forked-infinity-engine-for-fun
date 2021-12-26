@@ -18,7 +18,7 @@ class CountdownSprite extends FlxSprite {
 		screenCenter();
 		scrollFactor.set();
 		
-		FlxTween.tween(this, {alpha: 0}, game.PlayState.bpm / 400, {
+		FlxTween.tween(this, {alpha: 0}, game.Conductor.crochet / 1000, {
 			ease: FlxEase.cubeInOut,
 			onComplete: function(twn:FlxTween)
 			{

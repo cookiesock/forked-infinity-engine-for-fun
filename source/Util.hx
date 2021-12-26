@@ -15,6 +15,7 @@ using StringTools;
 class Util
 {
 	static public var soundExt:String = #if web '.mp3' #else '.ogg' #end;
+	static public var funnyStringArray:Array<String> = [];
 
 	static public function getJsonContents(path:String):Dynamic {
 		return Json.parse(Assets.getText(path));
