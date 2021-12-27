@@ -1,5 +1,6 @@
 package menus;
 
+import haxe.ds.Option;
 import flixel.FlxSubState;
 import flixel.text.FlxText;
 import ui.AlphabetText;
@@ -25,7 +26,6 @@ class OptionsState extends BasicState
 		["Graphics Options", "Change graphics settings such as Anti-Aliasing, Low Quality, etc."],
 		["Gameplay Options", "Change gameplay settings such as Downscroll or Middlescroll to play better."],
 		["Manage Keybinds", "Manage your controls for menus and gameplay."],
-		["Adjust Offset", "Change how early/late your notes fall on-screen."],
 		["Note Colors", "Change the color of your notes, personalize them to your liking!"],
 		["Note Skin", "Change how your notes look during gameplay."],
 		["UI Skin", "Change how things such as the combo and ratings look during gameplay."],
@@ -36,6 +36,12 @@ class OptionsState extends BasicState
 		["Low Quality", "Removes some background elements for performance when enabled.", "checkbox"],
 		["Anti-Aliasing", "Gives more performance when disabled, at the cost of lower quality graphics.", "checkbox"],
 		["Remove Characters", "When enabled, every character will get removed for performance.", "checkbox"], // max is 1
+	];
+
+	var gameplayOptionsList:Array<Dynamic> = [
+		["Downscroll", "Makes notes scroll down instead of up.", "checkbox","downscroll"],
+		["Botplay", "Enables bot to play the song for you!", "checkbox","botplay"],
+		["Adjust Offset", "Change how early/late your notes fall on-screen.","menushit","songOffset"]
 	];
 
 	var optionsList:Array<Dynamic> = [];
@@ -109,6 +115,7 @@ class OptionsState extends BasicState
 			{
 				default:
 					var daOption:String = optionsList[selectedOption][0];
+
 					switch(daOption)
 					{
 						case 'Graphics Options':
@@ -120,10 +127,23 @@ class OptionsState extends BasicState
 							changeSelection();
 
 							//openSubState(new whateversubstatehahaha());
+						case 'Gameplay Options':
+							optionsState = "gameplayOptions";
+							optionsList = gameplayOptionsList;
+
+							refreshOptionsList(true);
+							selectedOption = 0;
+							changeSelection();
 					}
 				
 				case 'graphicsOptions':
 					Options.graphicsSettings[selectedOption] = !Options.graphicsSettings[selectedOption];
+					reloadShit();
+
+				case 'gameplayOptions':
+					if(gameplayOptionsList[selectedOption][2] == "checkbox")
+						Reflect.setProperty(Options, gameplayOptionsList[selectedOption][3], !Reflect.getProperty(Options, gameplayOptionsList[selectedOption][3]));
+
 					reloadShit();
 			}
 		}
@@ -225,9 +245,17 @@ class OptionsState extends BasicState
 	{
 		for (i in 0...checkboxArray.length) {
 			var checkbox:Checkbox = checkboxArray[i];
+
 			if(checkbox != null) {
 				var daValue = false;
-				daValue = Options.graphicsSettings[checkboxNumber[i]];
+
+				switch(optionsState)
+				{
+					case "graphicsOptions":
+						daValue = Options.graphicsSettings[checkboxNumber[i]];
+					case "gameplayOptions":
+						daValue = Reflect.getProperty(Options, gameplayOptionsList[i][3]);
+				}
 
 				checkboxGroup.members[i].daValue = daValue;
 			}

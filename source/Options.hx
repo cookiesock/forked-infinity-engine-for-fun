@@ -16,14 +16,6 @@ class Options
         false, // remove chars, 0 - just gf, 1 - everyone
     ];
 
-    public static var gameplaySettings:Array<Dynamic> = [
-        false, // downscroll
-        false, // middlescroll
-        false, // botplay
-        0, // hitsound, max is 2
-        0, // song offset
-    ];
-
     public static var mainBinds:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
     public static var altBinds:Array<String> = ["A", "S", "W", "D"];
 
@@ -33,9 +25,6 @@ class Options
 
         if(FlxG.save.data.graphicsSettings == null)
             FlxG.save.data.graphicsSettings = graphicsSettings;
-
-        if(FlxG.save.data.gameplaySettings == null)
-            FlxG.save.data.gameplaySettings = gameplaySettings;
 
         if(FlxG.save.data.downscroll == null)
             FlxG.save.data.downscroll = downscroll;
@@ -60,7 +49,6 @@ class Options
     public static function loadSettings()
     {
         graphicsSettings = FlxG.save.data.graphicsSettings;
-        gameplaySettings = FlxG.save.data.gameplaySettings;
         mainBinds = FlxG.save.data.mainBinds;
         altBinds = FlxG.save.data.altBinds;
         songOffset = FlxG.save.data.songOffset;
@@ -71,12 +59,12 @@ class Options
     public static function saveSettings()
     {
         FlxG.save.data.graphicsSettings = graphicsSettings;
-        FlxG.save.data.gameplaySettings = gameplaySettings;
         FlxG.save.data.mainBinds = mainBinds;
         FlxG.save.data.altBinds = altBinds;
         FlxG.save.data.songOffset = songOffset;
         FlxG.save.data.botplay = botplay;
         FlxG.save.data.downscroll = downscroll;
+        
         FlxG.save.flush();
     }
 }

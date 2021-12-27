@@ -88,8 +88,8 @@ class PlayState extends BasicState
 	var countdownStarted:Bool = true;
 	var countdownNum:Int = -1;
 
-	var downscroll:Bool = Options.gameplaySettings[0];
-	var botplay:Bool = Options.gameplaySettings[2];
+	var downscroll:Bool = Options.downscroll;
+	var botplay:Bool = Options.botplay;
 
 	// rating shit
 	var funnyRating:RatingSprite;
@@ -388,7 +388,7 @@ class PlayState extends BasicState
 		{
 			for(songNotes in section.sectionNotes)
 			{
-				var daStrumTime:Float = songNotes[0] + song.chartOffset + Options.gameplaySettings[3];
+				var daStrumTime:Float = songNotes[0] + song.chartOffset + Options.songOffset;
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 
 				var gottaHitNote:Bool = section.mustHitSection;
@@ -610,7 +610,7 @@ class PlayState extends BasicState
 			{
 				if(Conductor.songPosition - Conductor.safeZoneOffset * 1.5 > note.strum && note != null)
 				{
-					if(note.mustPress)
+					if(note.mustPress && !botplay)
 					{
 						if(vocals != null)
 							vocals.volume = 0;
@@ -839,7 +839,7 @@ class PlayState extends BasicState
 			}
 			else
 			{
-				if(Conductor.songPosition * 1.5 - note.strum >= 0 && note.mustPress)
+				if(note.strum <= Conductor.songPosition && note.mustPress)
 					possibleNotes.push(note);
 			}
 		}
@@ -861,6 +861,9 @@ class PlayState extends BasicState
 
 					var noteMs = Conductor.songPosition - note.strum;
 					trace(noteMs + " ms");
+
+					if(botplay)
+						noteMs = 0;
 
 					var roundedDecimalNoteMs:Float = FlxMath.roundDecimal(noteMs, 3);
 
