@@ -1,5 +1,6 @@
 package menus;
 
+import lime.app.Application;
 import ui.AlphabetText;
 import flixel.util.FlxColor;
 import flixel.FlxG;
@@ -66,6 +67,13 @@ class TitleScreenState extends BasicState
 
 		#if debug
 		add(new AlphabetText(0, 100, '"the quick brown fox jumps \nover the lazy dog"\n\n1234567890\n\n!?.-+()*><&_\'', 35));
+		#end
+
+		#if desktop
+		Application.current.onExit.add(function (exitCode) {
+			Options.saveSettings();
+			trace("GAME CLOSED WITH CODE: " + exitCode);
+		});
 		#end
 
 		super.create();

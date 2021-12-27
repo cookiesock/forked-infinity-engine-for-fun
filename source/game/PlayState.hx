@@ -551,7 +551,7 @@ class PlayState extends BasicState
 			health = 2;
 			
 		if (healthBar.percent < 20)
-			playerIcon.animation.play('death', true);
+			playerIcon.animation.play('dead', true);
 		else
 			if (healthBar.percent > 80)
 				playerIcon.animation.play('winning', true);
@@ -559,7 +559,7 @@ class PlayState extends BasicState
 				playerIcon.animation.play('default', true);
 
 		if (healthBar.percent > 80)
-			opponentIcon.animation.play('death', true);
+			opponentIcon.animation.play('dead', true);
 		else
 			if (healthBar.percent < 20)
 				opponentIcon.animation.play('winning', true);
@@ -782,8 +782,8 @@ class PlayState extends BasicState
 
 	function inputFunction()
 	{
-		var testBinds:Array<String> = Options.MAIN_BINDS;
-		var testBindsAlt:Array<String> = Options.ALT_BINDS;
+		var testBinds:Array<String> = Options.mainBinds;
+		var testBindsAlt:Array<String> = Options.altBinds;
 
 		var justPressed:Array<Bool> = [false, false, false, false];
 		var pressed:Array<Bool> = [false, false, false, false];
