@@ -16,6 +16,7 @@ using StringTools;
 class PauseSubState extends BasicSubState
 {
 	var grpOptions:FlxTypedGroup<AlphabetText>;
+
 	var pauseOptions:Array<String> = [
 		"Resume",
 		"Restart Song",
@@ -77,6 +78,7 @@ class PauseSubState extends BasicSubState
 
 		if(up) changeSelection(-1);
 		if(down) changeSelection(1);
+
 		if(accept)
 		{
 			var selectedItem:String = pauseOptions[selectedOption];
@@ -118,16 +120,17 @@ class PauseSubState extends BasicSubState
 		selectedOption += change;
 
 		if (selectedOption < 0)
-			selectedOption = grpOptions.length - 1;
+			selectedOption = pauseOptions.length - 1;
 
-		if (selectedOption >= grpOptions.length)
+		if (selectedOption > pauseOptions.length - 1)
 			selectedOption = 0;
 
 		var bullShit:Int = 0;
 
-		for (item in grpOptions.members)
+		for(item in grpOptions.members)
 		{
 			item.targetY = bullShit - selectedOption;
+			
 			bullShit++;
 
 			item.alpha = 0.6;
@@ -135,6 +138,7 @@ class PauseSubState extends BasicSubState
 			if (item.targetY == 0)
 				item.alpha = 1;
 		}
-		FlxG.sound.play(Util.getSound('scrollMenu'));
+
+		FlxG.sound.play(Util.getSound('menus/scrollMenu'));
 	}
 }

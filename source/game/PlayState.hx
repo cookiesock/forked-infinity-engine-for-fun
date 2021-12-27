@@ -136,6 +136,9 @@ class PlayState extends BasicState
 	var speed:Float = 1;
 	public static var storyMode:Bool = false;
 
+	var funnyHitStuffsLmao:Float = 0.0;
+	var totalNoteStuffs:Int = 0;
+
 	public function new(?songName:String, ?difficulty:String, ?storyModeBool:Bool = false)
 	{
 		super();
@@ -433,6 +436,8 @@ class PlayState extends BasicState
 
 	override public function update(elapsed:Float)
 	{
+		updateAccuracyStuff();
+
 		Conductor.songPosition += elapsed * 1000;
 
 		if(!countdownStarted)
@@ -500,7 +505,20 @@ class PlayState extends BasicState
 
 		var accept = FlxG.keys.justPressed.ENTER;
 
-		if(accept) openSubState(new PauseSubState());
+		if(accept)
+		{
+			if(FlxG.sound.music != null)
+				FlxG.sound.music.pause();
+
+			if(vocals != null)
+				vocals.pause();
+
+			persistentUpdate = false;
+
+			theTimer.active = false;
+
+			openSubState(new PauseSubState());
+		}
 		
 		FlxG.camera.zoom = FlxMath.lerp(stageCamZoom, FlxG.camera.zoom, Util.boundTo(1 - (elapsed * 3.125), 0, 1));
 		hudCam.zoom = FlxMath.lerp(1, hudCam.zoom, Util.boundTo(1 - (elapsed * 3.125), 0, 1));
@@ -533,20 +551,20 @@ class PlayState extends BasicState
 			health = 2;
 			
 		if (healthBar.percent < 20)
-			playerIcon.animation.curAnim.curFrame = 1;
+			playerIcon.animation.play('death', true);
 		else
 			if (healthBar.percent > 80)
-				playerIcon.animation.curAnim.curFrame = 2;
+				playerIcon.animation.play('winning', true);
 			else
-				playerIcon.animation.curAnim.curFrame = 0;
+				playerIcon.animation.play('default', true);
 
 		if (healthBar.percent > 80)
-			opponentIcon.animation.curAnim.curFrame = 1;
+			opponentIcon.animation.play('death', true);
 		else
 			if (healthBar.percent < 20)
-				opponentIcon.animation.curAnim.curFrame = 2;
+				opponentIcon.animation.play('winning', true);
 			else
-				opponentIcon.animation.curAnim.curFrame = 0;
+				opponentIcon.animation.play('default', true);
 
 		for(note in notes)
 		{
@@ -604,6 +622,7 @@ class PlayState extends BasicState
 
 						score -= 10;
 						misses += 1;
+						totalNoteStuffs++;
 						combo = 0;
 					}
 
@@ -633,9 +652,27 @@ class PlayState extends BasicState
 		super.update(elapsed);
 	}
 
+	override public function closeSubState()
+	{
+		super.closeSubState();
+
+		theTimer.active = true;
+
+		persistentUpdate = true;
+
+		if(!countdownStarted)
+		{
+			if(FlxG.sound.music != null)
+				FlxG.sound.music.play();
+	
+			if(vocals != null)
+				vocals.play();
+		}
+	}
+
 	public function CalculateAccuracy()
 	{
-		accuracy = score / ((hits + misses) * 350);
+		accuracy = funnyHitStuffsLmao / totalNoteStuffs;
 	}
 
 	override public function beatHit(timer:FlxTimer)
@@ -853,18 +890,22 @@ class PlayState extends BasicState
 						case 'sick':
 							score += ratingScores[0];
 							sicks += 1;
+							funnyHitStuffsLmao += 1;
 							msText.color = FlxColor.CYAN;
 						case 'good':
 							score += ratingScores[1];
 							goods += 1;
+							funnyHitStuffsLmao += 0.8;
 							msText.color = FlxColor.LIME;
 						case 'bad':
 							score += ratingScores[2];
 							bads += 1;
+							funnyHitStuffsLmao += 0.4;
 							msText.color = FlxColor.ORANGE;
 						case 'shit':
 							score += ratingScores[3];
 							shits += 1;
+							funnyHitStuffsLmao += 0.1;
 							msText.color = FlxColor.RED;
 					}
 
@@ -875,47 +916,7 @@ class PlayState extends BasicState
 							health -= 0.275;
 					}
 
-					if(accuracyNum == 100)
-						rating1 = letterRatings[0];
-					
-					else if(accuracyNum >= 90)	
-						rating1 = letterRatings[1];
-
-					else if(accuracyNum >= 80)	
-						rating1 = letterRatings[2];
-
-					else if(accuracyNum >= 70)	
-						rating1 = letterRatings[3];
-
-					else if(accuracyNum >= 60)	
-						rating1 = letterRatings[4];
-
-					else if(accuracyNum >= 50)	
-						rating1 = letterRatings[5];
-
-					else if(accuracyNum >= 40)	
-						rating1 = letterRatings[6];
-
-					else if(accuracyNum >= 30)	
-						rating1 = letterRatings[7];
-
-					else if(accuracyNum >= 20)	
-						rating1 = letterRatings[8];
-
-					if(goods == 0 && bads == 0 && shits == 0 && misses == 0)
-						rating2 = swagRatings[0];
-					else
-					if(goods >= 1 && bads == 0 && shits == 0 && misses == 0)
-						rating2 = swagRatings[1];
-					else
-					if(goods >= 1 && bads >= 1 && shits >= 1 && misses == 0)
-						rating2 = swagRatings[2];
-					else
-					if(misses >= 1 && misses <= 9)
-						rating2 = swagRatings[3];
-					else
-					if(misses >= 1 && misses > 9)
-						rating2 = swagRatings[4];
+					updateAccuracyStuff();
 
 					funnyRating.loadRating(sussyBallsRating);
 					funnyRating.tweenRating();
@@ -948,6 +949,8 @@ class PlayState extends BasicState
 					notes.remove(note);
 					note.kill();
 					note.destroy();
+
+					totalNoteStuffs++;
 				}
 			}
 
@@ -970,5 +973,50 @@ class PlayState extends BasicState
 		if(player.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !pressed.contains(true))
 			if(player.animation.curAnim.name.startsWith('sing'))
 				player.dance();
+	}
+
+	function updateAccuracyStuff()
+	{
+		if(accuracyNum == 100)
+			rating1 = letterRatings[0];
+		
+		else if(accuracyNum >= 90)	
+			rating1 = letterRatings[1];
+
+		else if(accuracyNum >= 80)	
+			rating1 = letterRatings[2];
+
+		else if(accuracyNum >= 70)	
+			rating1 = letterRatings[3];
+
+		else if(accuracyNum >= 60)	
+			rating1 = letterRatings[4];
+
+		else if(accuracyNum >= 50)	
+			rating1 = letterRatings[5];
+
+		else if(accuracyNum >= 40)	
+			rating1 = letterRatings[6];
+
+		else if(accuracyNum >= 30)	
+			rating1 = letterRatings[7];
+
+		else if(accuracyNum >= 20)	
+			rating1 = letterRatings[8];
+
+		if(goods == 0 && bads == 0 && shits == 0 && misses == 0)
+			rating2 = swagRatings[0];
+		else
+		if(goods >= 1 && bads == 0 && shits == 0 && misses == 0)
+			rating2 = swagRatings[1];
+		else
+		if(goods >= 1 && bads >= 1 && shits >= 1 && misses == 0)
+			rating2 = swagRatings[2];
+		else
+		if(misses >= 1 && misses <= 9)
+			rating2 = swagRatings[3];
+		else
+		if(misses >= 1 && misses > 9)
+			rating2 = swagRatings[4];
 	}
 }
