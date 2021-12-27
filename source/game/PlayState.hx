@@ -16,6 +16,8 @@ import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import lime.utils.Assets;
 import openfl.Assets;
@@ -76,6 +78,7 @@ class PlayState extends BasicState
 
 	// score shit
 	static public var score:Int = 0;
+	static public var sickScore:Int = 0;
 	static public var misses:Int = 0;
 	static public var combo:Int = 0;
 
@@ -85,17 +88,55 @@ class PlayState extends BasicState
 	var countdownStarted:Bool = true;
 	var countdownNum:Int = -1;
 
-	var downscroll:Bool = Options.DOWNSCROLL;
-	var botplay:Bool = Options.BOTPLAY;
+	var downscroll:Bool = Options.gameplaySettings[0];
+	var botplay:Bool = Options.gameplaySettings[2];
 
 	// rating shit
 	var funnyRating:RatingSprite;
 	var comboGroup:FlxTypedGroup<ComboSprite>;
 
+	var msText:FlxText;
+	var scoreText:FlxText;
+
+	var botplayText:FlxText;
+
+	var accuracy:Float = 0;
+	var accuracyNum:Float = 0;
+	var rating1:String = "N/A";
+	var rating2:String = "N/A";
+
+	var letterRatings:Array<String> = [
+		"S++",
+		"S+",
+		"S",
+		"A",
+		"B",
+		"C",
+		"D",
+		"E",
+		"F",
+	];
+
+	var swagRatings:Array<String> = [
+		"SFC",
+		"GFC",
+		"FC",
+		"SDCB",
+		"Clear",
+	];
+
+	var sicks:Int = 0;
+	var goods:Int = 0;
+	var bads:Int = 0;
+	var shits:Int = 0;
+
+	var hits:Int = 0;
+
 	// song config shit
 	var speed:Float = 1;
+	public static var storyMode:Bool = false;
 
-	public function new(?songName:String, ?difficulty:String)
+	public function new(?songName:String, ?difficulty:String, ?storyModeBool:Bool = false)
 	{
 		super();
 
@@ -109,6 +150,7 @@ class PlayState extends BasicState
 				difficulty = "normal";
 	
 			song = Util.getJsonContents('assets/songs/$songName/$difficulty.json').song;
+			storyMode = storyModeBool;
 		}
 	}
 
@@ -119,6 +161,7 @@ class PlayState extends BasicState
 		}
 
 		score = 0;
+		sickScore = 0;
 		misses = 0;
 		combo = 0;
 			
@@ -233,7 +276,7 @@ class PlayState extends BasicState
 
 		for(i in 0...8) { // add strum arrows
 			var isPlayerArrow:Bool = i > 3;
-			var funnyArrowX:Float = 42;
+			var funnyArrowX:Float = 52;
 			
 			if(isPlayerArrow) {
 				funnyArrowX += 242;
@@ -259,13 +302,29 @@ class PlayState extends BasicState
 		for(i in 0...4) {
 			
 			var newComboNum:ComboSprite = new ComboSprite();
-			newComboNum.x = funnyRating.x + 80 + i * 50;
-			newComboNum.y = funnyRating.y + 2;
+			newComboNum.x = funnyRating.x - 80 + i * 50;
+			newComboNum.y = funnyRating.y + 85;
 			newComboNum.stupidY = newComboNum.y;
 			newComboNum.alpha = 0;
 
 			comboGroup.add(newComboNum);
 		}
+
+		msText = new FlxText(funnyRating.x + 105, funnyRating.y + 105, 0, "999ms", 32, true);
+		msText.color = FlxColor.CYAN;
+		msText.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, null, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		msText.scrollFactor.set();
+		msText.borderSize = 2;
+		add(msText);
+
+		botplayText = new FlxText(0, strumArea.y + 40, 0, "BOTPLAY", 32, true);
+		botplayText.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, null, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		botplayText.scrollFactor.set();
+		botplayText.borderSize = 2;
+		botplayText.screenCenter(X);
+		add(botplayText);
+
+		msText.alpha = 0;
 		
 		// health bar shit
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Util.getImage('healthBar'));
@@ -281,7 +340,7 @@ class PlayState extends BasicState
 		healthBar.scrollFactor.set();
 		healthBar.createFilledBar(opponent.healthColor, player.healthColor);
 		add(healthBar);
-		
+
 		// health bar icons
 		opponentIcon = new Icon(Util.getCharacterIcons(opponent.healthIcon), false);
 		opponentIcon.y = healthBar.y - (opponentIcon.height / 2);
@@ -290,6 +349,13 @@ class PlayState extends BasicState
 		playerIcon = new Icon(Util.getCharacterIcons(player.healthIcon), true);
 		playerIcon.y = healthBar.y - (playerIcon.height / 2);
 		add(playerIcon);
+
+		scoreText = new FlxText(0, healthBarBG.y + 35, 0, "", 18);
+		scoreText.screenCenter(X);
+		scoreText.setFormat("assets/fonts/vcr.ttf", 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreText.scrollFactor.set();
+		scoreText.borderSize = 2;
+		add(scoreText);
 		
 		// debug shit
 
@@ -306,6 +372,10 @@ class PlayState extends BasicState
 		opponentIcon.cameras = [hudCam];
 		playerIcon.cameras = [hudCam];
 		funnyRating.cameras = [hudCam];
+		comboGroup.cameras = [hudCam];
+		msText.cameras = [hudCam];
+		scoreText.cameras = [hudCam];
+		botplayText.cameras = [hudCam];
 		debugText.cameras = [otherCam];
 
 		if(song.chartOffset == null)
@@ -315,7 +385,7 @@ class PlayState extends BasicState
 		{
 			for(songNotes in section.sectionNotes)
 			{
-				var daStrumTime:Float = songNotes[0] + song.chartOffset + Options.SONG_OFFSET;
+				var daStrumTime:Float = songNotes[0] + song.chartOffset + Options.gameplaySettings[3];
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 
 				var gottaHitNote:Bool = section.mustHitSection;
@@ -345,6 +415,20 @@ class PlayState extends BasicState
 		Conductor.songPosition = -1 * (Conductor.crochet * 5);
 		
 		super.create();
+	}
+
+	public function msTextFade()
+	{
+		FlxTween.cancelTweensOf(msText);
+		msText.alpha = 1;
+		FlxTween.tween(msText, {alpha: 0}, 0.4, {
+			ease: FlxEase.cubeInOut,
+			startDelay: 0.4,
+			onComplete: function(twn:FlxTween)
+			{
+				// do nothign because uhsdcjnkALehds
+			}
+		});
 	}
 
 	override public function update(elapsed:Float)
@@ -403,14 +487,20 @@ class PlayState extends BasicState
 		else
 			comboArray = [r.split(comboString)[2], r.split(comboString)[3], r.split(comboString)[4]];
 
-		debugText.text = curBeat + "\n" + curStep + "\n" + Conductor.songPosition + "\n" + FlxG.sound.music.time + '\nCombo: ' + comboArray[0] + comboArray[1] + comboArray[2];
+		debugText.text = curBeat + "\n" + curStep + "\n" + Conductor.songPosition + "\n" + FlxG.sound.music.time;
+
+		botplayText.visible = botplay;
 		
-		if(FlxG.keys.justPressed.BACKSPACE)
+		/*if(FlxG.keys.justPressed.BACKSPACE)
 		{
 			FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
 			FlxG.switchState(new menus.MainMenuState());
 		} // temporary way to go back to menus without restarting the game
-		// THIS WILL BE REPLACED WITH PAUSE MENU WHEN THAT IS EXIST!!!
+		// THIS WILL BE REPLACED WITH PAUSE MENU WHEN THAT IS EXIST!!!*/
+
+		var accept = FlxG.keys.justPressed.ENTER;
+
+		if(accept) openSubState(new PauseSubState());
 		
 		FlxG.camera.zoom = FlxMath.lerp(stageCamZoom, FlxG.camera.zoom, Util.boundTo(1 - (elapsed * 3.125), 0, 1));
 		hudCam.zoom = FlxMath.lerp(1, hudCam.zoom, Util.boundTo(1 - (elapsed * 3.125), 0, 1));
@@ -526,8 +616,26 @@ class PlayState extends BasicState
 
 		if(!countdownStarted)
 			inputFunction();
+
+		CalculateAccuracy();
+
+		accuracyNum = accuracy * 100;
+
+		var dumbAccuracyNum = FlxMath.roundDecimal(accuracyNum, 2);
+
+		if(rating1 == "N/A")
+			scoreText.text = "Score: " + score + " | Misses: " + misses + " | Accuracy: 0% | Rating: N/A";
+		else
+			scoreText.text = "Score: " + score + " | Misses: " + misses + " | Accuracy: " + dumbAccuracyNum + "%" + " | Rating: " + rating1 + " (" + rating2 + ")";
 		
+		scoreText.screenCenter(X);
+
 		super.update(elapsed);
+	}
+
+	public function CalculateAccuracy()
+	{
+		accuracy = score / ((hits + misses) * 350);
 	}
 
 	override public function beatHit(timer:FlxTimer)
@@ -712,37 +820,102 @@ class PlayState extends BasicState
 
 				if(((justPressed[note.noteID] && !dontHitTheseDirectionsLol[note.noteID]) && !botplay) || botplay)
 				{
+					var ratingScores:Array<Int> = [350, 200, 100, 50];
+
 					var noteMs = Conductor.songPosition - note.strum;
 					trace(noteMs + " ms");
 
+					var roundedDecimalNoteMs:Float = FlxMath.roundDecimal(noteMs, 3);
+
+					msText.text = roundedDecimalNoteMs + "ms";
+					msTextFade();
+
+					hits += 1;
+
 					var sussyBallsRating:String = 'sick';
+					//msText.color = FlxColor.CYAN;
 
 					if(Math.abs(noteMs) > 50)
 						sussyBallsRating = 'good';
+						//msText.color = FlxColor.ORANGE;
 
 					if(Math.abs(noteMs) > 70)
 						sussyBallsRating = 'bad';
+						//msText.color = FlxColor.RED;
 
 					if(Math.abs(noteMs) > 100)
 						sussyBallsRating = 'shit';
+						//msText.color = FlxColor.BROWN;
+
+					sickScore += ratingScores[0];
 
 					switch(sussyBallsRating) {
 						case 'sick':
-							score += 350;
+							score += ratingScores[0];
+							sicks += 1;
+							msText.color = FlxColor.CYAN;
 						case 'good':
-							score += 200;
+							score += ratingScores[1];
+							goods += 1;
+							msText.color = FlxColor.LIME;
 						case 'bad':
-							score += 100;
+							score += ratingScores[2];
+							bads += 1;
+							msText.color = FlxColor.ORANGE;
 						case 'shit':
-							score += 50;
+							score += ratingScores[3];
+							shits += 1;
+							msText.color = FlxColor.RED;
 					}
 
 					switch(sussyBallsRating) {
 						default:
 							changeHealth(true);
-						case 'bad' | 'shit': // anti spam...kinda
+						case 'shit': // anti spam...kinda
 							health -= 0.275;
 					}
+
+					if(accuracyNum == 100)
+						rating1 = letterRatings[0];
+					
+					else if(accuracyNum >= 90)	
+						rating1 = letterRatings[1];
+
+					else if(accuracyNum >= 80)	
+						rating1 = letterRatings[2];
+
+					else if(accuracyNum >= 70)	
+						rating1 = letterRatings[3];
+
+					else if(accuracyNum >= 60)	
+						rating1 = letterRatings[4];
+
+					else if(accuracyNum >= 50)	
+						rating1 = letterRatings[5];
+
+					else if(accuracyNum >= 40)	
+						rating1 = letterRatings[6];
+
+					else if(accuracyNum >= 30)	
+						rating1 = letterRatings[7];
+
+					else if(accuracyNum >= 20)	
+						rating1 = letterRatings[8];
+
+					if(goods == 0 && bads == 0 && shits == 0 && misses == 0)
+						rating2 = swagRatings[0];
+					else
+					if(goods >= 1 && bads == 0 && shits == 0 && misses == 0)
+						rating2 = swagRatings[1];
+					else
+					if(goods >= 1 && bads >= 1 && shits >= 1 && misses == 0)
+						rating2 = swagRatings[2];
+					else
+					if(misses >= 1 && misses <= 9)
+						rating2 = swagRatings[3];
+					else
+					if(misses >= 1 && misses > 9)
+						rating2 = swagRatings[4];
 
 					funnyRating.loadRating(sussyBallsRating);
 					funnyRating.tweenRating();
@@ -760,17 +933,17 @@ class PlayState extends BasicState
 
 					pressed[note.noteID] = true;
 
-					combo += 1;
-
-					if(combo > 9999)
-						combo = 9999; // you should never be able to get a combo this high, if you do, you're nuts.
-
 					for(i in 0...comboArray.length) {
 						if(combo >= 10 || combo == 0) {
 							comboGroup.members[i].loadCombo(comboArray[i]);
 							comboGroup.members[i].tweenSprite();
 						}
 					}
+
+					combo += 1;
+
+					if(combo > 9999)
+						combo = 9999; // you should never be able to get a combo this high, if you do, you're nuts.
 
 					notes.remove(note);
 					note.kill();

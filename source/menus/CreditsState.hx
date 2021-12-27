@@ -10,6 +10,7 @@ import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.math.FlxMath;
+import flixel.tweens.FlxTween;
 
 class CreditsState extends BasicState{
     var menuBG:FlxSprite;
@@ -18,6 +19,9 @@ class CreditsState extends BasicState{
     var credits:Array<Dynamic>;
     var creditGroup:FlxTypedGroup<AlphabetText>;
     var creditIconGroup:FlxTypedGroup<TrackerSprite>;
+    var colorTween:FlxTween;
+
+    var selectedColor:Int = 0xFFFFFFFF;
 
 	override public function create()
         {
@@ -27,7 +31,7 @@ class CreditsState extends BasicState{
             creditIconGroup = new FlxTypedGroup();
             curSelected = 0;
 
-            menuBG = new FlxSprite(-80).loadGraphic('assets/images/menuBG.png');
+            menuBG = new FlxSprite(-80).loadGraphic(Util.getImage('menuDesat'));
             menuBG.scrollFactor.x = 0;
             menuBG.scrollFactor.y = 0.18;
             menuBG.setGraphicSize(Std.int(menuBG.width * 1.175));
@@ -40,6 +44,9 @@ class CreditsState extends BasicState{
 
             var json:Dynamic = Util.getJsonContents('assets/credits/credits.json');
             credits = json.credTextShit;
+
+            selectedColor = Std.int(credits[curSelected].color);
+            menuBG.color = selectedColor;
 
             for (i in 0...credits.length) {
                 var text = new AlphabetText(FlxG.width / 6 + i * 5, 100 + i * 150, credits[i].name);
@@ -72,18 +79,12 @@ class CreditsState extends BasicState{
 
             if(FlxG.keys.justPressed.DOWN)
             {
-                curSelected += 1;
-
-                if(curSelected > credits.length - 1)
-                    curSelected = 0;
+                changeSelection(1);
             }
 
             if(FlxG.keys.justPressed.UP)
             {
-                curSelected -= 1;
-
-                if(curSelected < 0)
-                    curSelected = credits.length - 1;
+                changeSelection(-1);
             }
 		
             updateDesc(elapsed);
@@ -121,6 +122,33 @@ class CreditsState extends BasicState{
                 description.setFormat("assets/fonts/funkin.otf", 64, FlxColor.BLACK, RIGHT);
                 description.y = FlxG.height - description.height - 30;
                 add(description);
+            }
+        }
+
+        function changeSelection(change:Int = 0)
+        {
+            curSelected += change;
+
+            if(curSelected < 0)
+                curSelected = credits.length - 1;
+
+            if(curSelected > credits.length - 1)
+                curSelected = 0;
+
+            var newColor:FlxColor = Std.int(credits[curSelected].color);
+
+            if(newColor != selectedColor) {
+                if(colorTween != null) {
+                    colorTween.cancel();
+                }
+
+                selectedColor = newColor;
+
+                colorTween = FlxTween.color(menuBG, 0.4, menuBG.color, selectedColor, {
+                    onComplete: function(twn:FlxTween) {
+                        colorTween = null;
+                    }
+                });
             }
         }
 }

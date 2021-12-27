@@ -1,5 +1,8 @@
 package menus;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.effects.FlxFlicker;
 import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.FlxG;
@@ -106,15 +109,48 @@ class MainMenuState extends BasicState
 		{
 			// seriously pls use switch cases for shit like this - swordcmube
 			FlxG.sound.play('assets/sounds/menus/confirmMenu' + Util.soundExt);
-			
-			switch swagMenuButtons[selectedMenu]{
-				case "StoryMode":
-					FlxG.switchState(new game.PlayState("test", "normal"));
-				case "Credits":
-					FlxG.switchState(new menus.CreditsState());
-				case "Freeplay":
-					FlxG.switchState(new menus.FreeplayMenuState());
-			}
+
+			FlxFlicker.flicker(menuBGMagenta, 1.1, 0.15, false);
+
+			menuButtons.forEach(function(spr:FlxSprite)
+				{
+					if (selectedMenu != spr.ID)
+					{
+						FlxTween.tween(spr, {alpha: 0}, 0.4, {
+							ease: FlxEase.quadOut,
+							onComplete: function(twn:FlxTween)
+							{
+								spr.kill();
+							}
+						});
+					}
+					else
+					{
+						FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
+						{
+							var daChoice:String = swagMenuButtons[selectedMenu];
+
+							switch (daChoice)
+							{
+								case 'StoryMode':
+									FlxG.switchState(new menus.StoryModeState());
+									trace("entered story mode");
+									
+								case 'Freeplay':
+									FlxG.switchState(new menus.FreeplayMenuState());
+									trace("entered freeplay");
+									
+								case 'Credits':
+									FlxG.switchState(new menus.CreditsState());
+									trace("entered credits");
+
+								case 'Options':
+									FlxG.switchState(new menus.OptionsState());
+									trace("entered options");
+							}
+						});
+					}
+				});
 		}
 		
 		if (FlxG.keys.justPressed.BACKSPACE)

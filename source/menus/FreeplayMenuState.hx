@@ -79,7 +79,7 @@ class FreeplayMenuState extends BasicState
         scoreText.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, RIGHT);
         add(scoreText);
 
-        difText = new FlxText(0, scoreText.y + scoreText.height + 2, 0, "> Normal <", 24);
+        difText = new FlxText(0, scoreText.y + scoreText.height + 2, 0, "< Normal >", 24);
 		difText.font = scoreText.font;
 		difText.alignment = RIGHT;
 		add(difText);
@@ -151,7 +151,7 @@ class FreeplayMenuState extends BasicState
         }
 
         if(FlxG.keys.justPressed.ENTER)
-            FlxG.switchState(new game.PlayState(songs[selectedSong].songName.toLowerCase(), selectedDifficulty));
+            FlxG.switchState(new game.PlayState(songs[selectedSong].songName.toLowerCase(), selectedDifficulty, false));
 
         var funnyObject:FlxText = scoreText;
 
@@ -185,7 +185,7 @@ class FreeplayMenuState extends BasicState
 
         selectedDifficulty = songs[selectedSong].difficulties[selectedDifIndex];
 
-        difText.text = "> " + songs[selectedSong].difficulties[selectedDifIndex] + " <";
+        difText.text = "< " + songs[selectedSong].difficulties[selectedDifIndex] + " >";
 
         var newColor:FlxColor = songs[selectedSong].color;
 
@@ -196,7 +196,7 @@ class FreeplayMenuState extends BasicState
 
             selectedColor = newColor;
 
-            colorTween = FlxTween.color(bg, 0.25, bg.color, selectedColor, {
+            colorTween = FlxTween.color(bg, 0.4, bg.color, selectedColor, {
                 onComplete: function(twn:FlxTween) {
                     colorTween = null;
                 }

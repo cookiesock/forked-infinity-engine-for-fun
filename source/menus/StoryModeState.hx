@@ -9,12 +9,18 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
 class StoryModeState extends BasicState {
-    override public function create() {
-
-		super.create();
+    override public function create()
+    {
+        super.create();
     }
+
     override public function update(elapsed:Float)
     {
+        if (FlxG.keys.justPressed.BACKSPACE)
+        {
+            FlxG.switchState(new MainMenuState());
+        }
+
         super.update(elapsed);
     }
 }
