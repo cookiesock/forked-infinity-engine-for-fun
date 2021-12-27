@@ -30,7 +30,6 @@ class TitleScreenState extends BasicState
 
 		Options.init();
 		
-		persistentUpdate = true;
 		persistentDraw = true;
 
 		FlxG.fixedTimestep = false;
