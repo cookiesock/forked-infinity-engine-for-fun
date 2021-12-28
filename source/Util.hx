@@ -38,25 +38,10 @@ class Util
 		return FlxAtlasFrames.fromSparrow(png + ".png", xml + ".xml");
 	}
 
-	static public function getPacker(filePath:String, ?fromImagesFolder:Bool = true, ?txtPath:String)
-        // SPIRIT FUCKING CRASHES THE GAME IF THIS IS REMOVED, EITHER RE-EXPORT HIM AS AN XML
-        // OR LEAVE HIM AS IS NOW, OTHERWISE THE GAME WILL CRASH
-	{
-		var png = filePath;
-		var txt = txtPath;
+    // SPIRIT FUCKING CRASHES THE GAME IF THIS IS REMOVED, EITHER RE-EXPORT HIM AS AN XML
+    // OR LEAVE HIM AS IS NOW, OTHERWISE THE GAME WILL CRASH
+	// fuck you
 
-		if (txt == null)
-			txt = png;
-
-		if (fromImagesFolder)
-		{
-			png = "assets/images/" + png;
-			txt = "assets/images/" + txt;
-		}
-
-		return FlxAtlasFrames.fromSpriteSheetPacker(png + ".png", txt + ".txt");
-	}
-	
 	static public function getImage(filePath:String, ?fromImagesFolder:Bool = true)
 	// this is so i can grab images without having to rembr that i have to put a .png at the end
 	// - swordcube
