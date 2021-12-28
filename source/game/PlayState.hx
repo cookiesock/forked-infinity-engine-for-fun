@@ -174,12 +174,16 @@ class PlayState extends BasicState
 		hudCam.bgColor.alpha = 0;
 		otherCam.bgColor.alpha = 0;
 
-		FlxG.cameras.reset(gameCam);
-		FlxG.cameras.add(hudCam);
-		FlxG.cameras.add(otherCam);
+		FlxG.cameras.reset();
 
-		FlxCamera.defaultCameras = [gameCam]; //- deprecated but needs to be used
-		//FlxG.cameras.setDefaultDrawTarget(gameCam, false); // not deprecated but literally breaks everything
+		FlxG.cameras.add(gameCam, true);
+		FlxG.cameras.add(hudCam, false);
+		FlxG.cameras.add(otherCam, false);
+
+		FlxG.cameras.setDefaultDrawTarget(gameCam, true);
+
+		FlxG.camera = gameCam;
+
 		FlxG.camera.zoom = stageCamZoom;
 
 		speed = song.speed;
