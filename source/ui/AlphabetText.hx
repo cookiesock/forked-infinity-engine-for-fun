@@ -58,10 +58,7 @@ class AlphabetText extends FlxSpriteGroup
                     startingX = 0;
 
                 case " ":
-                    startingX += (size*(size/70))*0.5;
-
-                case "":
-                    startingX += (size*(size/70))*100;
+                    startingX += (size*(size/70))/(size/35);
 
                 case "quote":
                     if (quoteAmount == Math.floor(quoteAmount/2)*2) {
