@@ -1,4 +1,4 @@
-package game;
+package menus;
 
 import menus.FreeplayMenuState;
 import flixel.FlxG;
@@ -8,12 +8,13 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.system.FlxSound;
 import flixel.util.FlxColor;
+import flixel.math.FlxMath;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import ui.AlphabetText;
 
 using StringTools;
 
-class PauseSubState extends BasicSubState
+class PauseMenu extends BasicSubState
 {
 	var grpOptions:FlxTypedGroup<AlphabetText>;
 
@@ -30,6 +31,7 @@ class PauseSubState extends BasicSubState
 	var practiceText:FlxText;
 	var botplayText:FlxText;
 	var descText:FlxText;
+	var bg:FlxSprite;
 
 	public function new(?x:Float, ?y:Float)
 	{
@@ -43,7 +45,7 @@ class PauseSubState extends BasicSubState
 
 		FlxG.sound.list.add(pauseMusic);
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
 		bg.scrollFactor.set();
 		add(bg);
@@ -72,6 +74,8 @@ class PauseSubState extends BasicSubState
 		if (pauseMusic.volume < 0.5)
 			pauseMusic.volume += 0.01 * elapsed;
 
+		bg.alpha = FlxMath.lerp(bg.alpha, 0.6, Math.max(0, Math.min(1, elapsed * 6)));
+
 		var up = FlxG.keys.justPressed.UP;
 		var down = FlxG.keys.justPressed.DOWN;
 		var accept = FlxG.keys.justPressed.ENTER;
@@ -98,7 +102,7 @@ class PauseSubState extends BasicSubState
 					// wanna do this tomorrow
 				
 				case 'Exit To Menu':
-					if(PlayState.storyMode)
+					if(game.PlayState.storyMode)
 						FlxG.switchState(new menus.StoryModeState());
 					else
 						FlxG.switchState(new menus.FreeplayMenuState());

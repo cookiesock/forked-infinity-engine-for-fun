@@ -1,5 +1,6 @@
 package menus;
 
+import flixel.FlxBasic;
 import haxe.ds.Option;
 import flixel.FlxSubState;
 import flixel.text.FlxText;
@@ -41,7 +42,7 @@ class OptionsState extends BasicState
 	var gameplayOptionsList:Array<Dynamic> = [
 		["Downscroll", "Makes notes scroll down instead of up.", "checkbox","downscroll"],
 		["Botplay", "Enables bot to play the song for you!", "checkbox","botplay"],
-		["Adjust Offset", "Change how early/late your notes fall on-screen.","menushit","songOffset"]
+		["Adjust Offset", "Change how early/late your notes fall on-screen.","menuitem","songOffset"]
 	];
 
 	var optionsList:Array<Dynamic> = [];
@@ -134,6 +135,8 @@ class OptionsState extends BasicState
 							refreshOptionsList(true);
 							selectedOption = 0;
 							changeSelection();
+						case 'Manage Keybinds':
+							openSubState(new menus.KeybindMenu());
 					}
 				
 				case 'graphicsOptions':
@@ -141,9 +144,19 @@ class OptionsState extends BasicState
 					reloadShit();
 
 				case 'gameplayOptions':
-					if(gameplayOptionsList[selectedOption][2] == "checkbox")
-						Reflect.setProperty(Options, gameplayOptionsList[selectedOption][3], !Reflect.getProperty(Options, gameplayOptionsList[selectedOption][3]));
+						switch(optionsList[selectedOption][2])
+						{
+							case 'checkbox':
+								Reflect.setProperty(Options, optionsList[selectedOption][3], !Reflect.getProperty(Options, optionsList[selectedOption][3]));
 
+							case 'menuitem':
+								switch (optionsList[selectedOption][0])
+								{
+									case 'Adjust Offset':
+										openSubState(new menus.OffsetMenu());
+								}
+						}
+						
 					reloadShit();
 			}
 		}

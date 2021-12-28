@@ -9,6 +9,8 @@ class Options
 
     public static var songOffset:Int = 0;
 
+    public static var noteSkin:String = 'default';
+
     public static var graphicsSettings:Array<Dynamic> = [
         true, // toggle background
         false, // low quality
@@ -54,6 +56,7 @@ class Options
         songOffset = FlxG.save.data.songOffset;
         botplay = FlxG.save.data.botplay;
         downscroll = FlxG.save.data.downscroll;
+        noteSkin = FlxG.save.data.noteskin;
     }
 
     public static function saveSettings()
@@ -64,6 +67,7 @@ class Options
         FlxG.save.data.songOffset = songOffset;
         FlxG.save.data.botplay = botplay;
         FlxG.save.data.downscroll = downscroll;
+        FlxG.save.data.noteskin = noteSkin;
         
         FlxG.save.flush();
     }

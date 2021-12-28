@@ -279,7 +279,7 @@ class PlayState extends BasicState
 
 		for(i in 0...8) { // add strum arrows
 			var isPlayerArrow:Bool = i > 3;
-			var funnyArrowX:Float = 52;
+			var funnyArrowX:Float = 62;
 			
 			if(isPlayerArrow) {
 				funnyArrowX += 242;
@@ -517,7 +517,7 @@ class PlayState extends BasicState
 
 			theTimer.active = false;
 
-			openSubState(new PauseSubState());
+			openSubState(new menus.PauseMenu());
 		}
 		
 		FlxG.camera.zoom = FlxMath.lerp(stageCamZoom, FlxG.camera.zoom, Util.boundTo(1 - (elapsed * 3.125), 0, 1));
