@@ -981,7 +981,7 @@ class PlayState extends BasicState
 			}
 		}
 
-		for(i in 0...justPressed.length)
+		/*for(i in 0...justPressed.length)
 		{
 			if(justPressed[i])
 			{
@@ -997,7 +997,7 @@ class PlayState extends BasicState
 					totalNoteStuffs++;
 				}
 			}
-		}
+		}*/
 
 		if(player.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !pressed.contains(true))
 			if(player.animation.curAnim.name.startsWith('sing'))

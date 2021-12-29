@@ -119,6 +119,8 @@ class KeybindMenu extends BasicSubState
 			keybindWarning.text = "Press LEFT & RIGHT to select an arrow\nPress ENTER to change the keybind for the arrow";
 		}
 
+		keybindWarning.screenCenter(X);
+
 		bg.alpha = FlxMath.lerp(bg.alpha, 0.6, Math.max(0, Math.min(1, elapsed * 6)));
 
 		super.update(elapsed);
