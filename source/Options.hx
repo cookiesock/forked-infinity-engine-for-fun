@@ -7,7 +7,7 @@ class Options
     public static var downscroll:Bool = false;
     public static var botplay:Bool = false;
 
-    public static var ghostTapping:Bool = false;
+    public static var ghostTapping:Bool = true;
 
     public static var songOffset:Int = 0;
 
