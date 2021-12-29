@@ -89,7 +89,9 @@ class PlayState extends BasicState
 	var countdownNum:Int = -1;
 
 	var downscroll:Bool = Options.downscroll;
-	var botplay:Bool = Options.botplay;
+	static public var botplay:Bool = Options.botplay;
+
+	static public var ghostTapping:Bool = Options.ghostTapping;
 
 	// rating shit
 	var funnyRating:RatingSprite;
@@ -98,7 +100,7 @@ class PlayState extends BasicState
 	var msText:FlxText;
 	var scoreText:FlxText;
 
-	var botplayText:FlxText;
+	static public var botplayText:FlxText;
 
 	var accuracy:Float = 0;
 	var accuracyNum:Float = 0;
@@ -808,7 +810,9 @@ class PlayState extends BasicState
 			for(i in 0...justPressed.length)
 			{
 				if(justPressed[i])
+				{
 					playerStrumArrows.members[i].playAnim("tap", true);
+				}
 			}
 	
 			for(i in 0...released.length)
@@ -846,11 +850,11 @@ class PlayState extends BasicState
 
 		possibleNotes.sort((a, b) -> Std.int(a.strum - b.strum));
 
+		var dontHitTheseDirectionsLol:Array<Bool> = [false, false, false, false];
+		var noteDataTimes:Array<Float> = [-1, -1, -1, -1];
+
 		if(possibleNotes.length > 0)
 		{
-			var dontHitTheseDirectionsLol:Array<Bool> = [false, false, false, false];
-			var noteDataTimes:Array<Float> = [-1, -1, -1, -1];
-
 			for(i in 0...possibleNotes.length)
 			{
 				var note = possibleNotes[i];
@@ -969,6 +973,24 @@ class PlayState extends BasicState
 						note.kill();
 						note.destroy();
 					}
+				}
+			}
+		}
+
+		for(i in 0...justPressed.length)
+		{
+			if(justPressed[i])
+			{
+				if(!Options.ghostTapping && !dontHitTheseDirectionsLol[i]) 
+				{
+					changeHealth(false);
+		
+					player.holdTimer = 0;
+					player.playAnim(singAnims[i] + "miss", true);
+		
+					score -= 10;
+					misses += 1;
+					totalNoteStuffs++;
 				}
 			}
 		}

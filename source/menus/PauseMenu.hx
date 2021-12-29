@@ -1,5 +1,6 @@
 package menus;
 
+import game.PlayState;
 import menus.FreeplayMenuState;
 import flixel.FlxG;
 import flixel.FlxCamera;
@@ -18,13 +19,21 @@ class PauseMenu extends BasicSubState
 {
 	var grpOptions:FlxTypedGroup<AlphabetText>;
 
-	var pauseOptions:Array<String> = [
+	var defaultPauseOptions:Array<String> = [
 		"Resume",
 		"Restart Song",
 		"Toggle Practice Mode",
 		"Options",
 		"Exit To Menu",
 	];
+
+	var funnyOptions:Array<String> = [
+		"Back",
+		"Botplay",
+		"Ghost Tapping",
+	];
+
+	var pauseOptions:Array<String> = [];
 
 	var selectedOption:Int = 0;
 	var pauseMusic:FlxSound;
@@ -36,6 +45,8 @@ class PauseMenu extends BasicSubState
 	public function new(?x:Float, ?y:Float)
 	{
 		super();
+
+		pauseOptions = defaultPauseOptions;
 
 		// if it crashes i am WAY too tired to fix rn - sworduceb
 
@@ -53,20 +64,35 @@ class PauseMenu extends BasicSubState
 		grpOptions = new FlxTypedGroup<AlphabetText>();
 		add(grpOptions);
 
-		for (i in 0...pauseOptions.length)
-		{
-			var songText:AlphabetText = new AlphabetText(0, (70 * i) + 30, pauseOptions[i]);
-			songText.isMenuItem = true;
-			songText.targetY = i;
-			grpOptions.add(songText);
-		}
-
+		refreshPauseOptions();
 		changeSelection();
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		// rembr: add song info shit into this later and also fun facts idkdfd
 		// it's like 4:45am as of writing thsi i weant to die
+	}
+
+	public function refreshPauseOptions(?deletePreviousOptions:Bool = false)
+	{
+		if(deletePreviousOptions)
+		{
+			for(i in 0...grpOptions.members.length)
+			{
+				grpOptions.members[i].kill;
+				grpOptions.members[i].destroy;
+
+				grpOptions.clear();
+			}
+		}
+
+		for (i in 0...pauseOptions.length)
+			{
+				var songText:AlphabetText = new AlphabetText(0, (70 * i) + 30, pauseOptions[i]);
+				songText.isMenuItem = true;
+				songText.targetY = i;
+				grpOptions.add(songText);
+			}
 	}
 
 	override function update(elapsed:Float)
@@ -99,13 +125,36 @@ class PauseMenu extends BasicSubState
 					// do nothing yet, i'm tired aaadfgiserh
 
 				case 'Options':
-					// wanna do this tomorrow
+					pauseOptions = funnyOptions;
+					selectedOption = 0;
+					refreshPauseOptions(true);
+					changeSelection();
 				
 				case 'Exit To Menu':
+					FlxG.sound.playMusic(Util.getSound('menus/freakyMenu', false));
+
 					if(game.PlayState.storyMode)
 						FlxG.switchState(new menus.StoryModeState());
 					else
 						FlxG.switchState(new menus.FreeplayMenuState());
+				
+				// options Shit
+				case 'Back':
+					pauseOptions = defaultPauseOptions;
+					selectedOption = 0;
+					refreshPauseOptions(true);
+					changeSelection();
+
+				case 'Botplay':
+					game.PlayState.botplay = !game.PlayState.botplay;
+					Options.botplay = game.PlayState.botplay;
+					game.PlayState.botplayText.visible = Options.botplay;
+					Options.saveSettings();
+
+				case 'Ghost Tapping':
+					game.PlayState.ghostTapping = !game.PlayState.ghostTapping;
+					Options.ghostTapping = game.PlayState.ghostTapping;
+					Options.saveSettings();
 			}
 		}
 

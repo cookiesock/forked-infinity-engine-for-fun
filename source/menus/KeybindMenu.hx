@@ -1,13 +1,9 @@
 package menus;
 
 import game.StrumArrow;
-import menus.FreeplayMenuState;
 import flixel.FlxG;
-import flixel.FlxCamera;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.text.FlxText;
-import flixel.system.FlxSound;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -18,34 +14,134 @@ using StringTools;
 class KeybindMenu extends BasicSubState
 {
 	var bg:FlxSprite;
+	var keybindWarning:FlxText;
 	var daNotes:FlxTypedGroup<StrumArrow>;
+	var daKeybinds:FlxTypedGroup<FlxText>;
+
+	var currentKeybinds:Array<String> = [];
+
+	var selectedKey:Int = 0;
+	var isEditingKey:Bool = false;
+	var checkingForKeys:Bool = false;
 
 	public function new()
 	{
 		super();
+
+		for(i in 0...Options.mainBinds.length)
+		{
+			currentKeybinds.push(Options.mainBinds[i]);
+		}
+
 		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
 		bg.scrollFactor.set();
 		add(bg);
 
+		keybindWarning = new FlxText(0, FlxG.height * 0.8, 0, "Press any key to continue.", 32);
+		keybindWarning.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		keybindWarning.scrollFactor.set();
+		keybindWarning.screenCenter(X);
+		keybindWarning.borderSize = 2.4;
+		keybindWarning.alpha = 0;
+		add(keybindWarning);
+
 		daNotes = new FlxTypedGroup<StrumArrow>();
 		add(daNotes);
 
+		daKeybinds = new FlxTypedGroup<FlxText>();
+		add(daKeybinds);
+
 		for (i in 0...4) {
-			var note:StrumArrow = new StrumArrow((135 * i) + 375, 0, i, Options.noteSkin);
+			var note:StrumArrow = new StrumArrow((125 * i) + 395, 0, i, Options.noteSkin);
 			note.antialiasing = true;
+			note.centerOffsets();
+			note.centerOrigin();
+			note.updateHitbox();
 			note.screenCenter(Y);
+			note.ID = i;
 			daNotes.add(note);
 		}
+
+		for (i in 0...daNotes.members.length) {
+			var daKeybindText:FlxText = new FlxText(daNotes.members[i].x + daNotes.members[i].width / 2.5, 0, 0, "A", 48, true);
+			daKeybindText.screenCenter(Y);
+			daKeybindText.setFormat("assets/fonts/vcr.ttf", 48, FlxColor.WHITE, null, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			daKeybindText.scrollFactor.set();
+			daKeybindText.borderSize = 2;
+			daKeybinds.add(daKeybindText);
+		}
+
+		changeSelection();
 	}
 
 	override public function update(elapsed:Float)
 	{
+		var up = FlxG.keys.justPressed.UP;
+		var down = FlxG.keys.justPressed.DOWN;
+		var left = FlxG.keys.justPressed.LEFT;
+		var right = FlxG.keys.justPressed.RIGHT;
+		var accept = FlxG.keys.justPressed.ENTER;
+
 		if(FlxG.keys.justPressed.BACKSPACE)
 			close();
+
+		for(i in 0...daKeybinds.members.length)
+		{
+			daKeybinds.members[i].text = currentKeybinds[i];
+		}
+
+		if(!isEditingKey)
+		{
+			if(left) changeSelection(-1);
+			if(right) changeSelection(1);
+			if(accept) {
+				checkingForKeys = false;
+				isEditingKey = true;
+				FlxG.sound.play(Util.getSound('menus/confirmMenu'));
+			}
+		} else {
+			if(!FlxG.keys.pressed.ENTER)
+			{
+				checkingForKeys = true;
+			}
+			if(FlxG.keys.getIsDown().length > 0 && checkingForKeys) {
+				currentKeybinds[selectedKey] = FlxG.keys.getIsDown()[0].ID.toString();
+				Options.mainBinds = currentKeybinds;
+				isEditingKey = false;
+				FlxG.sound.play(Util.getSound('menus/scrollMenu'));
+			}
+		}
+
+		keybindWarning.visible = isEditingKey;
 
 		bg.alpha = FlxMath.lerp(bg.alpha, 0.6, Math.max(0, Math.min(1, elapsed * 6)));
 
 		super.update(elapsed);
+	}
+
+	public function changeSelection(?change:Int = 0)
+	{
+		selectedKey += change;
+
+		if(selectedKey < 0)
+			selectedKey = daNotes.members.length - 1;
+
+		if(selectedKey > daNotes.members.length - 1)
+			selectedKey = 0;	
+
+		for(i in 0...daNotes.members.length)
+		{
+			if(daNotes.members[i].ID == selectedKey)
+			{
+				daNotes.members[i].alpha = 1;
+				daNotes.members[i].scale.set(1, 1);
+			} else {
+				daNotes.members[i].alpha = 0.6;
+				daNotes.members[i].scale.set(0.8, 0.8);
+			}
+		}
+
+		FlxG.sound.play(Util.getSound('menus/scrollMenu'));
 	}
 }

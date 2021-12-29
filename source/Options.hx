@@ -7,6 +7,8 @@ class Options
     public static var downscroll:Bool = false;
     public static var botplay:Bool = false;
 
+    public static var ghostTapping:Bool = false;
+
     public static var songOffset:Int = 0;
 
     public static var noteSkin:String = 'default';
@@ -18,8 +20,8 @@ class Options
         false, // remove chars, 0 - just gf, 1 - everyone
     ];
 
-    public static var mainBinds:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
-    public static var altBinds:Array<String> = ["A", "S", "W", "D"];
+    public static var altBinds:Array<String> = ["LEFT", "DOWN", "UP", "RIGHT"];
+    public static var mainBinds:Array<String> = ["A", "S", "W", "D"];
 
     public static function init()
     {
@@ -36,6 +38,9 @@ class Options
 
         if(FlxG.save.data.songOffset == null)
             FlxG.save.data.songOffset = songOffset;
+
+        if(FlxG.save.data.ghostTapping == null)
+            FlxG.save.data.ghostTapping = ghostTapping;
 
         if(FlxG.save.data.mainBinds == null)
             FlxG.save.data.mainBinds = mainBinds;
@@ -57,6 +62,7 @@ class Options
         botplay = FlxG.save.data.botplay;
         downscroll = FlxG.save.data.downscroll;
         noteSkin = FlxG.save.data.noteskin;
+        ghostTapping = FlxG.save.data.ghostTapping;
     }
 
     public static function saveSettings()
@@ -68,6 +74,7 @@ class Options
         FlxG.save.data.botplay = botplay;
         FlxG.save.data.downscroll = downscroll;
         FlxG.save.data.noteskin = noteSkin;
+        FlxG.save.data.ghostTapping = ghostTapping;
         
         FlxG.save.flush();
     }

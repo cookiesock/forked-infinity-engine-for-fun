@@ -98,7 +98,7 @@ class TitleScreenState extends BasicState
 		}
 
 		logo.y = FlxMath.lerp(logo.y, 50, Math.max(0, Math.min(1, elapsed * 3)));
-		gf.y = FlxMath.lerp(gf.y, 100, Math.max(0, Math.min(1, elapsed * 3)));
+		gf.y = FlxMath.lerp(gf.y, 200, Math.max(0, Math.min(1, elapsed * 3)));
 		
 		super.update(elapsed);
 	}
