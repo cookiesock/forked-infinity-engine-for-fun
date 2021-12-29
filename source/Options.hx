@@ -45,8 +45,9 @@ class Options
         if(FlxG.save.data.mainBinds == null)
             FlxG.save.data.mainBinds = mainBinds;
 
+        /*
         if(FlxG.save.data.altBinds == null)
-            FlxG.save.data.altBinds = altBinds;
+            FlxG.save.data.altBinds = altBinds;*/
 
         loadSettings();
 
@@ -57,7 +58,7 @@ class Options
     {
         graphicsSettings = FlxG.save.data.graphicsSettings;
         mainBinds = FlxG.save.data.mainBinds;
-        altBinds = FlxG.save.data.altBinds;
+        //altBinds = FlxG.save.data.altBinds;
         songOffset = FlxG.save.data.songOffset;
         botplay = FlxG.save.data.botplay;
         downscroll = FlxG.save.data.downscroll;
@@ -69,7 +70,7 @@ class Options
     {
         FlxG.save.data.graphicsSettings = graphicsSettings;
         FlxG.save.data.mainBinds = mainBinds;
-        FlxG.save.data.altBinds = altBinds;
+        //FlxG.save.data.altBinds = altBinds;
         FlxG.save.data.songOffset = songOffset;
         FlxG.save.data.botplay = botplay;
         FlxG.save.data.downscroll = downscroll;
