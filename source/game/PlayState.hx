@@ -26,6 +26,7 @@ import ui.Icon;
 import ui.CountdownSprite;
 import ui.RatingSprite;
 import ui.ComboSprite;
+import ui.NoteSplash;
 
 using StringTools;
 
@@ -189,6 +190,9 @@ class PlayState extends BasicState
 		FlxG.camera.zoom = stageCamZoom;
 
 		speed = song.speed;
+
+		if(Options.scrollSpeed > 1)
+			speed = Options.scrollSpeed;
 		
 		// commented out speakers/gf because my pc sucks rn - swordcube
 		// that should hopefully no longer be the case on christmas - also swordcube
@@ -300,6 +304,11 @@ class PlayState extends BasicState
 				playerStrumArrows.add(theRealStrumArrow);
 			}
 		}
+
+		// note splash cache
+		var noteSplashCache:NoteSplash = new NoteSplash(100, 100, 0);
+		noteSplashCache.cameras = [otherCam];
+		add(noteSplashCache);
 
 		funnyRating = new RatingSprite(FlxG.width * 0.55, 300);
 		funnyRating.alpha = 0;
@@ -936,6 +945,11 @@ class PlayState extends BasicState
 						vocals.volume = 1;
 
 					playerStrumArrows.members[note.noteID].playAnim("confirm", true);
+					if(sussyBallsRating == 'sick') {
+						var noteSplash:NoteSplash = new NoteSplash(playerStrumArrows.members[note.noteID].x, playerStrumArrows.members[note.noteID].y, note.noteID);
+						noteSplash.cameras = [otherCam];
+						add(noteSplash);
+					}
 					dontHitTheseDirectionsLol[note.noteID] = true;
 
 					player.holdTimer = 0;

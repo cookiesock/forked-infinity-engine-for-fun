@@ -14,11 +14,11 @@ import ui.AlphabetText;
 
 using StringTools;
 
-class OffsetMenu extends BasicSubState
+class ScrollSpeedMenu extends BasicSubState
 {
 	var bg:FlxSprite;
-	var offsetWarning:FlxText;
-	var funnyOffset:FlxText;
+	var scrollSpeedWarning:FlxText;
+	var funnyScrollSpeed:FlxText;
 	var holdTime:Float = 0;
 	var stupidDumb:Float = 0;
 
@@ -28,7 +28,7 @@ class OffsetMenu extends BasicSubState
 	var right:Bool = false;
 	var accept:Bool = false;
 
-	var maxOffset:Int = 1000;
+	var maxSpeed:Int = 10;
 
 	override public function create()
 	{
@@ -37,19 +37,19 @@ class OffsetMenu extends BasicSubState
 		bg.scrollFactor.set();
 		add(bg);
 
-		funnyOffset = new FlxText(0, 0, 0, "placeholder", 64);
-		funnyOffset.setFormat("assets/fonts/vcr.ttf", 64, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		funnyOffset.scrollFactor.set();
-		funnyOffset.screenCenter();
-		funnyOffset.borderSize = 2.4;
-		add(funnyOffset);
+		funnyScrollSpeed = new FlxText(0, 0, 0, "placeholder", 64);
+		funnyScrollSpeed.setFormat("assets/fonts/vcr.ttf", 64, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		funnyScrollSpeed.scrollFactor.set();
+		funnyScrollSpeed.screenCenter();
+		funnyScrollSpeed.borderSize = 2.4;
+		add(funnyScrollSpeed);
 
-		offsetWarning = new FlxText(0, FlxG.height * 0.8, 0, "Press LEFT & RIGHT to change how early/late notes appear.", 32);
-		offsetWarning.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		offsetWarning.scrollFactor.set();
-		offsetWarning.screenCenter(X);
-		offsetWarning.borderSize = 2.4;
-		add(offsetWarning);
+		scrollSpeedWarning = new FlxText(0, FlxG.height * 0.8, 0, "Press LEFT & RIGHT to change how fast notes go.\n1 = Chart Dependent Speed", 32);
+		scrollSpeedWarning.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scrollSpeedWarning.scrollFactor.set();
+		scrollSpeedWarning.screenCenter(X);
+		scrollSpeedWarning.borderSize = 2.4;
+		add(scrollSpeedWarning);
 
 		super.create();
 	}
@@ -67,13 +67,13 @@ class OffsetMenu extends BasicSubState
 
 		if(left || right) {
 			var daMultiplier:Int = left ? -1 : 1;
-			changeOffset(daMultiplier);
+			changeOffset(daMultiplier / 10);
 		} else {
 			holdTime = 0;
 		}
 
-		funnyOffset.text = "Current Offset: " + Options.songOffset;
-		funnyOffset.screenCenter();
+		funnyScrollSpeed.text = "Current Scroll Speed: " + FlxMath.roundDecimal(Options.scrollSpeed, 1);
+		funnyScrollSpeed.screenCenter();
 
 		bg.alpha = FlxMath.lerp(bg.alpha, 0.6, Math.max(0, Math.min(1, elapsed * 6)));
 
@@ -82,19 +82,19 @@ class OffsetMenu extends BasicSubState
 		super.update(elapsed);
 	}
 
-	public function changeOffset(?change:Int = 0)
+	public function changeOffset(?change:Float = 0)
 	{
 		holdTime += stupidDumb;
 
 		if(holdTime > 0.5 || leftP || rightP)
 		{
-			Options.songOffset += change;
+			Options.scrollSpeed += change;
 
-			if(Options.songOffset < (maxOffset * -1))
-				Options.songOffset = (maxOffset * -1);
+			if(Options.scrollSpeed < 1)
+				Options.scrollSpeed = 1;
 
-			if(Options.songOffset > maxOffset)
-				Options.songOffset = maxOffset;
+			if(Options.scrollSpeed > maxSpeed)
+				Options.scrollSpeed = maxSpeed;
 		}
 	}
 }

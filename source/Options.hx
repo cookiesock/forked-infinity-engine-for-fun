@@ -10,6 +10,7 @@ class Options
     public static var ghostTapping:Bool = true;
 
     public static var songOffset:Int = 0;
+    public static var scrollSpeed:Float = 1;
 
     public static var noteSkin:String = 'default';
 
@@ -39,6 +40,9 @@ class Options
         if(FlxG.save.data.songOffset == null)
             FlxG.save.data.songOffset = songOffset;
 
+        if(FlxG.save.data.scrollSpeed == null)
+            FlxG.save.data.scrollSpeed = scrollSpeed;
+
         if(FlxG.save.data.ghostTapping == null)
             FlxG.save.data.ghostTapping = ghostTapping;
 
@@ -60,6 +64,7 @@ class Options
         mainBinds = FlxG.save.data.mainBinds;
         //altBinds = FlxG.save.data.altBinds;
         songOffset = FlxG.save.data.songOffset;
+        scrollSpeed = FlxG.save.data.scrollSpeed;
         botplay = FlxG.save.data.botplay;
         downscroll = FlxG.save.data.downscroll;
         noteSkin = FlxG.save.data.noteskin;
@@ -76,6 +81,7 @@ class Options
         FlxG.save.data.mainBinds = mainBinds;
         //FlxG.save.data.altBinds = altBinds;
         FlxG.save.data.songOffset = songOffset;
+        FlxG.save.data.scrollSpeed = scrollSpeed;
         FlxG.save.data.botplay = botplay;
         FlxG.save.data.downscroll = downscroll;
         FlxG.save.data.noteskin = noteSkin;

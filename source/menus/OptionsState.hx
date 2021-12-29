@@ -43,6 +43,7 @@ class OptionsState extends BasicState
 		["Downscroll", "Makes notes scroll down instead of up.", "checkbox","downscroll"],
 		["Botplay", "Enables bot to play the song for you!", "checkbox","botplay"],
 		["Ghost Tapping", "Makes you not get misses from pressing keys when there are no notes.","checkbox","ghostTapping"],
+		["Adjust Scroll Speed", "Change how fast your notes go.","menuitem","scrollSpeed"],
 		["Adjust Offset", "Change how early/late your notes fall on-screen.","menuitem","songOffset"],
 	];
 
@@ -155,6 +156,8 @@ class OptionsState extends BasicState
 								{
 									case 'Adjust Offset':
 										openSubState(new menus.OffsetMenu());
+									case 'Adjust Scroll Speed':
+										openSubState(new menus.ScrollSpeedMenu());
 								}
 						}
 						
