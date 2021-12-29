@@ -167,9 +167,10 @@ class OptionsState extends BasicState
 		}
 
 		if(descText != null) {
-			descText.screenCenter(X);
 			descText.text = optionsList[selectedOption][1];
+			descText.screenCenter(X);
 			descText.alpha = FlxMath.lerp(descText.alpha, 1, Math.max(0, Math.min(1, elapsed * 3)));
+
 			if(descBox != null) {
 				descText.y = descBox.y + 25;
 			}
@@ -241,16 +242,16 @@ class OptionsState extends BasicState
 			selectedOption = 0;
 
         for(i in 0...grpOptions.members.length)
-			{
-				var item = grpOptions.members[i];
-	
-				item.targetY = i - selectedOption;
-	
-				item.alpha = 0.6;
-	
-				if (item.targetY == 0)
-					item.alpha = 1;
-			}
+		{
+			var item = grpOptions.members[i];
+
+			item.targetY = i - selectedOption;
+
+			item.alpha = 0.6;
+
+			if (item.targetY == 0)
+				item.alpha = 1;
+		}
 
 		FlxG.sound.play(Util.getSound('menus/scrollMenu', true));
 	}
