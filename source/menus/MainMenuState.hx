@@ -19,6 +19,8 @@ class MainMenuState extends BasicState
 	var mouseOverlapped = false;
 	var mouseOverlappedBefore = false;
 
+	var hasSelected:Bool = false;
+
 	var menuBG:FlxSprite;
 	var menuBGMagenta:FlxSprite;
 	
@@ -99,16 +101,18 @@ class MainMenuState extends BasicState
 			var btn:FlxSprite = menuButtons.members[i];
 			btn.screenCenter(X);
 		}
-		if (FlxG.keys.justPressed.UP) {
+		if (FlxG.keys.justPressed.UP && !hasSelected) {
 			changeSelection(-1);
 		}
-		if (FlxG.keys.justPressed.DOWN) {
+		if (FlxG.keys.justPressed.DOWN && !hasSelected) {
 			changeSelection(1);
 		}
 		if (FlxG.keys.justPressed.ENTER)
 		{
 			// seriously pls use switch cases for shit like this - swordcmube
 			FlxG.sound.play('assets/sounds/menus/confirmMenu' + Util.soundExt);
+
+			hasSelected = true;
 
 			FlxFlicker.flicker(menuBGMagenta, 1.1, 0.15, false);
 
