@@ -110,7 +110,7 @@ class MainMenuState extends BasicState
 		if (FlxG.keys.justPressed.ENTER)
 		{
 			// seriously pls use switch cases for shit like this - swordcmube
-			FlxG.sound.play('assets/sounds/menus/confirmMenu' + Util.soundExt);
+			FlxG.sound.play(Util.getSound('menus/confirmMenu'));
 
 			hasSelected = true;
 
