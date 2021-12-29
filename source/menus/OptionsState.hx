@@ -42,8 +42,8 @@ class OptionsState extends BasicState
 	var gameplayOptionsList:Array<Dynamic> = [
 		["Downscroll", "Makes notes scroll down instead of up.", "checkbox","downscroll"],
 		["Botplay", "Enables bot to play the song for you!", "checkbox","botplay"],
+		["Ghost Tapping", "Makes you not get misses from pressing keys when there are no notes.","checkbox","ghostTapping"],
 		["Adjust Offset", "Change how early/late your notes fall on-screen.","menuitem","songOffset"],
-		["Ghost Tapping", "Makes you not get misses from pressing keys when there are no notes.","checkbox","ghostTapping"]
 	];
 
 	var optionsList:Array<Dynamic> = [];
