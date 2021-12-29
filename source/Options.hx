@@ -64,6 +64,10 @@ class Options
         downscroll = FlxG.save.data.downscroll;
         noteSkin = FlxG.save.data.noteskin;
         ghostTapping = FlxG.save.data.ghostTapping;
+
+		if(FlxG.save.data.volume != null) {
+			FlxG.sound.volume = FlxG.save.data.volume;
+		}
     }
 
     public static function saveSettings()

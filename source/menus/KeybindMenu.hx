@@ -43,7 +43,6 @@ class KeybindMenu extends BasicSubState
 		keybindWarning.scrollFactor.set();
 		keybindWarning.screenCenter(X);
 		keybindWarning.borderSize = 2.4;
-		keybindWarning.alpha = 0;
 		add(keybindWarning);
 
 		daNotes = new FlxTypedGroup<StrumArrow>();
@@ -64,7 +63,7 @@ class KeybindMenu extends BasicSubState
 		}
 
 		for (i in 0...daNotes.members.length) {
-			var daKeybindText:FlxText = new FlxText(daNotes.members[i].x + daNotes.members[i].width / 2.5, 0, 0, "A", 48, true);
+			var daKeybindText:FlxText = new FlxText(daNotes.members[i].x + daNotes.members[i].width / 2.7, 0, 0, "A", 48, true);
 			daKeybindText.screenCenter(Y);
 			daKeybindText.setFormat("assets/fonts/vcr.ttf", 48, FlxColor.WHITE, null, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			daKeybindText.scrollFactor.set();
@@ -113,7 +112,11 @@ class KeybindMenu extends BasicSubState
 			}
 		}
 
-		keybindWarning.visible = isEditingKey;
+		if(isEditingKey) {
+			keybindWarning.text = "Press any key to continue.";
+		} else {
+			keybindWarning.text = "Press LEFT & RIGHT to select an arrow\nPress ENTER to change the keybind for the arrow";
+		}
 
 		bg.alpha = FlxMath.lerp(bg.alpha, 0.6, Math.max(0, Math.min(1, elapsed * 6)));
 
@@ -135,10 +138,10 @@ class KeybindMenu extends BasicSubState
 			if(daNotes.members[i].ID == selectedKey)
 			{
 				daNotes.members[i].alpha = 1;
-				daNotes.members[i].scale.set(1, 1);
+				daNotes.members[i].scale.set(0.8, 0.8);
 			} else {
 				daNotes.members[i].alpha = 0.6;
-				daNotes.members[i].scale.set(0.8, 0.8);
+				daNotes.members[i].scale.set(0.7, 0.7);
 			}
 		}
 
