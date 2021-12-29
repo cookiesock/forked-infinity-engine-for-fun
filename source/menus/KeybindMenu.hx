@@ -64,7 +64,7 @@ class KeybindMenu extends BasicSubState
 		}
 
 		for (i in 0...daNotes.members.length) {
-			var daKeybindText:FlxText = new FlxText(daNotes.members[i].x + daNotes.members[i].width / 2.5, 0, 0, "A", 48, true);
+			var daKeybindText:FlxText = new FlxText(daNotes.members[i].x, 0, 48, "A", 48, true);
 			daKeybindText.screenCenter(Y);
 			daKeybindText.setFormat("assets/fonts/vcr.ttf", 48, FlxColor.WHITE, null, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			daKeybindText.scrollFactor.set();
@@ -89,6 +89,7 @@ class KeybindMenu extends BasicSubState
 		for(i in 0...daKeybinds.members.length)
 		{
 			daKeybinds.members[i].text = currentKeybinds[i];
+			daKeybinds.members[i].x = daNotes.members[i].x + (daNotes.members[i].width / 2) - (24 /* text size / 2 */);
 		}
 
 		if(!isEditingKey)
