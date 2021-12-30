@@ -634,6 +634,7 @@ class PlayState extends BasicState
 
 						player.holdTimer = 0;
 						player.playAnim(singAnims[note.noteID % 4] + "miss", true);
+						FlxG.sound.play(Util.getSound('gameplay/missnote' + FlxG.random.int(1, 3)), 0.6);
 
 						score -= 10;
 						misses += 1;
@@ -1003,6 +1004,7 @@ class PlayState extends BasicState
 		
 					player.holdTimer = 0;
 					player.playAnim(singAnims[i] + "miss", true);
+					FlxG.sound.play(Util.getSound('gameplay/missnote' + FlxG.random.int(1, 3)), 0.6);
 		
 					score -= 10;
 					misses += 1;
