@@ -482,6 +482,10 @@ class PlayState extends BasicState
 			}
 		}
 
+		FlxG.camera.follow(camFollow, LOCKON, 0.04 * (60 / Main.display.currentFPS));
+		FlxG.camera.zoom = stageCamZoom;
+		FlxG.camera.focusOn(camFollow.getPosition());
+
 		// for combo counter :D
 
 		var comboString1:String = Std.string(combo);
@@ -666,6 +670,19 @@ class PlayState extends BasicState
 		scoreText.screenCenter(X);
 
 		super.update(elapsed);
+
+		if(song.notes[Std.int(curStep / 16)] != null)
+		{
+			var midPos = song.notes[Std.int(curStep / 16)].mustHitSection ? player.getMidpoint() : opponent.getMidpoint();
+			if(song.notes[Std.int(curStep / 16)].mustHitSection)
+			{
+				if(camFollow.x != midPos.x - 100 + player.camOffsets[0])
+					camFollow.setPosition(midPos.x - 100 + player.camOffsets[0], midPos.y - 100 + player.camOffsets[1]);
+			} else {
+				if(camFollow.x != midPos.x + 150 + opponent.camOffsets[0])
+					camFollow.setPosition(midPos.x + 150 + opponent.camOffsets[0], midPos.y - 100 + opponent.camOffsets[1]);	
+			}
+		}
 	}
 
 	override public function closeSubState()
