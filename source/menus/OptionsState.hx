@@ -109,7 +109,7 @@ class OptionsState extends BasicState
 					selectedOption = 0;
 					changeSelection();
 				case 'default':
-					FlxG.switchState(new MainMenuState());
+					transitionState(new MainMenuState());
 			}
 		}
 

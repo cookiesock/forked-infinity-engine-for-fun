@@ -137,19 +137,19 @@ class MainMenuState extends BasicState
 							switch (daChoice)
 							{
 								case 'StoryMode':
-									FlxG.switchState(new menus.StoryModeState());
+									transitionState(new menus.StoryModeState());
 									trace("entered story mode");
 									
 								case 'Freeplay':
-									FlxG.switchState(new menus.FreeplayMenuState());
+									transitionState(new menus.FreeplayMenuState());
 									trace("entered freeplay");
 									
 								case 'Credits':
-									FlxG.switchState(new menus.CreditsState());
+									transitionState(new menus.CreditsState());
 									trace("entered credits");
 
 								case 'Options':
-									FlxG.switchState(new menus.OptionsState());
+									transitionState(new menus.OptionsState());
 									trace("entered options");
 							}
 						});
@@ -159,7 +159,7 @@ class MainMenuState extends BasicState
 		
 		if (FlxG.keys.justPressed.BACKSPACE)
 		{
-			FlxG.switchState(new TitleScreenState());
+			transitionState(new TitleScreenState());
 		} // temporary way to go back to menus without restarting the game
 
 		super.update(elapsed);

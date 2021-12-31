@@ -12,7 +12,7 @@ import flixel.FlxState;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxTween;
 
-class CreditsState extends BasicState{
+class CreditsState extends BasicState {
     var menuBG:FlxSprite;
     var description:FlxText;
     var curSelected:Int;

@@ -134,9 +134,9 @@ class PauseMenu extends BasicSubState
 					FlxG.sound.playMusic(Util.getSound('menus/freakyMenu', false));
 
 					if(game.PlayState.storyMode)
-						FlxG.switchState(new menus.StoryModeState());
+						transitionState(new menus.StoryModeState());
 					else
-						FlxG.switchState(new menus.FreeplayMenuState());
+						transitionState(new menus.FreeplayMenuState());
 				
 				// options Shit
 				case 'Back':

@@ -1,5 +1,6 @@
 package game;
 
+import flixel.graphics.frames.FlxAtlasFrames;
 import ui.RatingSprite;
 import flixel.FlxObject;
 import flixel.system.FlxSound;
@@ -142,6 +143,8 @@ class PlayState extends BasicState
 	var funnyHitStuffsLmao:Float = 0.0;
 	var totalNoteStuffs:Int = 0;
 
+	public static var noteSplashFrames:FlxAtlasFrames;
+
 	public function new(?songName:String, ?difficulty:String, ?storyModeBool:Bool = false)
 	{
 		super();
@@ -230,6 +233,8 @@ class PlayState extends BasicState
 				pixelStage = false;
 		}
 
+		noteSplashFrames = Util.getSparrow('noteskins/' + game.PlayState.song.ui_Skin + '/noteSplashes');
+
 		if(!song.player2.startsWith("gf"))
 		{
 			speakers = new Character(100, 120, song.gf);
@@ -304,11 +309,6 @@ class PlayState extends BasicState
 				playerStrumArrows.add(theRealStrumArrow);
 			}
 		}
-
-		// note splash cache
-		var noteSplashCache:NoteSplash = new NoteSplash(100, 100, 0);
-		noteSplashCache.cameras = [otherCam];
-		add(noteSplashCache);
 
 		funnyRating = new RatingSprite(FlxG.width * 0.55, 300);
 		funnyRating.alpha = 0;
@@ -517,7 +517,7 @@ class PlayState extends BasicState
 		/*if(FlxG.keys.justPressed.BACKSPACE)
 		{
 			FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
-			FlxG.switchState(new menus.MainMenuState());
+			transitionState(new menus.MainMenuState());
 		} // temporary way to go back to menus without restarting the game
 		// THIS WILL BE REPLACED WITH PAUSE MENU WHEN THAT IS EXIST!!!*/
 
@@ -775,7 +775,7 @@ class PlayState extends BasicState
 					FlxG.sound.music.onComplete = function()
 					{
 						FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
-						FlxG.switchState(new menus.MainMenuState());
+						transitionState(new menus.MainMenuState());
 					};
 			}
 		}

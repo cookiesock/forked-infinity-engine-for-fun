@@ -18,7 +18,7 @@ class StoryModeState extends BasicState {
     {
         if (FlxG.keys.justPressed.BACKSPACE)
         {
-            FlxG.switchState(new MainMenuState());
+            transitionState(new MainMenuState());
         }
 
         super.update(elapsed);

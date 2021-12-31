@@ -16,7 +16,8 @@ class ComboSprite extends FlxSprite
 		stupidY = y;
 		isComboText = isComboTextB;
 		super(x, y);
-		antialiasing = true;
+		if(!game.PlayState.pixelStage)
+			antialiasing = true;
 
 		loadCombo('0');
 	}

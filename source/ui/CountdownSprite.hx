@@ -10,7 +10,8 @@ class CountdownSprite extends FlxSprite {
 	public function new(countdownStr:String, pixel:Bool = false)
 	{
 		super();
-		antialiasing = true;
+		if(!pixel)
+			antialiasing = true;
 
 		if(pixel)
 			filePath = 'countdown/pixel/';

@@ -93,7 +93,7 @@ class TitleScreenState extends BasicState
 
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
-				FlxG.switchState(new MainMenuState());
+				transitionState(new MainMenuState());
 			});
 		}
 

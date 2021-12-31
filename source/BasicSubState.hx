@@ -1,14 +1,25 @@
 package;
 
+import flixel.FlxState;
+import flixel.FlxSubState;
+import flixel.util.FlxColor;
+import flixel.FlxG;
 import game.Conductor;
 import flixel.FlxSprite;
-import flixel.FlxSubState;
 
 class BasicSubState extends FlxSubState
 {
 	//bpm and step
 	var curStep:Int = 0;
 	var curBeat:Int = 0;
+
+	public function new()
+	{
+		super();
+
+		//if(FlxG.camera != null)
+		//	FlxG.camera.fade(FlxColor.TRANSPARENT, 0.5, true);
+	}
 
 	public function funkyBpm(BPM:Float)
 	{
@@ -31,9 +42,10 @@ class BasicSubState extends FlxSubState
 	//transition
 	var transitionSpr:FlxSprite = new FlxSprite(0, 0, 'assets/images/transition.png');
 
-	public function transitionState(close:Bool)
+	public function transitionState(state:FlxState)
 	{
-
+		FlxG.switchState(state);
+		//FlxG.camera.fade(FlxColor.BLACK, 0.5, true, function(){ FlxG.switchState(state); }, true);
 	}
 
 	private function updateBeat():Void

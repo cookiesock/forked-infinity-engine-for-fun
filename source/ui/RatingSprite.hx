@@ -13,7 +13,8 @@ class RatingSprite extends FlxSprite
 	{
 		stupidY = y;
 		super(x, y);
-		antialiasing = true;
+		if(!game.PlayState.pixelStage)
+			antialiasing = true;
 
 		loadRating('sick');
 	}
