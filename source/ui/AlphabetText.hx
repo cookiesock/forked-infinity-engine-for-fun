@@ -141,6 +141,8 @@ class AlphabetCharacter extends FlxSprite
     {
         super();
 
+        antialiasing = true;
+
         if(id != null)
             ID = id;
 

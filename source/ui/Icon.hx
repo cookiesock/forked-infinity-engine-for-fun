@@ -8,6 +8,7 @@ class Icon extends TrackerSprite
 	public function new(?iconPath:String = "test", ?tracker:FlxSprite, ?isPlayer:Bool = false, ?xOff:Float = 10, ?yOff:Float = -30, ?direction:TrackerDirection = RIGHT)
 	{
 		super(tracker, xOff, yOff, direction);
+		antialiasing = true;
 
 		loadGraphic(Util.getImage(iconPath, false), true, 150, 150);
 

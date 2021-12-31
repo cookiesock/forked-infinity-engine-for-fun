@@ -430,7 +430,7 @@ class PlayState extends BasicState
 
 		notes.sort(sortByShit);
 
-		Conductor.songPosition = -1 * (Conductor.crochet * 5);
+		Conductor.songPosition = 0 - (Conductor.crochet * 4.5);
 		
 		super.create();
 	}
@@ -482,9 +482,8 @@ class PlayState extends BasicState
 			}
 		}
 
-		FlxG.camera.follow(camFollow, LOCKON, 0.04 * (60 / Main.display.currentFPS));
+		FlxG.camera.followLerp = 0.04 * (60 / Main.display.currentFPS);
 		FlxG.camera.zoom = stageCamZoom;
-		FlxG.camera.focusOn(camFollow.getPosition());
 
 		// for combo counter :D
 
@@ -533,8 +532,6 @@ class PlayState extends BasicState
 				vocals.pause();
 
 			persistentUpdate = false;
-
-			theTimer.active = false;
 
 			openSubState(new menus.PauseMenu());
 		}
@@ -608,7 +605,6 @@ class PlayState extends BasicState
 						if(vocals != null)
 							vocals.volume = 1;
 
-						opponent.holdTimer = 0;
 						opponent.playAnim(singAnims[note.noteID % 4], true);
 
 						notes.remove(note);
@@ -621,6 +617,8 @@ class PlayState extends BasicState
 							if(name == "confirm")
 								opponentStrumArrows.members[note.noteID].playAnim("strum", true);
 						};
+
+						opponent.holdTimer = 0;
 					}
 				}
 			}
@@ -689,8 +687,6 @@ class PlayState extends BasicState
 	{
 		super.closeSubState();
 
-		theTimer.active = true;
-
 		persistentUpdate = true;
 
 		if(!countdownStarted)
@@ -708,7 +704,7 @@ class PlayState extends BasicState
 		accuracy = funnyHitStuffsLmao / totalNoteStuffs;
 	}
 
-	override public function beatHit(timer:FlxTimer)
+	override public function beatHit()
 	{
 		if (!countdownStarted) {
 			if (cameraZooms && FlxG.camera.zoom < 1.35 && curBeat % 4 == 0)
@@ -722,6 +718,12 @@ class PlayState extends BasicState
 
 			playerIcon.updateHitbox();
 			opponentIcon.updateHitbox();
+
+			if(player.active)
+				playerIcon.antialiasing = player.antialiasing;
+
+			if(opponent.active)
+				opponentIcon.antialiasing = opponent.antialiasing;
 		} else {
 			countdownNum += 1;
 
@@ -780,8 +782,11 @@ class PlayState extends BasicState
 		
 		if(opponent.active)
 		{
-			if((opponent.animation.curAnim.name.startsWith("sing") && opponent.animation.curAnim.finished || !opponent.animation.curAnim.name.startsWith("sing")))
+			if((!opponent.animation.curAnim.name.startsWith("sing") || (opponent.animation.curAnim.name.startsWith("sing") && opponent.holdTimer >= Conductor.crochet / 1000)))
+			{
 				opponent.dance();
+				opponent.holdTimer = 0;
+			}
 		}
 
 		if(player.active)
@@ -796,7 +801,7 @@ class PlayState extends BasicState
 				speakers.dance();
 		}
 
-		super.beatHit(timer);
+		super.beatHit();
 	}
 	
 	public function changeHealth(gainHealth:Bool)

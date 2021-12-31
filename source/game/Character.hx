@@ -67,20 +67,6 @@ class Character extends FlxSprite {
 
         if(animation.curAnim.name.startsWith('sing'))
             holdTimer += elapsed;
-
-        if(!isPlayer)
-        {
-            var dadVar:Float = 4;
-
-            if(name == 'dad')
-                dadVar = 6.1;
-            
-            if(holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
-            {
-                dance();
-                holdTimer = 0;
-            }
-        }
     }
 
     public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0) {

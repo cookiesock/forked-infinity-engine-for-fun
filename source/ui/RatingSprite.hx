@@ -13,6 +13,7 @@ class RatingSprite extends FlxSprite
 	{
 		stupidY = y;
 		super(x, y);
+		antialiasing = true;
 
 		loadRating('sick');
 	}

@@ -16,6 +16,7 @@ class ComboSprite extends FlxSprite
 		stupidY = y;
 		isComboText = isComboTextB;
 		super(x, y);
+		antialiasing = true;
 
 		loadCombo('0');
 	}

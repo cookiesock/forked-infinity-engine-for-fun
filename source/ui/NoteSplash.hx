@@ -12,6 +12,7 @@ class NoteSplash extends FlxSprite
 	public function new(x, y, noteID:Int = 0)
 	{
 		super(x, y);
+		antialiasing = true;
 		this.noteID = noteID;
 		alpha = 0.6;
 		doSplash();

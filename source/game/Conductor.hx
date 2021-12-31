@@ -2,6 +2,7 @@ package game;
 
 typedef BPMChangeEvent =
 {
+	var stepTime:Int;
 	var songTime:Float;
 	var bpm:Float;
 }
