@@ -2,39 +2,30 @@ package;
 
 import game.Conductor;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.FlxSubState;
-import flixel.util.FlxTimer;
 
 class BasicSubState extends FlxSubState
 {
 	//bpm and step
 	var curStep:Int = 0;
 	var curBeat:Int = 0;
-	
-	public function stepHit(timer:FlxTimer) {curStep++;}
-	public function beatHit(timer:FlxTimer) {curBeat++;}
-
-	var theTimer:FlxTimer;
-	var theTimerButStep:FlxTimer;
 
 	public function funkyBpm(BPM:Float)
 	{
-		var BPS = BPM / 60; // beats every second
-		var delayTime = 1 / BPS; // makes it into actual loob times (the original is just beats every second this makes it something like.. 0.5 so if our bps was 2 then it would be 0.5 so it would loop twice evry second)
-		var delayTimeStep = delayTime/4; // makes delay time to steps
-		theTimer = new FlxTimer().start(delayTime, beatHit, 0);
-		theTimerButStep = new FlxTimer().start(delayTimeStep, stepHit, 0);
-
 		Conductor.changeBPM(BPM);
 	}
 
-	public function destroyFunkyBPM()
+	override function update(elapsed:Float)
 	{
-		theTimer.destroy();
-		theTimer = null;
-		theTimerButStep.destroy();
-		theTimerButStep = null;
+		var oldStep:Int = curStep;
+
+		updateCurStep();
+		updateBeat();
+
+		if(oldStep != curStep)
+			stepHit();
+
+		super.update(elapsed);
 	}
 
 	//transition
@@ -43,5 +34,42 @@ class BasicSubState extends FlxSubState
 	public function transitionState(close:Bool)
 	{
 
+	}
+
+	private function updateBeat():Void
+	{
+		curBeat = Math.floor(curStep / (16 / Conductor.timeScale[1]));
+	}
+
+	private function updateCurStep():Void
+	{
+		var lastChange:BPMChangeEvent = {
+			stepTime: 0,
+			songTime: 0,
+			bpm: 0
+		}
+		
+		for (i in 0...Conductor.bpmChangeMap.length)
+		{
+			if (Conductor.songPosition >= Conductor.bpmChangeMap[i].songTime)
+				lastChange = Conductor.bpmChangeMap[i];
+		}
+
+		Conductor.recalculateStuff();
+
+		curStep = lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
+
+		updateBeat();
+	}
+
+	public function stepHit():Void
+	{
+		if (curStep % Conductor.timeScale[0] == 0)
+			beatHit();
+	}
+
+	public function beatHit():Void
+	{
+		//do literally nothing dumbass
 	}
 }
