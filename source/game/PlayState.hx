@@ -28,6 +28,7 @@ import ui.CountdownSprite;
 import ui.RatingSprite;
 import ui.ComboSprite;
 import ui.NoteSplash;
+import ui.DialogueBox;
 
 using StringTools;
 
@@ -431,6 +432,9 @@ class PlayState extends BasicState
 		notes.sort(sortByShit);
 
 		Conductor.songPosition = 0 - (Conductor.crochet * 4.5);
+
+		var dialogueBoxTest:DialogueBox = new DialogueBox(100, FlxG.height * 0.65);
+		add(dialogueBoxTest);
 		
 		super.create();
 	}
