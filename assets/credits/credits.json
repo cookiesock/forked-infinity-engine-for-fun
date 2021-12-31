@@ -5,28 +5,28 @@
 			"desc": "Coder, Artist, Owner",
             "icon": "raf",
             "link": "https://github.com/RafaelGiacom",
-            "color": "0xFFCC293F"
+            "color": "0xFFCC3333"
 		},
         {
 			"name": "SwordCube",
 			"desc": "Coder, Artist",
             "icon": "cube",
             "link": "https://github.com/swordcube",
-            "color": "0xFF5A9BDB"
+            "color": "0xFF82B5EB"
 		},
         {
 			"name": "ZonianDX",
 			"desc": "Coder, Artist",
             "icon": "zon",
             "link": "https://github.com/timeless13GH",
-            "color": "0xFF242526"
+            "color": "0xFF333333"
 		},
         {
 			"name": "Leather128",
 			"desc": "Coder",
             "icon": "leather",
             "link": "https://www.youtube.com/channel/UCbCtO-ghipZessWaOBx8u1g",
-            "color": "0xFFDBAF3D"
+            "color": "0xFFFFFF00"
 		}
     ]
 }
