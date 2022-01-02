@@ -150,5 +150,7 @@ class CreditsState extends BasicState {
                     }
                 });
             }
+
+            FlxG.sound.play(Util.getSound('menus/scrollMenu'));
         }
 }

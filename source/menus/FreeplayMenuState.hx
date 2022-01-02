@@ -68,7 +68,7 @@ class FreeplayMenuState extends BasicState
         bg = new FlxSprite().loadGraphic(Util.getImage("menuDesat"));
 		
 		add(bg);
-
+ 
         box = new FlxSprite();
         box.makeGraphic(1,1,FlxColor.BLACK);
         box.alpha = 0.6;
@@ -224,6 +224,8 @@ class FreeplayMenuState extends BasicState
             if (item.targetY == 0)
                 item.alpha = 1;
         }
+
+        FlxG.sound.play(Util.getSound('menus/scrollMenu'));
     }
 }
 

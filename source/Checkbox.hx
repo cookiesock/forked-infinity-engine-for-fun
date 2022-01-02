@@ -35,11 +35,11 @@ class Checkbox extends FlxSprite
 		{
 			case 'checked':
 				animation.play('checked', true);
-				offset.set(75, 90);
+				offset.set(75 + 35, 90 + 35);
 
 			case 'unchecked':
 				animation.play('unchecked', true);
-				offset.set(70, 65);
+				offset.set(70 + 35, 65 + 35);
 		}
 	}
 	

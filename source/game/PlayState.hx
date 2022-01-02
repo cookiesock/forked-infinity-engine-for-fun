@@ -91,10 +91,10 @@ class PlayState extends BasicState
 	var countdownStarted:Bool = true;
 	var countdownNum:Int = -1;
 
-	var downscroll:Bool = Options.downscroll;
-	static public var botplay:Bool = Options.botplay;
+	var downscroll:Bool = Options.getData('downscroll');
+	static public var botplay:Bool = Options.getData('botplay');
 
-	static public var ghostTapping:Bool = Options.ghostTapping;
+	static public var ghostTapping:Bool = Options.getData('ghost-tapping');
 
 	// rating shit
 	var funnyRating:RatingSprite;
@@ -174,6 +174,8 @@ class PlayState extends BasicState
 		sickScore = 0;
 		misses = 0;
 		combo = 0;
+
+		botplay = Options.getData('botplay');
 			
 		gameCam = new FlxCamera();
 		hudCam = new FlxCamera();
@@ -195,8 +197,8 @@ class PlayState extends BasicState
 
 		speed = song.speed;
 
-		if(Options.scrollSpeed > 1)
-			speed = Options.scrollSpeed;
+		if(Options.getData('scroll-speed') > 1)
+			speed = Options.getData('scroll-speed');
 		
 		// commented out speakers/gf because my pc sucks rn - swordcube
 		// that should hopefully no longer be the case on christmas - also swordcube
@@ -404,7 +406,7 @@ class PlayState extends BasicState
 		{
 			for(songNotes in section.sectionNotes)
 			{
-				var daStrumTime:Float = songNotes[0] + song.chartOffset + Options.songOffset;
+				var daStrumTime:Float = songNotes[0] + song.chartOffset + Options.getData('song-offset');
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 
 				var gottaHitNote:Bool = section.mustHitSection;
@@ -434,7 +436,9 @@ class PlayState extends BasicState
 		Conductor.songPosition = 0 - (Conductor.crochet * 4.5);
 
 		var dialogueBoxTest:DialogueBox = new DialogueBox(100, FlxG.height * 0.65);
-		add(dialogueBoxTest);
+		dialogueBoxTest.scrollFactor.set();
+		dialogueBoxTest.cameras = [otherCam];
+		//add(dialogueBoxTest);
 		
 		super.create();
 	}
@@ -824,8 +828,8 @@ class PlayState extends BasicState
 
 	function inputFunction()
 	{
-		var testBinds:Array<String> = Options.mainBinds;
-		var testBindsAlt:Array<String> = Options.altBinds;
+		var testBinds:Array<String> = Options.getData('mainBinds');
+		var testBindsAlt:Array<String> = Options.getData('altBinds');
 
 		var justPressed:Array<Bool> = [false, false, false, false];
 		var pressed:Array<Bool> = [false, false, false, false];
@@ -1024,7 +1028,7 @@ class PlayState extends BasicState
 		{
 			if(justPressed[i])
 			{
-				if(!Options.ghostTapping && !dontHitTheseDirectionsLol[i]) 
+				if(!Options.getData('ghost-tapping') && !dontHitTheseDirectionsLol[i]) 
 				{
 					changeHealth(false);
 		

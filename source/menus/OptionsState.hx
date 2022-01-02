@@ -23,42 +23,45 @@ class OptionsState extends BasicState
 
 	var optionsState:String = "default";
 
-	var defaultOptionsList:Array<Dynamic> = [
-		["Graphics Options", "Change graphics settings such as Anti-Aliasing, Low Quality, etc."],
-		["Gameplay Options", "Change gameplay settings such as Downscroll or Middlescroll to play better."],
-		["Manage Keybinds", "Manage your controls for menus and gameplay."],
-		["Note Colors", "Change the color of your notes, personalize them to your liking!"],
-		["Note Skin", "Change how your notes look during gameplay."],
-		["UI Skin", "Change how things such as the combo and ratings look during gameplay."],
-	];
+	var debugText:FlxText;
 
-	var graphicsOptionsList:Array<Dynamic> = [
-		["Toggle Background", "When disabled, The background will disappear entirely.", "checkbox"],
-		["Low Quality", "Removes some background elements for performance when enabled.", "checkbox"],
-		["Anti-Aliasing", "Gives more performance when disabled, at the cost of lower quality graphics.", "checkbox"],
-		["Remove Characters", "When enabled, every character will get removed for performance.", "checkbox"], // max is 1
-	];
-
-	var gameplayOptionsList:Array<Dynamic> = [
-		["Downscroll", "Makes notes scroll down instead of up.", "checkbox","downscroll"],
-		["Botplay", "Enables bot to play the song for you!", "checkbox","botplay"],
-		["Ghost Tapping", "Makes you not get misses from pressing keys when there are no notes.","checkbox","ghostTapping"],
-		["Adjust Scroll Speed", "Change how fast your notes go.","menuitem","scrollSpeed"],
-		["Adjust Offset", "Change how early/late your notes fall on-screen.","menuitem","songOffset"],
+	var defaultOptionsList = [
+		"selectables" => [
+			["Graphics", "menu", "Change how things look in menus/gameplay."],
+			["Gameplay", "menu", "Change how things behave during gameplay."],
+		],
+		"graphics" => [
+			["Back", "menu", ""],
+			["Anti-Aliasing", "checkbox", "Gives extra performance when disabled at the cost of\ngraphics not looking very smooth.", "anti-aliasing"],
+			["Optimization", "checkbox", "Removes all of the characters and background elements\nfor performance.", "optimization"],
+			["Note Splashes", "checkbox", "When enabled, a firework-like effect will show up\nIf you hit a note and get a \"SiCK!!\" from it.", "note-splashes"],
+		],
+		"gameplay" => [
+			["Back", "menu", ""],
+			["Hitsounds", "menu", "Change what sound plays when you hit a note."],
+			["Adjust Offset", "menu", "Change how early/late notes appear on-screen."],
+			["Manage Keybinds", "menu", "Change the keys used to press arrows."],
+			["Adjust Scroll Speed", "menu", "Change how fast your notes fall on-screen."],
+			["Downscroll", "checkbox", "Makes the notes scroll downwards instead of upwards.", "downscroll"],
+			["Middlescroll", "checkbox", "Makes the notes centered on-screen.", "middlescroll"],
+			["Botplay", "checkbox", "When enabled, All notes will get hit for you.", "botplay"],
+		],
 	];
 
 	var optionsList:Array<Dynamic> = [];
+	
 	var selectedOption:Int = 0;
 	var descBox:FlxSprite;
 	var descText:FlxText;
-	var menuColor:Int = 0xFFe83aa2;
+	var menuColor:Int = 0xFFf542d7;
 
     override public function create()
 	{
-        menuBG = new FlxSprite().loadGraphic(Util.getImage("menuDesat"));
-		add(menuBG);
+		optionsList = defaultOptionsList["selectables"];
 
+        menuBG = new FlxSprite().loadGraphic(Util.getImage("menuDesat"));
 		menuBG.color = menuColor;
+		add(menuBG);
 
 		grpOptions = new FlxTypedGroup<AlphabetText>();
 		add(grpOptions);
@@ -66,24 +69,12 @@ class OptionsState extends BasicState
 		checkboxGroup = new FlxTypedGroup<Checkbox>();
 		add(checkboxGroup);
 
-		optionsList = defaultOptionsList; // set options to default
-
-		descBox = new FlxSprite(0, FlxG.height * 0.98).makeGraphic(FlxG.width, 999, FlxColor.BLACK);
-		descBox.alpha = 0.6;
-		add(descBox);
-
-		descText = new FlxText(0, 0, 0, "This should never be seen.", 22);
-		descText.setFormat("assets/fonts/vcr.ttf", 22, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		descText.scrollFactor.set();
-		descText.screenCenter(X);
-		descText.borderSize = 2.4;
-		descText.alpha = 0;
-		add(descText);
-
-		refreshOptionsList();
-
+		reloadOptionsList();
 		changeSelection();
 
+		debugText = new FlxText(0,0,0,"",32,true);
+		add(debugText);
+		
 		super.create();
 	}
 
@@ -93,109 +84,69 @@ class OptionsState extends BasicState
 		var down = FlxG.keys.justPressed.DOWN;
 		var accept = FlxG.keys.justPressed.ENTER;
 
+		if(FlxG.keys.justPressed.BACKSPACE)
+			transitionState(new MainMenuState());
+
 		if(up) changeSelection(-1);
 		if(down) changeSelection(1);
 
-		if(FlxG.keys.justPressed.BACKSPACE)
+		if(accept)
 		{
-			Options.saveSettings();
-			switch(optionsState)
+			switch(optionsList[selectedOption][1])
 			{
-				default:
-					optionsState = "default";
-					optionsList = defaultOptionsList;
-
-					refreshOptionsList(true);
-					selectedOption = 0;
-					changeSelection();
-				case 'default':
-					transitionState(new MainMenuState());
-			}
-		}
-
-		if(accept) {
-			switch(optionsState)
-			{
-				default:
-					var daOption:String = optionsList[selectedOption][0];
-
-					switch(daOption)
+				case "menu":
+					switch(optionsList[selectedOption][0])
 					{
-						case 'Graphics Options':
-							optionsState = "graphicsOptions";
-							optionsList = graphicsOptionsList;
-
-							refreshOptionsList(true);
+						case "Back":
+							optionsState = 'default';
+							optionsList = defaultOptionsList["selectables"];
+							reloadOptionsList(true);
 							selectedOption = 0;
 							changeSelection();
-
-							//openSubState(new whateversubstatehahaha());
-						case 'Gameplay Options':
-							optionsState = "gameplayOptions";
-							optionsList = gameplayOptionsList;
-
-							refreshOptionsList(true);
+						case "Graphics":
+							optionsState = 'graphics';
+							optionsList = defaultOptionsList["graphics"];
+							reloadOptionsList(true);
 							selectedOption = 0;
 							changeSelection();
-						case 'Manage Keybinds':
-							openSubState(new menus.KeybindMenu());
+						case "Gameplay":
+							optionsState = 'gameplay';
+							optionsList = defaultOptionsList["gameplay"];
+							reloadOptionsList(true);
+							selectedOption = 0;
+							changeSelection();
+						case "Adjust Offset":
+							openSubState(new OffsetMenu());
+						case "Manage Keybinds":
+							openSubState(new KeybindMenu());
+						case "Adjust Scroll Speed":
+							openSubState(new ScrollSpeedMenu());
 					}
-				
-				case 'graphicsOptions':
-					Options.graphicsSettings[selectedOption] = !Options.graphicsSettings[selectedOption];
-					reloadShit();
-
-				case 'gameplayOptions':
-						switch(optionsList[selectedOption][2])
-						{
-							case 'checkbox':
-								Reflect.setProperty(Options, optionsList[selectedOption][3], !Reflect.getProperty(Options, optionsList[selectedOption][3]));
-
-							case 'menuitem':
-								switch (optionsList[selectedOption][0])
-								{
-									case 'Adjust Offset':
-										openSubState(new menus.OffsetMenu());
-									case 'Adjust Scroll Speed':
-										openSubState(new menus.ScrollSpeedMenu());
-								}
-						}
-						
+				case "checkbox":
+					Options.saveData(optionsList[selectedOption][3], !Options.getData(optionsList[selectedOption][3]));
 					reloadShit();
 			}
 		}
 
-		if(descBox != null) {
-			descBox.y = FlxMath.lerp(descBox.y, FlxG.height * 0.9, Math.max(0, Math.min(1, elapsed * 3)));
-		}
-
-		if(descText != null) {
-			descText.text = optionsList[selectedOption][1];
-			descText.screenCenter(X);
-			descText.alpha = FlxMath.lerp(descText.alpha, 1, Math.max(0, Math.min(1, elapsed * 3)));
-
-			if(descBox != null) {
-				descText.y = descBox.y + 25;
-			}
-		}
+		//debugText.text = optionsList[selectedOption][0];
 
 		super.update(elapsed);
 	}
 
-	public function refreshOptionsList(?deletePreviousList:Bool = false)
+	public function reloadOptionsList(?deleteCurrentItems:Bool = false)
 	{
-		if(deletePreviousList)
+		if(deleteCurrentItems)
 		{
-			for(i in 0...checkboxGroup.members.length)
-			{
-				checkboxGroup.members[i].kill();
-				checkboxGroup.members[i].destroy();
-			}
-
 			for(i in 0...grpOptions.members.length)
 			{
-				grpOptions.members[i].kill();
-				grpOptions.members[i].destroy();
+				grpOptions.members[i].kill;
+				grpOptions.members[i].destroy;
+			}
+
+			for(i in 0...checkboxGroup.members.length)
+			{
+				checkboxGroup.members[i].kill;
+				checkboxGroup.members[i].destroy;
 			}
 
 			checkboxNumber = [];
@@ -207,41 +158,42 @@ class OptionsState extends BasicState
 
 		for(i in 0...optionsList.length)
 		{
-			var alphabet = new AlphabetText(0, 0, optionsList[i][0]);
-            alphabet.targetY = i;
-            alphabet.isMenuItem = true;
+			var swagOption = new AlphabetText(0, 0, optionsList[i][0]);
+			swagOption.isMenuItem = true;
+			swagOption.targetY = i;
+			swagOption.ID = i;
 
-			var isCheckbox:Bool = false;
-			if(optionsList[i][2] == 'checkbox')
-				isCheckbox = true;
+			var usesCheckbox:Bool = false;
+			
+			if(optionsList[i][1] == "checkbox")
+				usesCheckbox = true;
 
-			if(isCheckbox)
-			{
-				alphabet.x += 300;
-				alphabet.xAdd = 200;
-
-				var checkbox:Checkbox = new Checkbox(alphabet.x - 105, alphabet.y, Options.graphicsSettings[i]);
-				checkbox.sprTracker = alphabet;
+			if(usesCheckbox) {
+				swagOption.x += 300;
+				swagOption.xAdd = 200;
+				var checkbox:Checkbox = new Checkbox(swagOption.x - 105, swagOption.y, Options.getData(optionsList[i][3]));
+				checkbox.sprTracker = swagOption;
 				checkboxNumber.push(i);
 				checkboxArray.push(checkbox);
 				checkbox.ID = i;
 				checkboxGroup.add(checkbox);
-			}
+			} /*else {
+				swagOption.x -= 80;
+				swagOption.xAdd -= 80;
+			}*/
 
-            grpOptions.add(alphabet);
-
-			reloadShit();
+			grpOptions.add(swagOption);
 		}
 	}
 
-	function changeSelection(change:Int = 0)
+	public function changeSelection(?change:Int = 0)
 	{
 		selectedOption += change;
 
 		if(selectedOption < 0)
-			selectedOption = optionsList.length - 1;
+			selectedOption = grpOptions.members.length - 1;
 
-		if(selectedOption > optionsList.length - 1)
+		if(selectedOption > grpOptions.members.length - 1)
 			selectedOption = 0;
 
         for(i in 0...grpOptions.members.length)
@@ -256,27 +208,14 @@ class OptionsState extends BasicState
 				item.alpha = 1;
 		}
 
-		FlxG.sound.play(Util.getSound('menus/scrollMenu', true));
+		FlxG.sound.play(Util.getSound('menus/scrollMenu'));
 	}
 
-	function reloadShit()
+	public function reloadShit()
 	{
-		for (i in 0...checkboxArray.length) {
-			var checkbox:Checkbox = checkboxArray[i];
-
-			if(checkbox != null) {
-				var daValue = false;
-
-				switch(optionsState)
-				{
-					case "graphicsOptions":
-						daValue = Options.graphicsSettings[checkboxNumber[i]];
-					case "gameplayOptions":
-						daValue = Reflect.getProperty(Options, gameplayOptionsList[i][3]);
-				}
-
-				checkboxGroup.members[i].daValue = daValue;
-			}
+		for(i in 0...checkboxGroup.members.length)
+		{
+			checkboxGroup.members[i].daValue = Options.getData(optionsList[checkboxNumber[i]][3]);
 		}
 	}
 }

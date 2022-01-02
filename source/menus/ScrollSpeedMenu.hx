@@ -72,7 +72,7 @@ class ScrollSpeedMenu extends BasicSubState
 			holdTime = 0;
 		}
 
-		funnyScrollSpeed.text = "Current Scroll Speed: " + FlxMath.roundDecimal(Options.scrollSpeed, 1);
+		funnyScrollSpeed.text = "Current Scroll Speed: " + FlxMath.roundDecimal(Options.getData('scroll-speed'), 1);
 		funnyScrollSpeed.screenCenter();
 
 		bg.alpha = FlxMath.lerp(bg.alpha, 0.6, Math.max(0, Math.min(1, elapsed * 6)));
@@ -88,13 +88,16 @@ class ScrollSpeedMenu extends BasicSubState
 
 		if(holdTime > 0.5 || leftP || rightP)
 		{
-			Options.scrollSpeed += change;
+			var speed:Float = Options.getData('scroll-speed');
+			speed += change;
 
-			if(Options.scrollSpeed < 1)
-				Options.scrollSpeed = 1;
+			if(speed < 1)
+				speed = 1;
 
-			if(Options.scrollSpeed > maxSpeed)
-				Options.scrollSpeed = maxSpeed;
+			if(speed > maxSpeed)
+				speed = maxSpeed;
+
+			Options.saveData('scroll-speed', speed);
 		}
 	}
 }

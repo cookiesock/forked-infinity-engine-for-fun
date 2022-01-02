@@ -69,12 +69,14 @@ class TitleScreenState extends BasicState
 		add(new AlphabetText(0, 100, '"the quick brown fox jumps \nover the lazy dog"\n\n1234567890\n\n!?.-+()*><&_\'', 35));
 		#end
 
-		#if desktop
+		/*#if desktop
 		Application.current.onExit.add(function (exitCode) {
 			Options.saveSettings();
 			trace("GAME CLOSED WITH CODE: " + exitCode);
 		});
-		#end
+		#end*/
+
+		FlxG.sound.volume = Options.getData('volume');
 
 		super.create();
 	}

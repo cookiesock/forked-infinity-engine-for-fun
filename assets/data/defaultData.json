@@ -1,0 +1,52 @@
+{
+    "dataObjects": [
+        {
+            "name": "downscroll",
+            "value": false
+        },
+        {
+            "name": "middlescroll",
+            "value": false
+        },
+        {
+            "name": "botplay",
+            "value": false
+        },
+        {
+            "name": "anti-aliasing",
+            "value": true
+        },
+        {
+            "name": "note-splashes",
+            "value": true
+        },
+        {
+            "name": "ghost-tapping",
+            "value": true
+        },
+        {
+            "name": "remove-bg",
+            "value": false
+        },
+        {
+            "name": "noteskin",
+            "value": "default"
+        },
+        {
+            "name": "song-offset",
+            "value": 0
+        },
+        {
+            "name": "mainBinds",
+            "value": ["A", "S", "W", "D"]
+        },
+        {
+            "name": "altBinds",
+            "value": ["LEFT", "DOWN", "UP", "RIGHT"]
+        },
+        {
+            "name": "scroll-speed",
+            "value": 1
+        }
+    ] 
+}

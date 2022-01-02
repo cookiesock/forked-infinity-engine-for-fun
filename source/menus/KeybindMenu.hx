@@ -30,7 +30,7 @@ class KeybindMenu extends BasicSubState
 
 		for(i in 0...Options.mainBinds.length)
 		{
-			currentKeybinds.push(Options.mainBinds[i]);
+			currentKeybinds.push(Options.getData('mainBinds')[i]);
 		}
 
 		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
@@ -52,7 +52,7 @@ class KeybindMenu extends BasicSubState
 		add(daKeybinds);
 
 		for (i in 0...4) {
-			var note:StrumArrow = new StrumArrow((125 * i) + 395, 0, i, Options.noteSkin);
+			var note:StrumArrow = new StrumArrow((125 * i) + 395, 0, i, Options.getData('noteskin'));
 			note.antialiasing = true;
 			note.centerOffsets();
 			note.centerOrigin();
@@ -108,6 +108,7 @@ class KeybindMenu extends BasicSubState
 			if(FlxG.keys.getIsDown().length > 0 && checkingForKeys) {
 				currentKeybinds[selectedKey] = FlxG.keys.getIsDown()[0].ID.toString();
 				Options.mainBinds = currentKeybinds;
+				Options.saveData('mainBinds', Options.mainBinds);
 				isEditingKey = false;
 				FlxG.sound.play(Util.getSound('menus/scrollMenu'));
 			}

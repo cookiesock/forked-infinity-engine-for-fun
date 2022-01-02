@@ -147,14 +147,12 @@ class PauseMenu extends BasicSubState
 
 				case 'Botplay':
 					game.PlayState.botplay = !game.PlayState.botplay;
-					Options.botplay = game.PlayState.botplay;
-					game.PlayState.botplayText.visible = Options.botplay;
-					Options.saveSettings();
+					Options.saveData('botplay', game.PlayState.botplay);
+					game.PlayState.botplayText.visible = Options.getData('botplay');
 
 				case 'Ghost Tapping':
 					game.PlayState.ghostTapping = !game.PlayState.ghostTapping;
-					Options.ghostTapping = game.PlayState.ghostTapping;
-					Options.saveSettings();
+					Options.saveData('ghost-tapping', game.PlayState.ghostTapping);
 			}
 		}
 

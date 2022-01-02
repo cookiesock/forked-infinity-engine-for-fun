@@ -44,7 +44,7 @@ class OffsetMenu extends BasicSubState
 		funnyOffset.borderSize = 2.4;
 		add(funnyOffset);
 
-		offsetWarning = new FlxText(0, FlxG.height * 0.8, 0, "Press LEFT & RIGHT to change how early/late notes appear.", 32);
+		offsetWarning = new FlxText(0, FlxG.height * 0.8, 0, "Press LEFT & RIGHT to change how early/late notes appear.\nPress ENTER to round the number.", 32);
 		offsetWarning.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		offsetWarning.scrollFactor.set();
 		offsetWarning.screenCenter(X);
@@ -66,13 +66,16 @@ class OffsetMenu extends BasicSubState
 			close();
 
 		if(left || right) {
-			var daMultiplier:Int = left ? -1 : 1;
+			var daMultiplier:Float = left ? -0.5 : 0.5;
 			changeOffset(daMultiplier);
 		} else {
 			holdTime = 0;
 		}
 
-		funnyOffset.text = "Current Offset: " + Options.songOffset;
+		if(accept)
+			Options.saveData('song-offset', Math.floor(Options.getData('song-offset')));
+
+		funnyOffset.text = "Current Offset: " + Options.getData('song-offset');
 		funnyOffset.screenCenter();
 
 		bg.alpha = FlxMath.lerp(bg.alpha, 0.6, Math.max(0, Math.min(1, elapsed * 6)));
@@ -82,19 +85,22 @@ class OffsetMenu extends BasicSubState
 		super.update(elapsed);
 	}
 
-	public function changeOffset(?change:Int = 0)
+	public function changeOffset(?change:Float = 0)
 	{
 		holdTime += stupidDumb;
 
 		if(holdTime > 0.5 || leftP || rightP)
 		{
-			Options.songOffset += change;
+			var offset:Float = Options.getData('song-offset');
+			offset += change;
 
-			if(Options.songOffset < (maxOffset * -1))
-				Options.songOffset = (maxOffset * -1);
+			if(offset < (maxOffset * -1))
+				offset = (maxOffset * -1);
 
-			if(Options.songOffset > maxOffset)
-				Options.songOffset = maxOffset;
+			if(offset > maxOffset)
+				offset = maxOffset;
+
+			Options.saveData('song-offset', offset);
 		}
 	}
 }
