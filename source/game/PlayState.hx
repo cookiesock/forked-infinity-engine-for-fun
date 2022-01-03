@@ -240,27 +240,39 @@ class PlayState extends BasicState
 
 		if(!song.player2.startsWith("gf"))
 		{
-			speakers = new Character(100, 120, song.gf);
-			speakers.screenCenter(X);
+			speakers = new Character(400, 130, song.gf);
+			//speakers.screenCenter(X);
 			speakers.scrollFactor.set(0.95, 0.95);
 			add(speakers);
 
-			opponent = new Character(100, 120, song.player2);
-			opponent.screenCenter();
+			opponent = new Character(100, 100, song.player2);
+			//opponent.screenCenter();
 			add(opponent);
+
+			opponent.x += opponent.position[0];
+			opponent.y += opponent.position[1];
+
+			speakers.x += speakers.position[0];
+			speakers.y += speakers.position[1];
 		}
 		else
 		{
-			opponent = new Character(100, 120, song.gf);
-			opponent.screenCenter(X);
+			opponent = new Character(400, 130, song.gf);
+			//opponent.screenCenter(X);
 			opponent.scrollFactor.set(0.95, 0.95);
 			add(opponent);
+
+			opponent.x += opponent.position[0];
+			opponent.y += opponent.position[1];
 		}
 
-		player = new Character(opponent.x + 350, opponent.y + 200, song.player1);
+		player = new Character(770, 0, song.player1);
 		player.flipX = !player.flipX;
 		player.isPlayer = true;
 		add(player);
+
+		player.x += player.position[0];
+		player.y += player.position[1];
 		
 		// bpm init shit
 		bpm = song.bpm;

@@ -11,6 +11,7 @@ class Character extends FlxSprite {
     public var anims:Array<Dynamic> = [];
     public var offsetMap:Map<String, Array<Int>> = [];
     public var camOffsets:Array<Int> = [0,0];
+    public var position:Array<Int> = [0,0];
     public var healthColor:Int = FlxColor.WHITE;
     public var bopLeftRight:Bool = false;
     public var bopDirection:Int = 0;
@@ -39,6 +40,7 @@ class Character extends FlxSprite {
         antialiasing = !json.no_antialiasing;
         camOffsets = json.camera_position;
         healthColor = FlxColor.fromRGB(json.healthbar_colors[0], json.healthbar_colors[1], json.healthbar_colors[2]);
+        position = json.position;
 
         anims = json.animations;
 
