@@ -21,6 +21,8 @@ class Note extends FlxSprite {
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
 
+	public var lastNote:Note;
+
 	public function new(x, y, noteID:Int = 0, ?strum:Float, ?mustPress:Bool, ?noteskin:String = 'default', ?isSustainNote:Bool = false, ?isEndNote:Bool = false)
 	{
 		super(x, y);
@@ -47,16 +49,60 @@ class Note extends FlxSprite {
 			setGraphicSize(Std.int(width * 0.7));
 			updateHitbox();
 			
-			switch(Math.abs(noteID % 4))
+			if(!isSustainNote)
 			{
-				case 0:
-					animation.addByPrefix('strum', 'left0', 24, false);				
-				case 1:
-					animation.addByPrefix('strum', 'down0', 24, false);
-				case 2:
-					animation.addByPrefix('strum', 'up0', 24, false);					
-				case 3:
-					animation.addByPrefix('strum', 'right0', 24, false);
+				switch(Math.abs(noteID % 4))
+				{
+					case 0:
+						animation.addByPrefix('strum', 'left0', 24, false);				
+					case 1:
+						animation.addByPrefix('strum', 'down0', 24, false);
+					case 2:
+						animation.addByPrefix('strum', 'up0', 24, false);					
+					case 3:
+						animation.addByPrefix('strum', 'right0', 24, false);
+				}
+			}
+			else
+			{
+				if(!isEndNote)
+				{
+					switch(Math.abs(noteID % 4))
+					{
+						case 0:
+							animation.addByPrefix('strum', 'left hold0', 24, false);				
+						case 1:
+							animation.addByPrefix('strum', 'down hold0', 24, false);
+						case 2:
+							animation.addByPrefix('strum', 'up hold0', 24, false);					
+						case 3:
+							animation.addByPrefix('strum', 'right hold0', 24, false);
+					}
+
+					@:privateAccess
+					scale.y *= (Conductor.stepCrochet / 100) * 1.5 * PlayState.instance.speed;
+					updateHitbox();
+				}
+				else
+				{
+					switch(Math.abs(noteID % 4))
+					{
+						case 0:
+							animation.addByPrefix('strum', 'left hold end0', 24, false);				
+						case 1:
+							animation.addByPrefix('strum', 'down hold end0', 24, false);
+						case 2:
+							animation.addByPrefix('strum', 'up hold end0', 24, false);					
+						case 3:
+							animation.addByPrefix('strum', 'right hold end0', 24, false);
+					}
+				}
+
+				@:privateAccess
+				if(PlayState.instance.downscroll)
+					flipY = true;
+
+				alpha = 0.6;
 			}
 		} else { // if the note skin is INDEED pixel
 			loadGraphic(Util.getImage('noteskins/' + noteskin + '/notes'));

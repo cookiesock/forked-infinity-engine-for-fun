@@ -29,6 +29,7 @@ class OptionsState extends BasicState
 		"selectables" => [
 			["Graphics", "menu", "Change how things look in menus/gameplay."],
 			["Gameplay", "menu", "Change how things behave during gameplay."],
+			["Reset Data", "menu", "Reset all your save data."],
 		],
 		"graphics" => [
 			["Back", "menu", ""],
@@ -121,6 +122,8 @@ class OptionsState extends BasicState
 							openSubState(new KeybindMenu());
 						case "Adjust Scroll Speed":
 							openSubState(new ScrollSpeedMenu());
+						case "Reset Data":
+							Options.resetData();
 					}
 				case "checkbox":
 					Options.saveData(optionsList[selectedOption][3], !Options.getData(optionsList[selectedOption][3]));

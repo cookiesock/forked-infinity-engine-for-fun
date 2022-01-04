@@ -32,6 +32,13 @@ class Options
     {
         return Reflect.getProperty(FlxG.save.data, save);
     }
+
+    public static function resetData()
+    {
+        FlxG.save.erase();
+
+        init();
+    }
 }
 
 typedef DefaultOptionsData = {

@@ -146,8 +146,12 @@ class PlayState extends BasicState
 
 	public static var noteSplashFrames:FlxAtlasFrames;
 
+	public static var instance:PlayState;
+
 	public function new(?songName:String, ?difficulty:String, ?storyModeBool:Bool = false)
 	{
+		instance = this;
+
 		super();
 
 		if(songName != null)
@@ -448,8 +452,10 @@ class PlayState extends BasicState
 				{
 					for (susNote in 0...floorSus)
 					{
-						var sustainNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, gottaHitNote, song.ui_Skin);
+						var sustainNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, gottaHitNote, song.ui_Skin, true, susNote == floorSus - 1);
 						sustainNote.cameras = [hudCam];
+						sustainNote.x += sustainNote.width / 3;
+						sustainNote.lastNote = notes[0];
 						add(sustainNote);
 
 						notes.push(sustainNote);
@@ -662,6 +668,17 @@ class PlayState extends BasicState
 				}
 			}
 
+			if(note != null)
+			{
+				if(note.isSustainNote && note.isEndNote)
+				{
+					if(downscroll)
+						note.y += note.height / 2.35;
+					else
+						note.y -= note.height / 2.35;
+				}
+			}
+
 			if(!countdownStarted)
 			{
 				if(Conductor.songPosition - Conductor.safeZoneOffset * 1.5 > note.strum && note != null)
@@ -748,7 +765,7 @@ class PlayState extends BasicState
 		if (!countdownStarted) {
 			if (cameraZooms && FlxG.camera.zoom < 1.35 && curBeat % 4 == 0)
 			{
-				FlxG.camera.zoom += 0.015;
+				FlxG.camera.zoom += 0.03;
 				hudCam.zoom += 0.03;
 			}
 			
@@ -936,82 +953,94 @@ class PlayState extends BasicState
 				{
 					var ratingScores:Array<Int> = [350, 200, 100, 50];
 
-					var noteMs = Conductor.songPosition - note.strum;
-					trace(noteMs + " ms");
+					if(!note.isSustainNote)
+					{
+						var noteMs = Conductor.songPosition - note.strum;
+						trace(noteMs + " ms");
 
-					if(botplay)
-						noteMs = 0;
+						if(botplay)
+							noteMs = 0;
 
-					var roundedDecimalNoteMs:Float = FlxMath.roundDecimal(noteMs, 3);
+						var roundedDecimalNoteMs:Float = FlxMath.roundDecimal(noteMs, 3);
 
-					msText.text = roundedDecimalNoteMs + "ms";
-					msTextFade();
+						msText.text = roundedDecimalNoteMs + "ms";
+						msTextFade();
 
-					hits += 1;
+						hits += 1;
 
-					var sussyBallsRating:String = 'sick';
-					//msText.color = FlxColor.CYAN;
+						var sussyBallsRating:String = 'sick';
+						//msText.color = FlxColor.CYAN;
 
-					if(Math.abs(noteMs) > 50)
-						sussyBallsRating = 'good';
-						//msText.color = FlxColor.ORANGE;
+						if(Math.abs(noteMs) > 50)
+							sussyBallsRating = 'good';
+							//msText.color = FlxColor.ORANGE;
 
-					if(Math.abs(noteMs) > 70)
-						sussyBallsRating = 'bad';
-						//msText.color = FlxColor.RED;
+						if(Math.abs(noteMs) > 70)
+							sussyBallsRating = 'bad';
+							//msText.color = FlxColor.RED;
 
-					if(Math.abs(noteMs) > 100)
-						sussyBallsRating = 'shit';
-						//msText.color = FlxColor.BROWN;
+						if(Math.abs(noteMs) > 100)
+							sussyBallsRating = 'shit';
+							//msText.color = FlxColor.BROWN;
 
-					sickScore += ratingScores[0];
+						sickScore += ratingScores[0];
 
-					switch(sussyBallsRating) {
-						case 'sick':
-							score += ratingScores[0];
-							sicks += 1;
-							funnyHitStuffsLmao += 1;
-							msText.color = FlxColor.CYAN;
-						case 'good':
-							score += ratingScores[1];
-							goods += 1;
-							funnyHitStuffsLmao += 0.8;
-							msText.color = FlxColor.LIME;
-						case 'bad':
-							score += ratingScores[2];
-							bads += 1;
-							funnyHitStuffsLmao += 0.4;
-							msText.color = FlxColor.ORANGE;
-						case 'shit':
-							score += ratingScores[3];
-							shits += 1;
-							funnyHitStuffsLmao += 0.1;
-							msText.color = FlxColor.RED;
+						switch(sussyBallsRating) {
+							case 'sick':
+								score += ratingScores[0];
+								sicks += 1;
+								funnyHitStuffsLmao += 1;
+								msText.color = FlxColor.CYAN;
+							case 'good':
+								score += ratingScores[1];
+								goods += 1;
+								funnyHitStuffsLmao += 0.8;
+								msText.color = FlxColor.LIME;
+							case 'bad':
+								score += ratingScores[2];
+								bads += 1;
+								funnyHitStuffsLmao += 0.4;
+								msText.color = FlxColor.ORANGE;
+							case 'shit':
+								score += ratingScores[3];
+								shits += 1;
+								funnyHitStuffsLmao += 0.1;
+								msText.color = FlxColor.RED;
+						}
+
+						switch(sussyBallsRating) {
+							default:
+								changeHealth(true);
+							case 'shit': // anti spam...kinda
+								health -= 0.275;
+						}
+
+						updateAccuracyStuff();
+
+						funnyRating.loadRating(sussyBallsRating);
+						funnyRating.tweenRating();
+
+						noteDataTimes[note.noteID] = note.strum;
+
+						if(sussyBallsRating == 'sick') {
+							var noteSplash:NoteSplash = new NoteSplash(playerStrumArrows.members[note.noteID].x, playerStrumArrows.members[note.noteID].y, note.noteID);
+							noteSplash.cameras = [otherCam];
+							add(noteSplash);
+						}
+					}
+					else
+					{
+						hits += 1;
+						funnyHitStuffsLmao += 1;
+						totalNoteStuffs++;
+						score += 25;
 					}
 
-					switch(sussyBallsRating) {
-						default:
-							changeHealth(true);
-						case 'shit': // anti spam...kinda
-							health -= 0.275;
-					}
-
-					updateAccuracyStuff();
-
-					funnyRating.loadRating(sussyBallsRating);
-					funnyRating.tweenRating();
-
-					noteDataTimes[note.noteID] = note.strum;
+					playerStrumArrows.members[note.noteID].playAnim("confirm", true);
 
 					if(vocals != null)
 						vocals.volume = 1;
 
-					playerStrumArrows.members[note.noteID].playAnim("confirm", true);
-					if(sussyBallsRating == 'sick') {
-						var noteSplash:NoteSplash = new NoteSplash(playerStrumArrows.members[note.noteID].x, playerStrumArrows.members[note.noteID].y, note.noteID);
-						noteSplash.cameras = [otherCam];
-						add(noteSplash);
-					}
 					dontHitTheseDirectionsLol[note.noteID] = true;
 
 					player.holdTimer = 0;
@@ -1070,6 +1099,35 @@ class PlayState extends BasicState
 					score -= 10;
 					misses += 1;
 					totalNoteStuffs++;
+				}
+			}
+		}
+
+		for(note in notes)
+		{
+			if(note != null)
+			{
+				note.calculateCanBeHit();
+
+				if(note.isSustainNote)
+				{
+					if(pressed[note.noteID] && Conductor.songPosition >= note.strum)
+					{
+						hits += 1;
+						funnyHitStuffsLmao += 1;
+						totalNoteStuffs++;
+						score += 25;
+
+						changeHealth(true);
+
+						player.holdTimer = 0;
+						player.playAnim(singAnims[note.noteID % 4], true);
+						playerStrumArrows.members[note.noteID].playAnim("confirm", true);
+
+						notes.remove(note);
+						note.kill();
+						note.destroy();
+					}
 				}
 			}
 		}
