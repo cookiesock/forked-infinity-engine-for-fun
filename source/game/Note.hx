@@ -5,10 +5,6 @@ import flixel.FlxSprite;
 
 using StringTools;
 
-// yes believe it or not this is actually written by me swordcube hrfjzksjLk;lk - swordcube
-// i'm gonna start looking at the haxeflixel doc shit instead of yeeting fnf code now
-// uaydysusfydsh
-
 class Note extends FlxSprite {
 	var resetAnim:Float = 0;
 	var noteskin:String = 'default';
@@ -18,12 +14,14 @@ class Note extends FlxSprite {
 	public var strum:Float = 0.0;
 	public var mustPress:Bool = false;
 	public var isSustainNote:Bool = false;
+	public var isEndNote:Bool = false;
+	public var sustainLength:Float = 0;
 
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
 
-	public function new(x, y, noteID:Int = 0, ?strum:Float, ?mustPress:Bool, ?noteskin:String = 'default')
+	public function new(x, y, noteID:Int = 0, ?strum:Float, ?mustPress:Bool, ?noteskin:String = 'default', ?isSustainNote:Bool = false, ?isEndNote:Bool = false)
 	{
 		super(x, y);
 
@@ -31,6 +29,8 @@ class Note extends FlxSprite {
 		this.noteID = noteID;
 		this.strum = strum;
 		this.mustPress = mustPress;
+		this.isSustainNote = isSustainNote;
+		this.isEndNote = isEndNote;
 		
 		loadNoteShit(this.noteskin);
 	}
@@ -50,21 +50,13 @@ class Note extends FlxSprite {
 			switch(Math.abs(noteID % 4))
 			{
 				case 0:
-					animation.addByPrefix('strum', 'left0', 24, false);
-					animation.addByPrefix('tap', 'left press', 24, false);
-					animation.addByPrefix('confirm', 'left confirm', 24, false);				
+					animation.addByPrefix('strum', 'left0', 24, false);				
 				case 1:
 					animation.addByPrefix('strum', 'down0', 24, false);
-					animation.addByPrefix('tap', 'down press', 24, false);
-					animation.addByPrefix('confirm', 'down confirm', 24, false);
 				case 2:
-					animation.addByPrefix('strum', 'up0', 24, false);
-					animation.addByPrefix('tap', 'up press', 24, false);
-					animation.addByPrefix('confirm', 'up confirm', 24, false);					
+					animation.addByPrefix('strum', 'up0', 24, false);					
 				case 3:
 					animation.addByPrefix('strum', 'right0', 24, false);
-					animation.addByPrefix('tap', 'right press', 24, false);
-					animation.addByPrefix('confirm', 'right confirm', 24, false);
 			}
 		} else { // if the note skin is INDEED pixel
 			loadGraphic(Util.getImage('noteskins/' + noteskin + '/notes'));
@@ -80,20 +72,12 @@ class Note extends FlxSprite {
 			{
 				case 0:
 					animation.add('strum', [4]);
-					animation.add('tap', [4, 8], 12, false);
-					animation.add('confirm', [12, 16], 24, false);
 				case 1:
 					animation.add('strum', [5]);
-					animation.add('tap', [5, 9], 12, false);
-					animation.add('confirm', [13, 17], 24, false);
 				case 2:
 					animation.add('strum', [6]);
-					animation.add('tap', [6, 10], 12, false);
-					animation.add('confirm', [14, 18], 12, false);
 				case 3:
 					animation.add('strum', [7]);
-					animation.add('tap', [7, 11], 12, false);
-					animation.add('confirm', [15, 19], 24, false);
 			}
 		}
 		

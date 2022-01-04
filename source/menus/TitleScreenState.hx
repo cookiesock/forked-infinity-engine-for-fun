@@ -76,7 +76,8 @@ class TitleScreenState extends BasicState
 		});
 		#end*/
 
-		FlxG.sound.volume = Options.getData('volume');
+		if(Options.getData('volume') != null)
+			FlxG.sound.volume = Options.getData('volume');
 
 		super.create();
 	}

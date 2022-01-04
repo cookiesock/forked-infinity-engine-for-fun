@@ -435,8 +435,27 @@ class PlayState extends BasicState
 					oldNote = null;*/
 
 				var swagNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime, gottaHitNote, song.ui_Skin);
+				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0,0);
 				swagNote.cameras = [hudCam];
+
+				var susLength:Float = swagNote.sustainLength;
+				susLength = susLength / Conductor.stepCrochet;
+
+				var floorSus:Int = Math.floor(susLength);
+
+				if(floorSus > 0)
+				{
+					for (susNote in 0...floorSus)
+					{
+						var sustainNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, gottaHitNote, song.ui_Skin);
+						sustainNote.cameras = [hudCam];
+						add(sustainNote);
+
+						notes.push(sustainNote);
+					}
+				}
+
 				add(swagNote);
 
 				notes.push(swagNote);
