@@ -1,5 +1,6 @@
 package menus;
 
+import mods.Mods;
 import flixel.text.FlxText;
 import ui.Icon;
 import ui.AlphabetText;
@@ -39,6 +40,26 @@ class FreeplayMenuState extends BasicState
 
         var rawSongListData:FreeplayList = Util.getJsonContents(Util.getJsonPath("data/freeplaySongs"));
         var songListData:Array<FreeplaySong> = rawSongListData.songs;
+
+        #if sys
+        Mods.updateActiveMods();
+        
+        if(Mods.activeMods.length > 0)
+        {
+            for(mod in Mods.activeMods)
+            {
+                if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/data/freeplaySongs.json'))
+                {
+                    var coolData:FreeplayList = Util.getJsonContents('mods/$mod/data/freeplaySongs.json');
+
+                    for(song in coolData.songs)
+                    {
+                        songListData.push(song);
+                    }
+                }
+            }
+        }
+        #end
 
         for(songData in songListData)
         {

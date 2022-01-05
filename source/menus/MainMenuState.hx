@@ -30,7 +30,7 @@ class MainMenuState extends BasicState
 	var selectedMenu:Int = 0;
 	var menuButtons:FlxTypedGroup<FlxSprite>;
 	
-	var swagMenuButtons:Array<String> = ['StoryMode', 'Freeplay', 'Credits', 'Options',];
+	var swagMenuButtons:Array<String> = ['StoryMode', 'Freeplay', 'Credits', 'Options', 'Mods'];
 
 	override public function create()
 	{
@@ -151,6 +151,10 @@ class MainMenuState extends BasicState
 								case 'Options':
 									transitionState(new menus.OptionsState());
 									trace("entered options");
+
+								case 'Mods':
+									transitionState(new mods.ModsState());
+									trace("entered mods");
 							}
 						});
 					}

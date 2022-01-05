@@ -1,5 +1,7 @@
 package game;
 
+import mods.Mods;
+import openfl.media.Sound;
 import flixel.graphics.frames.FlxAtlasFrames;
 import ui.RatingSprite;
 import flixel.FlxObject;
@@ -809,12 +811,22 @@ class PlayState extends BasicState
 				case 4:
 					countdownStarted = false;
 
+					#if sys
+					if(!Assets.exists(Util.getInst(song.song.toLowerCase())))
+						FlxG.sound.music = Util.loadModSound("songs/" + song.song.toLowerCase() + "/Inst", true, true);
+					else
+					#end
 					FlxG.sound.playMusic(Util.getInst(song.song.toLowerCase()), 1, false);
 
 					if(song.needsVoices)
 					{
 						FlxG.sound.music.pause();
 
+						#if sys
+						if(!Assets.exists(Util.getVoices(song.song.toLowerCase())))
+							vocals = Util.loadModSound("songs/" + song.song.toLowerCase() + "/Voices", true, false);
+						else
+						#end
 						vocals = FlxG.sound.play(Util.getVoices(song.song.toLowerCase()));
 
 						vocals.pause();
@@ -828,11 +840,19 @@ class PlayState extends BasicState
 					else 
 						vocals = new FlxSound();
 
-					FlxG.sound.music.onComplete = function()
+					if(FlxG.sound.music.active)
+					{
+						FlxG.sound.music.onComplete = function()
+						{
+							FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
+							transitionState(new menus.MainMenuState());
+						};
+					}
+					else
 					{
 						FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
 						transitionState(new menus.MainMenuState());
-					};
+					}
 			}
 		}
 		

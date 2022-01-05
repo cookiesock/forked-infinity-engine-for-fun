@@ -1,12 +1,14 @@
 package;
 
-import flash.media.Sound;
+import mods.ModSoundUtil;
+import openfl.media.Sound;
+import flixel.system.FlxSound;
+import mods.Mods;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import lime.utils.Assets;
 import haxe.Json;
-import haxe.format.JsonParser;
 
 using StringTools;
 
@@ -17,8 +19,22 @@ class Util
 	static public var soundExt:String = #if web '.mp3' #else '.ogg' #end;
 	static public var funnyStringArray:Array<String> = [];
 
-	static public function getJsonContents(path:String):Dynamic {
+	static public function getJsonContents(path:String, ?mod:Null<String>):Dynamic {
+		#if sys
+		if(!Assets.exists(path))
+		{
+			if(sys.FileSystem.exists(Sys.getCwd() + path))
+				return Json.parse(sys.io.File.getContent(Sys.getCwd() + path));
+
+			return "File couldn't be found!";
+		}
+		else
+		{
+		#end
 		return Json.parse(Assets.getText(path));
+		#if sys
+		}
+		#end
 	}
 
 	static public function getSparrow(filePath:String, ?fromImagesFolder:Bool = true, ?xmlPath:String)
@@ -53,7 +69,33 @@ class Util
 		else
 			png = "assets/" + png;
 
+		#if sys
+		if(!Assets.exists(png + ".png", IMAGE))
+		{
+			trace("remember, a mod loaded image is coming so be prepared!!! :D");
+
+			for(mod in Mods.activeMods)
+			{
+				png = filePath;
+		
+				if (fromImagesFolder)
+					png = "mods/" + mod + "/images/" + png;
+				else
+					png = "mods/" + mod + "/" + png;
+
+				if(sys.FileSystem.exists(Sys.getCwd() + png + ".png"))
+					return png + ".png";
+			}
+
+			return "oof.png";
+		}
+		else
+		{
+		#end
 		return png + '.png';
+		#if sys
+		}
+		#end
 	}
 
 	static public function getSound(filePath:String, ?fromSoundsFolder:Bool = true, ?useUrOwnFolderLmfao:Bool = false)
@@ -121,6 +163,37 @@ class Util
 		else
 			return false;
 	}
+
+	#if sys
+	public static function loadModSound(path:String, ?autoPlay:Bool = false, ?persist:Bool = false):FlxSound
+	{
+		var modFoundFirst:String = "";
+
+		for(mod in Mods.activeMods)
+		{
+			if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/' + path + soundExt))
+				modFoundFirst = mod;
+		}
+
+		if(modFoundFirst != "")
+		{
+			var sound = new ModSoundUtil();
+
+			sound.loadByteArray(sys.io.File.getBytes(Sys.getCwd() + 'mods/$modFoundFirst/' + path + soundExt));
+
+			sound.persist = persist;
+
+			if(autoPlay)
+				sound.play();
+
+			sound.active = true;
+
+			return sound;
+		}
+
+		return new FlxSound();
+	}
+	#end
 }
 
 class LOG {

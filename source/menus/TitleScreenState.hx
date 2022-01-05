@@ -1,11 +1,9 @@
 package menus;
 
-import lime.app.Application;
-import ui.AlphabetText;
+import mods.Mods;
 import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 using flixel.util.FlxSpriteUtil;
@@ -30,6 +28,7 @@ class TitleScreenState extends BasicState
 		FlxG.mouse.load(sprite.pixels);
 
 		Options.init();
+		Mods.init();
 		
 		persistentUpdate = true;
 		persistentDraw = true;

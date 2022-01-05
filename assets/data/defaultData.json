@@ -47,6 +47,10 @@
         {
             "name": "scroll-speed",
             "value": 1
+        },
+        {
+            "name": "mods",
+            "value": []
         }
     ] 
 }

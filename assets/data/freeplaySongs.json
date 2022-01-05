@@ -191,14 +191,6 @@
             ]
         },
         {
-            "name": "Freedom Dive",
-            "icon": "bf",
-            "bgColor": "#31B0D1",
-            "difficulties": [
-                "Normal"
-            ]
-        },
-        {
             "name": "Test",
             "icon": "bf-pixel",
             "bgColor": "#31B0D1",
