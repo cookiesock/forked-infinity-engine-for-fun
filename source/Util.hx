@@ -165,9 +165,10 @@ class Util
 			return false;
 	}
 
-	#if sys
+	
 	public static function loadModSound(path:String, ?autoPlay:Bool = false, ?persist:Bool = false):FlxSound
 	{
+		#if sys
 		var modFoundFirst:String = "";
 
 		for(mod in Mods.activeMods)
@@ -189,10 +190,10 @@ class Util
 
 			return sound;
 		}
+		#end
 
 		return new FlxSound();
 	}
-	#end
 }
 
 class LOG {
