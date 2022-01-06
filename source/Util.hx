@@ -1,5 +1,6 @@
 package;
 
+import openfl.events.Event;
 import mods.ModSoundUtil;
 import openfl.media.Sound;
 import flixel.system.FlxSound;
@@ -177,9 +178,7 @@ class Util
 
 		if(modFoundFirst != "")
 		{
-			var sound = new ModSoundUtil();
-
-			sound.loadByteArray(sys.io.File.getBytes(Sys.getCwd() + 'mods/$modFoundFirst/' + path + soundExt));
+			var sound = new ModSoundUtil().loadCoolModdedSound('mods/$modFoundFirst/' + path + soundExt);
 
 			sound.persist = persist;
 
