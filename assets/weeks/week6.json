@@ -3,5 +3,15 @@
     "weekBeforeUnlock": "week5",
     "fileName": "week6",
     "weekQuote": "hating simulator ft. moawling",
-    "funnyWeekQuote": "pixelated high school lookin ass"
+    "funnyWeekQuote": "pixelated high school lookin ass",
+    "songs": [
+        "Senpai",
+        "Roses",
+        "Thorns"
+    ],
+    "difficulties": [
+        "Easy",
+        "Normal",
+        "Hard"
+    ]
 }

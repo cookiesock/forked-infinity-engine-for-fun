@@ -99,7 +99,7 @@ class StoryModeState extends BasicState {
             }
             #end
 
-            var realWeek:FlxSprite = new FlxSprite(0, 600 + json_i * 105).loadGraphic(Util.getImage('weeks/images/' + data.fileName, false));
+            var realWeek:FlxSprite = new FlxSprite(0, 600 + json_i * 125).loadGraphic(Util.getImage('weeks/images/' + data.fileName, false));
             realWeek.screenCenter(X);
             realWeek.ID = json_i;
             funnyWeeks.add(realWeek);
@@ -139,10 +139,15 @@ class StoryModeState extends BasicState {
         char.scrollFactor.set();
         weekChars.add(char);
 
+        var tracksText = new FlxText(0, yellowBG.y + 50, 0, "TRACKS:");
+        tracksText.screenCenter(X);
+        tracksText.x -= FlxG.width - 200;
+        add(tracksText);
+
         funkyBpm(102);
 
-		camFollow = new FlxObject(funnyWeeks.members[selectedWeek].getGraphicMidpoint().x, funnyWeeks.members[selectedWeek].getGraphicMidpoint().y - 200, 1, 1);
-		camFollowPos = new FlxObject(funnyWeeks.members[selectedWeek].getGraphicMidpoint().x, funnyWeeks.members[selectedWeek].getGraphicMidpoint().y - 200, 1, 1);
+		camFollow = new FlxObject(funnyWeeks.members[selectedWeek].getGraphicMidpoint().x, funnyWeeks.members[selectedWeek].getGraphicMidpoint().y - 100, 1, 1);
+		camFollowPos = new FlxObject(funnyWeeks.members[selectedWeek].getGraphicMidpoint().x, funnyWeeks.members[selectedWeek].getGraphicMidpoint().y - 100, 1, 1);
 		add(camFollow);
 		add(camFollowPos);
 		
@@ -209,6 +214,14 @@ class StoryModeState extends BasicState {
         if(selectedWeek > jsons.length - 1)
             selectedWeek = 0;
 
-        camFollow.setPosition(funnyWeeks.members[selectedWeek].getGraphicMidpoint().x, funnyWeeks.members[selectedWeek].getGraphicMidpoint().y - 200);
+        for(i in 0...funnyWeeks.members.length)
+        {
+            if(funnyWeeks.members[i].ID == selectedWeek)
+                funnyWeeks.members[i].alpha = 1;
+            else   
+                funnyWeeks.members[i].alpha = 0.6;
+        }
+
+        camFollow.setPosition(funnyWeeks.members[selectedWeek].getGraphicMidpoint().x, funnyWeeks.members[selectedWeek].getGraphicMidpoint().y - 160);
     }
 }

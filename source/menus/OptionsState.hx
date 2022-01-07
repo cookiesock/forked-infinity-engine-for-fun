@@ -1,7 +1,6 @@
 package menus;
 
 import flixel.FlxBasic;
-import haxe.ds.Option;
 import flixel.FlxSubState;
 import flixel.text.FlxText;
 import ui.AlphabetText;
@@ -24,6 +23,9 @@ class OptionsState extends BasicState
 	var optionsState:String = "default";
 
 	var debugText:FlxText;
+
+	var stupidBox:FlxSprite;
+	var descText:FlxText;
 
 	var defaultOptionsList = [
 		"selectables" => [
@@ -52,8 +54,6 @@ class OptionsState extends BasicState
 	var optionsList:Array<Dynamic> = [];
 	
 	var selectedOption:Int = 0;
-	var descBox:FlxSprite;
-	var descText:FlxText;
 	var menuColor:Int = 0xFFf542d7;
 
     override public function create()
@@ -73,7 +73,19 @@ class OptionsState extends BasicState
 		reloadOptionsList();
 		changeSelection();
 
+		stupidBox = new FlxSprite(0, FlxG.height * 0.9).makeGraphic(FlxG.width, 300, FlxColor.BLACK);
+		stupidBox.alpha = 0.6;
+		add(stupidBox);
+
+		descText = new FlxText(0, 0, 0, "", 24);
+		descText.font = "assets/fonts/vcr.ttf";
+		descText.color = FlxColor.WHITE;
+		descText.borderColor = FlxColor.BLACK;
+		descText.borderSize = 2;
+		add(descText);
+
 		debugText = new FlxText(0,0,0,"",32,true);
+		debugText.visible = false;
 		add(debugText);
 		
 		super.create();
@@ -130,6 +142,11 @@ class OptionsState extends BasicState
 					reloadShit();
 			}
 		}
+
+		stupidBox.y = FlxMath.lerp(stupidBox.y, FlxG.height * 0.8, Math.max(0, Math.min(1, elapsed * 3)));
+		descText.y = (stupidBox.y + 50) - descText.height / 2;
+		descText.text = optionsList[selectedOption][2];
+		descText.screenCenter(X);
 
 		//debugText.text = optionsList[selectedOption][0];
 

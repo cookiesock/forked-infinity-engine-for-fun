@@ -3,5 +3,13 @@
     "weekBeforeUnlock": "",
     "fileName": "tutorial",
     "weekQuote": "How to Funk",
-    "funnyWeekQuote": "How to F.U.C.K"
+    "funnyWeekQuote": "How to F.U.C.K",
+    "songs": [
+        "Tutorial"
+    ],
+    "difficulties": [
+        "Easy",
+        "Normal",
+        "Hard"
+    ]
 }
