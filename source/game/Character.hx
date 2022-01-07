@@ -27,8 +27,6 @@ class Character extends FlxSprite {
 
         this.name = name;
 
-        trace(name);
-
         #if sys
         if(Assets.exists('assets/characters/$name.json'))
         #end
