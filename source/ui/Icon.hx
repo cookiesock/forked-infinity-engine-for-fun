@@ -12,7 +12,11 @@ class Icon extends TrackerSprite
 	public function new(?iconPath:String = "test", ?tracker:FlxSprite, ?isPlayer:Bool = false, ?xOff:Float = 10, ?yOff:Float = -30, ?direction:TrackerDirection = RIGHT)
 	{
 		super(tracker, xOff, yOff, direction);
-		antialiasing = true;
+
+		if(iconPath.contains('-pixel'))
+			antialiasing = false;
+		else
+			antialiasing = true;
 
 		#if sys
 		if(Assets.exists(Util.getImage(iconPath, false)))

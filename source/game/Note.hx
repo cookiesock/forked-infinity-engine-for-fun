@@ -7,8 +7,8 @@ using StringTools;
 
 class Note extends FlxSprite {
 	var resetAnim:Float = 0;
-	var noteskin:String = 'default';
-	var isPixel:Bool = false;
+	public var noteskin:String = 'default';
+	public var isPixel:Bool = false;
 	public var noteID:Int = 0;
 
 	public var strum:Float = 0.0;
@@ -114,16 +114,69 @@ class Note extends FlxSprite {
 			setGraphicSize(Std.int(width * PlayState.pixelAssetZoom));
 			updateHitbox();
 			
-			switch(Math.abs(noteID % 4))
+			if(!isSustainNote)
 			{
-				case 0:
-					animation.add('strum', [4]);
-				case 1:
-					animation.add('strum', [5]);
-				case 2:
-					animation.add('strum', [6]);
-				case 3:
-					animation.add('strum', [7]);
+				switch(Math.abs(noteID % 4))
+				{
+					case 0:
+						animation.add('strum', [4]);
+					case 1:
+						animation.add('strum', [5]);
+					case 2:
+						animation.add('strum', [6]);
+					case 3:
+						animation.add('strum', [7]);
+				}
+			}
+			else
+			{
+				loadGraphic(Util.getImage('noteskins/' + noteskin + '/notesENDS'));
+				width = width / 4;
+				height = height / 2;
+				loadGraphic(Util.getImage('noteskins/' + noteskin + '/notesENDS'), true, Math.floor(width), Math.floor(height));
+				
+				antialiasing = false;
+				setGraphicSize(Std.int(width * PlayState.pixelAssetZoom));
+				updateHitbox();
+
+				if(!isEndNote)
+				{
+					switch(Math.abs(noteID % 4))
+					{
+						case 0:
+							animation.add('strum', [0]);
+						case 1:
+							animation.add('strum', [1]);
+						case 2:
+							animation.add('strum', [2]);
+						case 3:
+							animation.add('strum', [3]);
+					}
+
+					@:privateAccess
+					scale.y *= (Conductor.stepCrochet / 100) * 1.5 * PlayState.instance.speed;
+					updateHitbox();
+				}
+				else
+				{
+					switch(Math.abs(noteID % 4))
+					{
+						case 0:
+							animation.add('strum', [4]);
+						case 1:
+							animation.add('strum', [5]);
+						case 2:
+							animation.add('strum', [6]);
+						case 3:
+							animation.add('strum', [7]);
+					}
+				}
+
+				@:privateAccess
+				if(PlayState.instance.downscroll)
+					flipY = true;
+
+				alpha = 0.6;
 			}
 		}
 		

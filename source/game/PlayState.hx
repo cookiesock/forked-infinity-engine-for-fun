@@ -143,13 +143,20 @@ class PlayState extends BasicState
 	var speed:Float = 1;
 	public static var storyMode:Bool = false;
 
+	// misc shit
 	var funnyHitStuffsLmao:Float = 0.0;
 	var totalNoteStuffs:Int = 0;
 
+	// replay shit
+	public var savedReplay:Array<Dynamic> = [];
+	public var isReplayMode:Bool = false;
+	
+	// more misc shit
 	public static var noteSplashFrames:FlxAtlasFrames;
 
 	public static var instance:PlayState;
 
+	// shit other than variables
 	public function new(?songName:String, ?difficulty:String, ?storyModeBool:Bool = false)
 	{
 		instance = this;
@@ -477,7 +484,12 @@ class PlayState extends BasicState
 					{
 						var sustainNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, gottaHitNote, song.ui_Skin, true, susNote == floorSus - 1);
 						sustainNote.cameras = [hudCam];
-						sustainNote.x += sustainNote.width / 3;
+
+						if(!sustainNote.isPixel)
+							sustainNote.x += sustainNote.width / 3;
+						else
+							sustainNote.x += sustainNote.width / 1.5;
+
 						sustainNote.lastNote = notes[0];
 						add(sustainNote);
 
@@ -695,10 +707,20 @@ class PlayState extends BasicState
 			{
 				if(note.isSustainNote && note.isEndNote)
 				{
-					if(downscroll)
-						note.y += note.height / 2.35;
+					if(!note.isPixel)
+					{
+						if(downscroll)
+							note.y += note.height / 2.35;
+						else
+							note.y -= note.height / 2.35;
+					}
 					else
-						note.y -= note.height / 2.35;
+					{
+						if(downscroll)
+							note.y += note.height / 1;
+						else
+							note.y -= note.height / 1;
+					}
 				}
 			}
 
@@ -718,7 +740,10 @@ class PlayState extends BasicState
 						FlxG.sound.play(Util.getSound('gameplay/missnote' + FlxG.random.int(1, 3)), 0.6);
 
 						score -= 10;
-						misses += 1;
+
+						if(!note.isSustainNote)
+							misses += 1;
+
 						totalNoteStuffs++;
 						combo = 0;
 					}
@@ -1053,7 +1078,7 @@ class PlayState extends BasicState
 							default:
 								changeHealth(true);
 							case 'shit': // anti spam...kinda
-								health -= 0.275;
+								health -= 0.175; // maybe you shouldn't be able to die by spamming like twice?
 						}
 
 						updateAccuracyStuff();
