@@ -83,6 +83,8 @@ class OptionsState extends BasicState
 		descText.color = FlxColor.WHITE;
 		descText.borderColor = FlxColor.BLACK;
 		descText.borderSize = 2;
+		descText.borderStyle = OUTLINE;
+		descText.alignment = CENTER;
 		add(descText);
 
 		debugText = new FlxText(0,0,0,"",32,true);
@@ -148,7 +150,7 @@ class OptionsState extends BasicState
 
 		stupidBox.y = FlxMath.lerp(stupidBox.y, FlxG.height * 0.8, Math.max(0, Math.min(1, elapsed * 3)));
 		descText.y = (stupidBox.y + 50) - descText.height / 2;
-		descText.text = optionsList[selectedOption][2];
+		descText.text = optionsList[selectedOption][2] + "\n";
 		descText.screenCenter(X);
 
 		//debugText.text = optionsList[selectedOption][0];
