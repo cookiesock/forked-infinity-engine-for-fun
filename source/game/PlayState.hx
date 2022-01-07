@@ -481,7 +481,9 @@ class PlayState extends BasicState
 						else
 							sustainNote.x += sustainNote.width / 1.5;
 
-						sustainNote.lastNote = notes[0];
+						if(susNote != 0)
+							sustainNote.lastNote = notes[notes.length - 1];
+
 						add(sustainNote);
 
 						notes.push(sustainNote);
@@ -685,6 +687,7 @@ class PlayState extends BasicState
 
 						opponent.playAnim(singAnims[note.noteID % 4], true);
 
+						note.active = false;
 						notes.remove(note);
 						note.kill();
 						note.destroy();
@@ -703,22 +706,29 @@ class PlayState extends BasicState
 
 			if(note != null)
 			{
-				if(note.isSustainNote && note.isEndNote)
+				if(note.lastNote != null)
 				{
-					if(!note.isPixel)
+					if(note.isSustainNote && note.isEndNote && note.lastNote.active)
 					{
 						if(downscroll)
-							note.y += note.height / 2.35;
+							note.y = note.lastNote.getGraphicMidpoint().y - note.frameHeight;
 						else
-							note.y -= note.height / 2.35;
+							note.y = note.lastNote.getGraphicMidpoint().y + note.frameHeight;
 					}
+					else if(note.isSustainNote && note.isEndNote)
+					{
+						if(downscroll)
+							note.y += note.frameHeight / 2;
+						else
+							note.y += note.frameHeight / 2;
+					}
+				}
+				else if(note.isSustainNote && note.isEndNote)
+				{
+					if(downscroll)
+						note.y += note.frameHeight / 2;
 					else
-					{
-						if(downscroll)
-							note.y += note.height / 1;
-						else
-							note.y -= note.height / 1;
-					}
+						note.y += note.frameHeight / 2;
 				}
 			}
 
@@ -746,6 +756,7 @@ class PlayState extends BasicState
 						combo = 0;
 					}
 
+					note.active = false;
 					notes.remove(note);
 					note.kill();
 					note.destroy();
@@ -1020,7 +1031,6 @@ class PlayState extends BasicState
 					if(!note.isSustainNote)
 					{
 						var noteMs = Conductor.songPosition - note.strum;
-						trace(noteMs + " ms");
 
 						if(botplay)
 							noteMs = 0;
@@ -1124,6 +1134,7 @@ class PlayState extends BasicState
 					if(combo > 9999)
 						combo = 9999; // you should never be able to get a combo this high, if you do, you're nuts.
 
+					note.active = false;
 					notes.remove(note);
 					note.kill();
 					note.destroy();
@@ -1140,6 +1151,7 @@ class PlayState extends BasicState
 
 					if(note.strum == noteDataTimes[note.noteID] && dontHitTheseDirectionsLol[note.noteID])
 					{
+						note.active = false;
 						notes.remove(note);
 						note.kill();
 						note.destroy();
@@ -1186,6 +1198,7 @@ class PlayState extends BasicState
 						player.playAnim(singAnims[note.noteID % 4], true);
 						playerStrumArrows.members[note.noteID].playAnim("confirm", true);
 
+						note.active = false;
 						notes.remove(note);
 						note.kill();
 						note.destroy();
