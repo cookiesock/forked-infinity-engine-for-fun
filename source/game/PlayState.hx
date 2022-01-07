@@ -56,7 +56,6 @@ class PlayState extends BasicState
 	var opponent:Character;
 	var speakers:Character;
 	var player:Character;	
-	var debugText:FlxText;
 	
 	// arrow shit
 	var opponentStrumArrows:FlxTypedGroup<StrumArrow>;
@@ -424,13 +423,6 @@ class PlayState extends BasicState
 		scoreText.borderSize = 2;
 		add(scoreText);
 		
-		// debug shit
-
-		debugText = new FlxText(0,0,FlxG.width, "", 32, true);
-		debugText.color = FlxColor.WHITE;
-		debugText.font = "assets/fonts/vcr.ttf";
-		add(debugText);
-		
 		// camera shit
 		opponentStrumArrows.cameras = [hudCam];
 		playerStrumArrows.cameras = [hudCam];
@@ -443,7 +435,6 @@ class PlayState extends BasicState
 		msText.cameras = [hudCam];
 		scoreText.cameras = [hudCam];
 		botplayText.cameras = [hudCam];
-		debugText.cameras = [otherCam];
 
 		if(song.chartOffset == null)
 			song.chartOffset = 0;
@@ -538,6 +529,7 @@ class PlayState extends BasicState
 		updateAccuracyStuff();
 
 		Conductor.songPosition += elapsed * 1000;
+		Conductor.songPosition = FlxMath.roundDecimal(Conductor.songPosition, 2);
 
 		if(!countdownStarted)
 		{
@@ -593,8 +585,6 @@ class PlayState extends BasicState
 			comboArray = [r.split(comboString)[1], r.split(comboString)[2], r.split(comboString)[3], r.split(comboString)[4]];
 		else
 			comboArray = [r.split(comboString)[2], r.split(comboString)[3], r.split(comboString)[4]];
-
-		debugText.text = curBeat + "\n" + curStep + "\n" + Conductor.songPosition + "\n" + FlxG.sound.music.time;
 
 		botplayText.visible = botplay;
 		
