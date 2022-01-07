@@ -1172,9 +1172,7 @@ class PlayState extends BasicState
 		{
 			if(note != null)
 			{
-				note.calculateCanBeHit();
-
-				if(note.isSustainNote)
+				if(note.isSustainNote && note.mustPress)
 				{
 					if(pressed[note.noteID] && Conductor.songPosition >= note.strum)
 					{
