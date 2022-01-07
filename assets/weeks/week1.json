@@ -3,5 +3,15 @@
     "weekBeforeUnlock": "tutorial",
     "fileName": "week1",
     "weekQuote": "Daddy Dearest",
-    "funnyWeekQuote": "Fatherly Encounter"
+    "funnyWeekQuote": "Fatherly Encounter",
+    "songs": [
+        "Bopeebo",
+        "Fresh",
+        "Dad Battle"
+    ],
+    "difficulties": [
+        "Easy",
+        "Normal",
+        "Hard"
+    ]
 }

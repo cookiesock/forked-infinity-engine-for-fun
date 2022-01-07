@@ -3,5 +3,15 @@
     "weekBeforeUnlock": "week1",
     "fileName": "week2",
     "weekQuote": "Spooky Month",
-    "funnyWeekQuote": "IT'SA SPOOKY MONTH!!!"
+    "funnyWeekQuote": "IT'SA SPOOKY MONTH!!!",
+    "songs": [
+        "Spookeez",
+        "South",
+        "Monster"
+    ],
+    "difficulties": [
+        "Easy",
+        "Normal",
+        "Hard"
+    ]
 }
