@@ -90,7 +90,7 @@ class StoryModeState extends BasicState {
                 {
                     for(mod in Mods.activeMods)
                     {
-                        if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/weeks/$jsonName'))
+                        if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/weeks/$jsonName.json'))
                         {
                             data = Util.getJsonContents('mods/$mod/weeks/$jsonName.json');
                         }
