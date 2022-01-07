@@ -36,6 +36,8 @@ class BasicSubState extends FlxSubState
 		if(oldStep != curStep)
 			stepHit();
 
+		FlxG.stage.frameRate = Options.getData('fpsCap');
+
 		super.update(elapsed);
 	}
 

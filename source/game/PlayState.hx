@@ -56,7 +56,6 @@ class PlayState extends BasicState
 	var opponent:Character;
 	var speakers:Character;
 	var player:Character;	
-	var debugText:FlxText;
 	
 	// arrow shit
 	var opponentStrumArrows:FlxTypedGroup<StrumArrow>;
@@ -424,13 +423,6 @@ class PlayState extends BasicState
 		scoreText.borderSize = 2;
 		add(scoreText);
 		
-		// debug shit
-
-		debugText = new FlxText(0,0,FlxG.width, "", 32, true);
-		debugText.color = FlxColor.WHITE;
-		debugText.font = "assets/fonts/vcr.ttf";
-		add(debugText);
-		
 		// camera shit
 		opponentStrumArrows.cameras = [hudCam];
 		playerStrumArrows.cameras = [hudCam];
@@ -443,7 +435,6 @@ class PlayState extends BasicState
 		msText.cameras = [hudCam];
 		scoreText.cameras = [hudCam];
 		botplayText.cameras = [hudCam];
-		debugText.cameras = [otherCam];
 
 		if(song.chartOffset == null)
 			song.chartOffset = 0;
@@ -533,9 +524,12 @@ class PlayState extends BasicState
 
 	override public function update(elapsed:Float)
 	{
+		super.update(elapsed);
+
 		updateAccuracyStuff();
 
 		Conductor.songPosition += elapsed * 1000;
+		Conductor.songPosition = FlxMath.roundDecimal(Conductor.songPosition, 2);
 
 		if(!countdownStarted)
 		{
@@ -591,8 +585,6 @@ class PlayState extends BasicState
 			comboArray = [r.split(comboString)[1], r.split(comboString)[2], r.split(comboString)[3], r.split(comboString)[4]];
 		else
 			comboArray = [r.split(comboString)[2], r.split(comboString)[3], r.split(comboString)[4]];
-
-		debugText.text = curBeat + "\n" + curStep + "\n" + Conductor.songPosition + "\n" + FlxG.sound.music.time;
 
 		botplayText.visible = botplay;
 		
@@ -778,8 +770,6 @@ class PlayState extends BasicState
 		
 		scoreText.screenCenter(X);
 
-		super.update(elapsed);
-
 		if(song.notes[Std.int(curStep / 16)] != null)
 		{
 			var midPos = song.notes[Std.int(curStep / 16)].mustHitSection ? player.getMidpoint() : opponent.getMidpoint();
@@ -829,11 +819,6 @@ class PlayState extends BasicState
 
 			playerIcon.updateHitbox();
 			opponentIcon.updateHitbox();
-
-			var iconOffset:Int = 26;
-
-			playerIcon.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
-			opponentIcon.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (opponentIcon.width - iconOffset);
 
 			if(player.active)
 				playerIcon.antialiasing = player.antialiasing;
@@ -1187,9 +1172,7 @@ class PlayState extends BasicState
 		{
 			if(note != null)
 			{
-				note.calculateCanBeHit();
-
-				if(note.isSustainNote)
+				if(note.isSustainNote && note.mustPress)
 				{
 					if(pressed[note.noteID] && Conductor.songPosition >= note.strum)
 					{

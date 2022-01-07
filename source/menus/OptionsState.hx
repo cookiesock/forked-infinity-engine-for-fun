@@ -38,6 +38,7 @@ class OptionsState extends BasicState
 			["Anti-Aliasing", "checkbox", "Gives extra performance when disabled at the cost of\ngraphics not looking very smooth.", "anti-aliasing"],
 			["Optimization", "checkbox", "Removes all of the characters and background elements\nfor performance.", "optimization"],
 			["Note Splashes", "checkbox", "When enabled, a firework-like effect will show up\nIf you hit a note and get a \"SiCK!!\" from it.", "note-splashes"],
+			["FPS Cap", "menu", "Change Max FPS."],
 		],
 		"gameplay" => [
 			["Back", "menu", ""],
@@ -136,6 +137,8 @@ class OptionsState extends BasicState
 							openSubState(new ScrollSpeedMenu());
 						case "Reset Data":
 							Options.resetData();
+						case "FPS Cap":
+							openSubState(new FPSCapMenu());
 					}
 				case "checkbox":
 					Options.saveData(optionsList[selectedOption][3], !Options.getData(optionsList[selectedOption][3]));
