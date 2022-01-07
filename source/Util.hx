@@ -61,30 +61,29 @@ class Util
 		{
 			for(mod in Mods.activeMods)
 			{
-				png = filePath;
+				var newPng = filePath;
 		
 				if (fromImagesFolder)
-					png = "mods/" + mod + "/images/" + png;
+					newPng = "mods/" + mod + "/images/" + newPng;
 				else
-					png = "mods/" + mod + "/" + png;
+					newPng = "mods/" + mod + "/" + newPng;
 
-				xml = xmlPath;
+				var newXml = xmlPath;
 
-				if (xml == null)
-					xml = png;
-		
-				if (fromImagesFolder)
-					xml = "mods/" + mod + "/images/" + xml;
+				if (newXml == null)
+					newXml = newPng;
 				else
-					xml = "mods/" + mod + "/" + xml;
-
-				trace(png);
-				trace(xml);
-
-				if(sys.FileSystem.exists(Sys.getCwd() + png + ".png") && sys.FileSystem.exists(Sys.getCwd() + xml + ".xml"))
 				{
-					var xmlData = sys.io.File.getContent(Sys.getCwd() + xml + ".xml");
-					var bitmapData = BitmapData.fromFile(Sys.getCwd() + png + ".png");
+					if (fromImagesFolder)
+						newXml = "mods/" + mod + "/images/" + newXml;
+					else
+						newXml = "mods/" + mod + "/" + newXml;
+				}
+
+				if(sys.FileSystem.exists(Sys.getCwd() + newPng + ".png") && sys.FileSystem.exists(Sys.getCwd() + newXml + ".xml"))
+				{
+					var xmlData = sys.io.File.getContent(Sys.getCwd() + newXml + ".xml");
+					var bitmapData = BitmapData.fromFile(Sys.getCwd() + newPng + ".png");
 	
 					return FlxAtlasFrames.fromSparrow(bitmapData, xmlData);
 				}
@@ -105,7 +104,7 @@ class Util
     // OR LEAVE HIM AS IS NOW, OTHERWISE THE GAME WILL CRASH
 	// fuck you
 
-	static public function getImage(filePath:String, ?fromImagesFolder:Bool = true)
+	static public function getImage(filePath:String, ?fromImagesFolder:Bool = true):Dynamic
 	// this is so i can grab images without having to rembr that i have to put a .png at the end
 	// - swordcube
 	{
@@ -119,8 +118,6 @@ class Util
 		#if sys
 		if(!Assets.exists(png + ".png", IMAGE))
 		{
-			trace("remember, a mod loaded image is coming so be prepared!!! :D");
-
 			for(mod in Mods.activeMods)
 			{
 				png = filePath;
@@ -131,7 +128,7 @@ class Util
 					png = "mods/" + mod + "/" + png;
 
 				if(sys.FileSystem.exists(Sys.getCwd() + png + ".png"))
-					return png + ".png";
+					return BitmapData.fromFile(Sys.getCwd() + png + ".png");
 			}
 
 			return "oof.png";

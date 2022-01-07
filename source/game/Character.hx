@@ -47,7 +47,14 @@ class Character extends FlxSprite {
         }
         #end
 
-        frames = Util.getSparrow('assets/characters/images/$name/assets', false);
+        #if sys
+        if(Assets.exists('assets/characters/images/$name/assets.png', IMAGE))
+        #end
+            frames = Util.getSparrow('assets/characters/images/$name/assets', false);
+        #if sys
+        else
+            frames = Util.getSparrow('characters/images/$name/assets', false);
+        #end
 
         // SPIRIT FUCKING CRASHES THE GAME IF THIS IS REMOVED, EITHER RE-EXPORT HIM AS AN XML
         // OR LEAVE HIM AS IS NOW, OTHERWISE THE GAME WILL CRASH

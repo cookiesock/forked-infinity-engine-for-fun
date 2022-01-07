@@ -1,7 +1,11 @@
 package ui;
 
+import mods.Mods;
+import lime.utils.Assets;
 import ui.TrackerSprite.TrackerDirection;
 import flixel.FlxSprite;
+
+using StringTools;
 
 class Icon extends TrackerSprite
 {
@@ -10,7 +14,14 @@ class Icon extends TrackerSprite
 		super(tracker, xOff, yOff, direction);
 		antialiasing = true;
 
-		loadGraphic(Util.getImage(iconPath, false), true, 150, 150);
+		#if sys
+		if(Assets.exists(Util.getImage(iconPath, false)))
+		#end
+			loadGraphic(Util.getImage(iconPath, false), true, 150, 150);
+		#if sys
+		else
+			loadGraphic(Util.getImage(iconPath, false), true, 150, 150);
+		#end
 
 		animation.add("default", [0], 0, false, isPlayer);
 		animation.add("dead", [1], 0, false, isPlayer);
