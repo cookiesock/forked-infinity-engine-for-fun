@@ -92,8 +92,8 @@ class StoryModeState extends BasicState {
 
         funkyBpm(102);
 
-		camFollow = new FlxObject(0, 0, 1, 1);
-		camFollowPos = new FlxObject(0, 0, 1, 1);
+		camFollow = new FlxObject(funnyWeeks.members[selectedWeek].getGraphicMidpoint().x, funnyWeeks.members[selectedWeek].getGraphicMidpoint().y - 200, 1, 1);
+		camFollowPos = new FlxObject(funnyWeeks.members[selectedWeek].getGraphicMidpoint().x, funnyWeeks.members[selectedWeek].getGraphicMidpoint().y - 200, 1, 1);
 		add(camFollow);
 		add(camFollowPos);
 		
