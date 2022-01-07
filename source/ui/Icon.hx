@@ -16,7 +16,7 @@ class Icon extends TrackerSprite
 		if(iconPath.contains('-pixel'))
 			antialiasing = false;
 		else
-			antialiasing = true;
+			antialiasing = Options.getData('anti-aliasing');
 
 		#if sys
 		if(Assets.exists(Util.getImage(iconPath, false)))
