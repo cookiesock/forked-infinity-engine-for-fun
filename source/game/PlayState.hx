@@ -528,8 +528,7 @@ class PlayState extends BasicState
 
 		updateAccuracyStuff();
 
-		Conductor.songPosition += elapsed * 1000;
-		Conductor.songPosition = FlxMath.roundDecimal(Conductor.songPosition, 2);
+		Conductor.songPosition += Std.int(elapsed * 1000);
 
 		if(!countdownStarted)
 		{
