@@ -533,6 +533,8 @@ class PlayState extends BasicState
 
 	override public function update(elapsed:Float)
 	{
+		super.update(elapsed);
+
 		updateAccuracyStuff();
 
 		Conductor.songPosition += elapsed * 1000;
@@ -778,8 +780,6 @@ class PlayState extends BasicState
 		
 		scoreText.screenCenter(X);
 
-		super.update(elapsed);
-
 		if(song.notes[Std.int(curStep / 16)] != null)
 		{
 			var midPos = song.notes[Std.int(curStep / 16)].mustHitSection ? player.getMidpoint() : opponent.getMidpoint();
@@ -829,11 +829,6 @@ class PlayState extends BasicState
 
 			playerIcon.updateHitbox();
 			opponentIcon.updateHitbox();
-
-			var iconOffset:Int = 26;
-
-			playerIcon.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
-			opponentIcon.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (opponentIcon.width - iconOffset);
 
 			if(player.active)
 				playerIcon.antialiasing = player.antialiasing;
