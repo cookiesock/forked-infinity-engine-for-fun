@@ -99,8 +99,11 @@ class Character extends FlxSprite {
     }
 
     public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0) {
-        animation.play(AnimName, Force, Reversed, Frame);
-        offset.set(offsetMap[AnimName][0], offsetMap[AnimName][1]);
+        if(animation.getByName(AnimName) != null)
+        {
+            animation.play(AnimName, Force, Reversed, Frame);
+            offset.set(offsetMap[AnimName][0], offsetMap[AnimName][1]);
+        }
     }
 
     public function dance() {

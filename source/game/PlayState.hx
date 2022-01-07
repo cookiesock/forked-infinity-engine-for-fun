@@ -886,6 +886,8 @@ class PlayState extends BasicState
 					else 
 						vocals = new FlxSound();
 
+					FlxG.sound.list.add(vocals);
+
 					if(FlxG.sound.music.active)
 					{
 						FlxG.sound.music.onComplete = function()

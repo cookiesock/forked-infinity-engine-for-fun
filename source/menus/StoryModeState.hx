@@ -49,6 +49,7 @@ class StoryModeState extends BasicState {
         for(jsonName in jsons)
         {
             var data:Dynamic = Util.getJsonContents(Util.getJsonPath('weeks/' + jsonName));
+
             var realWeek:FlxSprite = new FlxSprite(0, 600 + json_i * 105).loadGraphic(Util.getImage('weeks/images/' + data.fileName, false));
             realWeek.screenCenter(X);
             realWeek.ID = json_i;
@@ -91,8 +92,6 @@ class StoryModeState extends BasicState {
 
         funkyBpm(102);
 
-        changeSelectedWeek();
-
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollowPos = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
@@ -105,6 +104,8 @@ class StoryModeState extends BasicState {
         debugText.color = FlxColor.WHITE;
         debugText.scrollFactor.set();
         add(debugText);
+
+        changeSelectedWeek();
         
         super.create();
     }
@@ -159,6 +160,6 @@ class StoryModeState extends BasicState {
         if(selectedWeek > jsons.length - 1)
             selectedWeek = 0;
 
-        camFollow.setPosition(camFollow.x, funnyWeeks.members[selectedWeek].getGraphicMidpoint().y - 200);
+        camFollow.setPosition(funnyWeeks.members[selectedWeek].getGraphicMidpoint().x, funnyWeeks.members[selectedWeek].getGraphicMidpoint().y - 200);
     }
 }
