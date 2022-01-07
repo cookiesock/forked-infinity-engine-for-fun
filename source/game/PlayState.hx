@@ -529,6 +529,8 @@ class PlayState extends BasicState
 		});
 	}
 
+	public static var songMultiplier = 1;
+
 	override public function update(elapsed:Float)
 	{
 		updateAccuracyStuff();
@@ -631,14 +633,19 @@ class PlayState extends BasicState
 		}
 		
 		// health icons!!!!!!!
-		playerIcon.setGraphicSize(Std.int(FlxMath.lerp(playerIcon.width, 150, 0.09 / (openfl.Lib.current.stage.frameRate / 120))));
-		opponentIcon.setGraphicSize(Std.int(FlxMath.lerp(opponentIcon.width, 150, 0.09 / (openfl.Lib.current.stage.frameRate / 120))));
-		
+
+		var icon_Zoom_Lerp = 0.09;
+
+		playerIcon.setGraphicSize(Std.int(FlxMath.lerp(playerIcon.width, 150, (icon_Zoom_Lerp / (Main.display.currentFPS / 60)) * songMultiplier)));
+		opponentIcon.setGraphicSize(Std.int(FlxMath.lerp(opponentIcon.width, 150, (icon_Zoom_Lerp / (Main.display.currentFPS / 60)) * songMultiplier)));
+
 		playerIcon.updateHitbox();
 		opponentIcon.updateHitbox();
-		
-		playerIcon.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - 26);
-		opponentIcon.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (opponentIcon.width - 26);
+
+		var iconOffset:Int = 26;
+
+		playerIcon.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
+		opponentIcon.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (opponentIcon.width - iconOffset);
 
 		if (health < 0)
 			health = 0;
@@ -822,6 +829,11 @@ class PlayState extends BasicState
 
 			playerIcon.updateHitbox();
 			opponentIcon.updateHitbox();
+
+			var iconOffset:Int = 26;
+
+			playerIcon.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
+			opponentIcon.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (opponentIcon.width - iconOffset);
 
 			if(player.active)
 				playerIcon.antialiasing = player.antialiasing;
