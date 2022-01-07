@@ -165,7 +165,28 @@ class PlayState extends BasicState
 			else
 				difficulty = "normal";
 	
-			song = Util.getJsonContents('assets/songs/$songName/$difficulty.json').song;
+			#if sys
+			if(Assets.exists('assets/songs/$songName/$difficulty.json'))
+			#end
+				song = Util.getJsonContents('assets/songs/$songName/$difficulty.json').song;
+			#if sys
+			else
+			{
+				Mods.updateActiveMods();
+
+				if(Mods.activeMods.length > 0)
+				{
+					for(mod in Mods.activeMods)
+					{
+						if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/songs/$songName/$difficulty.json'))
+						{
+							song = Util.getJsonContents('mods/$mod/songs/$songName/$difficulty.json').song;
+						}
+					}
+				}
+			}
+			#end
+
 			storyMode = storyModeBool;
 		}
 	}

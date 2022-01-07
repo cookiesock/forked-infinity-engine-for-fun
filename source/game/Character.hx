@@ -1,5 +1,7 @@
 package game;
 
+import mods.Mods;
+import openfl.Assets;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 
@@ -25,7 +27,27 @@ class Character extends FlxSprite {
 
         this.name = name;
 
-        json = Util.getJsonContents('assets/characters/$name.json');
+        trace(name);
+
+        #if sys
+        if(Assets.exists('assets/characters/$name.json'))
+        #end
+            json = Util.getJsonContents('assets/characters/$name.json');
+        #if sys
+        else
+        {
+            if(Mods.activeMods.length > 0)
+            {
+                for(mod in Mods.activeMods)
+                {
+                    if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/characters/$name.json'))
+                    {
+                        json = Util.getJsonContents('mods/$mod/characters/$name.json');
+                    }
+                }
+            }
+        }
+        #end
 
         frames = Util.getSparrow('assets/characters/images/$name/assets', false);
 

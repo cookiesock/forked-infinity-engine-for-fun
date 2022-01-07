@@ -1,5 +1,6 @@
 package;
 
+import openfl.display.BitmapData;
 import openfl.events.Event;
 import mods.ModSoundUtil;
 import openfl.media.Sound;
@@ -32,7 +33,10 @@ class Util
 		else
 		{
 		#end
-		return Json.parse(Assets.getText(path));
+		if(Assets.exists(path))
+			return Json.parse(Assets.getText(path));
+		else 
+			return null;
 		#if sys
 		}
 		#end
@@ -52,7 +56,49 @@ class Util
 			xml = "assets/images/" + xml;
 		}
 
+		#if sys
+		if(!Assets.exists(png + ".png") || !Assets.exists(xml + ".xml"))
+		{
+			for(mod in Mods.activeMods)
+			{
+				png = filePath;
+		
+				if (fromImagesFolder)
+					png = "mods/" + mod + "/images/" + png;
+				else
+					png = "mods/" + mod + "/" + png;
+
+				xml = xmlPath;
+
+				if (xml == null)
+					xml = png;
+		
+				if (fromImagesFolder)
+					xml = "mods/" + mod + "/images/" + xml;
+				else
+					xml = "mods/" + mod + "/" + xml;
+
+				trace(png);
+				trace(xml);
+
+				if(sys.FileSystem.exists(Sys.getCwd() + png + ".png") && sys.FileSystem.exists(Sys.getCwd() + xml + ".xml"))
+				{
+					var xmlData = sys.io.File.getContent(Sys.getCwd() + xml + ".xml");
+					var bitmapData = BitmapData.fromFile(Sys.getCwd() + png + ".png");
+	
+					return FlxAtlasFrames.fromSparrow(bitmapData, xmlData);
+				}
+			}
+
+			return FlxAtlasFrames.fromSparrow("assets/characters/images/bf/assets" + ".png", "assets/characters/images/bf/assets" + ".xml");
+		}
+		else
+		{
+		#end
 		return FlxAtlasFrames.fromSparrow(png + ".png", xml + ".xml");
+		#if sys
+		}
+		#end
 	}
 
     // SPIRIT FUCKING CRASHES THE GAME IF THIS IS REMOVED, EITHER RE-EXPORT HIM AS AN XML
