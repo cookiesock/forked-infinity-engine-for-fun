@@ -21,7 +21,7 @@ class Util
 	static public var soundExt:String = #if web '.mp3' #else '.ogg' #end;
 	static public var funnyStringArray:Array<String> = [];
 
-	static public function getJsonContents(path:String, ?mod:Null<String>):Dynamic {
+	static public function getJsonContents(path:String):Dynamic {
 		#if sys
 		if(!Assets.exists(path))
 		{

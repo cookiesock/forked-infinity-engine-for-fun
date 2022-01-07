@@ -18,14 +18,7 @@ class Icon extends TrackerSprite
 		else
 			antialiasing = Options.getData('anti-aliasing');
 
-		#if sys
-		if(Assets.exists(Util.getImage(iconPath, false)))
-		#end
-			loadGraphic(Util.getImage(iconPath, false), true, 150, 150);
-		#if sys
-		else
-			loadGraphic(Util.getImage(iconPath, false), true, 150, 150);
-		#end
+		loadGraphic(Util.getImage(iconPath, false), true, 150, 150);
 
 		animation.add("default", [0], 0, false, isPlayer);
 		animation.add("dead", [1], 0, false, isPlayer);

@@ -1,5 +1,7 @@
 package menus;
 
+import lime.utils.Assets;
+import mods.Mods;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -23,20 +25,47 @@ class StoryModeState extends BasicState {
 
     var funnyWeeks:FlxTypedGroup<FlxSprite>;
 
+    #if sys
     var jsonDirs = sys.FileSystem.readDirectory(Sys.getCwd() + "assets/weeks/");
+    #else
+    var jsonDirs:Array<String> = ["tutorial.json", "week1.json", "week2.json", "week3.json", "week4.json", "week5.json", "week6.json"];
+    #end
+
     var jsons:Array<String> = [];
 
     var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 
+    var tutorialData:Dynamic;
+
     override public function create()
     {
+        tutorialData = Util.getJsonContents(Util.getJsonPath('weeks/tutorial'));
+
 		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
 
         // week shit
         funnyWeeks = new FlxTypedGroup<FlxSprite>();
         add(funnyWeeks);
+
+        #if sys
+        if(Mods.activeMods.length > 0)
+        {
+            for(mod in Mods.activeMods)
+            {
+                if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/weeks/'))
+                {
+                    var funnyArray = sys.FileSystem.readDirectory(Sys.getCwd() + 'mods/$mod/weeks/');
+                    
+                    for(jsonThingy in funnyArray)
+                    {
+                        jsonDirs.push(jsonThingy);
+                    }
+                }
+            }
+        }
+        #end
 
         for(dir in jsonDirs)
         {
@@ -48,7 +77,27 @@ class StoryModeState extends BasicState {
 
         for(jsonName in jsons)
         {
-            var data:Dynamic = Util.getJsonContents(Util.getJsonPath('weeks/' + jsonName));
+            var data:Dynamic = tutorialData;
+
+            #if sys
+            if(Assets.exists(Util.getJsonPath('weeks/$jsonName')))
+            #end
+                data = Util.getJsonContents(Util.getJsonPath('weeks/$jsonName'));
+            #if sys
+            else
+            {
+                if(Mods.activeMods.length > 0)
+                {
+                    for(mod in Mods.activeMods)
+                    {
+                        if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/weeks/$jsonName'))
+                        {
+                            data = Util.getJsonContents('mods/$mod/weeks/$jsonName.json');
+                        }
+                    }
+                }
+            }
+            #end
 
             var realWeek:FlxSprite = new FlxSprite(0, 600 + json_i * 105).loadGraphic(Util.getImage('weeks/images/' + data.fileName, false));
             realWeek.screenCenter(X);
