@@ -1,4 +1,4 @@
-package plugin;
+package plugins;
 import hscript.Interp;
 import flixel.FlxG;
 import flixel.FlxSprite;

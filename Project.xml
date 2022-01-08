@@ -35,7 +35,7 @@
 	
 	<source path="source" />
 	<assets path="assets" />
-	<assets path="plugins">
+	<assets path="plugins" />
 	<assets path="assets/images" />
 	<assets path="assets/stages" />
 	<assets path="assets/characters" />
