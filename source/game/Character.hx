@@ -60,8 +60,10 @@ class Character extends FlxSprite {
         // OR LEAVE HIM AS IS NOW, OTHERWISE THE GAME WILL CRASH
         // fuck you
 
-        scale.set(json.scale, json.scale);
-        updateHitbox();
+        if(json.scale != 1) {
+            setGraphicSize(Std.int(width * json.scale));
+            updateHitbox();
+        }
 
         flipX = json.flip_x;
         antialiasing = !json.no_antialiasing;

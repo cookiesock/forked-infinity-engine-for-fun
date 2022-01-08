@@ -142,6 +142,8 @@ class PlayState extends BasicState
 	var speed:Float = 1;
 	public static var storyMode:Bool = false;
 
+	public static var storyPlaylist:Array<String> = [];
+
 	// misc shit
 	var funnyHitStuffsLmao:Float = 0.0;
 	var totalNoteStuffs:Int = 0;
@@ -154,6 +156,8 @@ class PlayState extends BasicState
 	public static var noteSplashFrames:FlxAtlasFrames;
 
 	public static var instance:PlayState;
+
+	public static var storedDifficulty:String;
 
 	// shit other than variables
 	public function new(?songName:String, ?difficulty:String, ?storyModeBool:Bool = false)
@@ -170,6 +174,8 @@ class PlayState extends BasicState
 				difficulty = difficulty.toLowerCase();
 			else
 				difficulty = "normal";
+
+			storedDifficulty = difficulty;
 	
 			#if sys
 			if(Assets.exists('assets/songs/$songName/$difficulty.json'))
@@ -588,13 +594,6 @@ class PlayState extends BasicState
 			comboArray = [r.split(comboString)[2], r.split(comboString)[3], r.split(comboString)[4]];
 
 		botplayText.visible = botplay;
-		
-		/*if(FlxG.keys.justPressed.BACKSPACE)
-		{
-			FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
-			transitionState(new menus.MainMenuState());
-		} // temporary way to go back to menus without restarting the game
-		// THIS WILL BE REPLACED WITH PAUSE MENU WHEN THAT IS EXIST!!!*/
 
 		var accept = FlxG.keys.justPressed.ENTER;
 
@@ -899,8 +898,25 @@ class PlayState extends BasicState
 					{
 						FlxG.sound.music.onComplete = function()
 						{
-							FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
-							transitionState(new menus.MainMenuState());
+							if(!storyMode)
+							{
+								FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
+								transitionState(new menus.MainMenuState());
+							}
+							else
+							{
+								storyPlaylist.remove(storyPlaylist[0]);
+
+								if(storyPlaylist.length <= 0)
+								{
+									FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
+									transitionState(new menus.StoryModeState());
+								}
+								else
+								{
+									transitionState(new PlayState(storyPlaylist[0].toLowerCase(), storedDifficulty, storyMode));
+								}
+							}
 						};
 					}
 					else
@@ -1122,17 +1138,20 @@ class PlayState extends BasicState
 
 					pressed[note.noteID] = true;
 
-					for(i in 0...comboArray.length) {
-						if(combo >= 10 || combo == 0) {
-							comboGroup.members[i].loadCombo(comboArray[i]);
-							comboGroup.members[i].tweenSprite();
+					if(!note.isSustainNote)
+					{
+						for(i in 0...comboArray.length) {
+							if(combo >= 10 || combo == 0) {
+								comboGroup.members[i].loadCombo(comboArray[i]);
+								comboGroup.members[i].tweenSprite();
+							}
 						}
+
+						combo += 1;
+
+						if(combo > 9999)
+							combo = 9999; // you should never be able to get a combo this high, if you do, you're nuts.
 					}
-
-					combo += 1;
-
-					if(combo > 9999)
-						combo = 9999; // you should never be able to get a combo this high, if you do, you're nuts.
 
 					note.active = false;
 					notes.remove(note);
@@ -1243,16 +1262,16 @@ class PlayState extends BasicState
 
 		if(goods == 0 && bads == 0 && shits == 0 && misses == 0)
 			rating2 = swagRatings[0];
-		else
-		if(goods >= 1 && bads == 0 && shits == 0 && misses == 0)
+		
+		if(goods >= 1 && bads == 0 || shits == 0 && misses == 0)
 			rating2 = swagRatings[1];
-		else
-		if(goods >= 1 && bads >= 1 && shits >= 1 && misses == 0)
+		
+		if(goods >= 1 && bads >= 1 || shits >= 1 && misses == 0)
 			rating2 = swagRatings[2];
-		else
+		
 		if(misses >= 1 && misses <= 9)
 			rating2 = swagRatings[3];
-		else
+		
 		if(misses >= 1 && misses > 9)
 			rating2 = swagRatings[4];
 	}

@@ -38,7 +38,7 @@ class OptionsState extends BasicState
 			["Anti-Aliasing", "checkbox", "Gives extra performance when disabled at the cost of\ngraphics not looking very smooth.", "anti-aliasing"],
 			["Optimization", "checkbox", "Removes all of the characters and background elements\nfor performance.", "optimization"],
 			["Note Splashes", "checkbox", "When enabled, a firework-like effect will show up\nIf you hit a note and get a \"SiCK!!\" from it.", "note-splashes"],
-			["FPS Cap", "menu", "Change Max FPS."],
+			["FPS Cap", "menu", "Change how low/high your FPS can go."],
 		],
 		"gameplay" => [
 			["Back", "menu", ""],
@@ -96,6 +96,8 @@ class OptionsState extends BasicState
 
 	override public function update(elapsed:Float)
 	{
+		super.update(elapsed);
+
 		var up = FlxG.keys.justPressed.UP;
 		var down = FlxG.keys.justPressed.DOWN;
 		var accept = FlxG.keys.justPressed.ENTER;
@@ -148,14 +150,12 @@ class OptionsState extends BasicState
 			}
 		}
 
-		stupidBox.y = FlxMath.lerp(stupidBox.y, FlxG.height * 0.8, Math.max(0, Math.min(1, elapsed * 3)));
-		descText.y = (stupidBox.y + 50) - descText.height / 2;
+		stupidBox.y = FlxMath.lerp(stupidBox.y, FlxG.height * 0.85, Math.max(0, Math.min(1, elapsed * 3)));
+		descText.y = (stupidBox.y + 75) - descText.height / 2;
 		descText.text = optionsList[selectedOption][2] + "\n";
 		descText.screenCenter(X);
 
 		//debugText.text = optionsList[selectedOption][0];
-
-		super.update(elapsed);
 	}
 
 	public function reloadOptionsList(?deleteCurrentItems:Bool = false)

@@ -13,5 +13,10 @@
         "Easy",
         "Normal",
         "Hard"
+    ],
+    "characters": [
+        "senpai",
+        "bf",
+        "gf"
     ]
 }

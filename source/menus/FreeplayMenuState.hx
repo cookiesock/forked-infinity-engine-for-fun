@@ -1,5 +1,7 @@
 package menus;
 
+import flixel.system.FlxSound;
+import lime.utils.Assets;
 import mods.Mods;
 import flixel.text.FlxText;
 import ui.Icon;
@@ -33,6 +35,8 @@ class FreeplayMenuState extends BasicState
 
     private var scoreText:FlxText;
     private var difText:FlxText;
+
+    private var vocals:FlxSound;
     
     public function new()
     {
@@ -140,7 +144,40 @@ class FreeplayMenuState extends BasicState
                 FlxG.sound.music.stop();
             }
 
-            // ples insert code here i can't be bothered rn
+            if (vocals != null) {
+                vocals.stop();
+            }
+
+            #if sys
+            if(!Assets.exists(Util.getInst(songs[selectedSong].songName.toLowerCase())))
+                FlxG.sound.music = Util.loadModSound("songs/" + songs[selectedSong].songName.toLowerCase() + "/Inst", true, true);
+            else
+            #end
+            FlxG.sound.playMusic(Util.getInst(songs[selectedSong].songName.toLowerCase()), 1, false);
+
+            /*if(song.needsVoices)
+            {*/
+                FlxG.sound.music.pause();
+
+                #if sys
+                if(!Assets.exists(Util.getVoices(songs[selectedSong].songName.toLowerCase())))
+                    vocals = Util.loadModSound("songs/" + songs[selectedSong].songName.toLowerCase() + "/Voices", true, false);
+                else
+                #end
+                vocals = FlxG.sound.play(Util.getVoices(songs[selectedSong].songName.toLowerCase()));
+
+                vocals.pause();
+
+                FlxG.sound.music.time = 0;
+                vocals.time = 0;
+
+                FlxG.sound.music.play();
+                vocals.play();
+            /*}
+            else 
+                vocals = new FlxSound();*/
+
+            FlxG.sound.list.add(vocals);
         }
 
         var up = FlxG.keys.justPressed.UP;

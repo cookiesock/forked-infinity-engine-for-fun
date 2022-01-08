@@ -100,13 +100,7 @@ class Util
 		#end
 	}
 
-    // SPIRIT FUCKING CRASHES THE GAME IF THIS IS REMOVED, EITHER RE-EXPORT HIM AS AN XML
-    // OR LEAVE HIM AS IS NOW, OTHERWISE THE GAME WILL CRASH
-	// fuck you
-
 	static public function getImage(filePath:String, ?fromImagesFolder:Bool = true):Dynamic
-	// this is so i can grab images without having to rembr that i have to put a .png at the end
-	// - swordcube
 	{
 		var png = filePath;
 		

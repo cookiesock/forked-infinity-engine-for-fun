@@ -11,5 +11,10 @@
         "Easy",
         "Normal",
         "Hard"
+    ],
+    "characters": [
+        "",
+        "bf",
+        "gf"
     ]
 }
