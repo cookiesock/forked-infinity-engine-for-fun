@@ -41,6 +41,26 @@ class Util
 		}
 		#end
 	}
+	static public function getText(path:String):Dynamic {
+		#if sys
+		if(!Assets.exists(path))
+		{
+			if(sys.FileSystem.exists(Sys.getCwd() + path))
+				return sys.io.File.getContent(Sys.getCwd() + path);
+
+			return "File couldn't be found!";
+		}
+		else
+		{
+		#end
+		if(Assets.exists(path))
+			return (Assets.getText(path));
+		else 
+			return null;
+		#if sys
+		}
+		#end
+	}
 
 	static public function getSparrow(filePath:String, ?fromImagesFolder:Bool = true, ?xmlPath:String)
 	{
