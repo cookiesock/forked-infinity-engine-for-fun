@@ -20,11 +20,11 @@ Made by 3 people literally out of pure boredom, Aiming to recreate the entirety 
 
 --------------------------------------------------------------------
 
-``- Add funny intro quotes in the title screen [i think raf wants this to not fucking exist but man idc i'm gonna add it at some point, i ithink]``
+``- Add funny intro quotes in the title screen (i think raf wants this to not fucking exist but man idc i might add it at some point)``
 
-``> Make Main Menu background tween smoothly instead of just snapping places``
+``V Make Main Menu background tween smoothly instead of just snapping places``
 
-``> Make Gameplay work``
+``V Make Gameplay work``
 
 ## Stupid Shit
 
@@ -33,3 +33,5 @@ Made by 3 people literally out of pure boredom, Aiming to recreate the entirety 
 hey so leather wants to maybe contribute to this shit so i made the code public i pray to god you won't scream at me raf :grief: -- swordcube
 
 i am going to scream at you for making this public  and not adding leather as a member of CubeSword instead -- raf
+
+me and leather have been keeping this project on life support lmao -- swordcube
