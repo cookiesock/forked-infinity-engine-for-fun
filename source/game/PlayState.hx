@@ -416,11 +416,12 @@ class PlayState extends BasicState
 		// health bar icons
 		opponentIcon = new Icon(Util.getCharacterIcons(opponent.healthIcon), false);
 		opponentIcon.y = healthBar.y - (opponentIcon.height / 2);
-		add(opponentIcon);
 		
 		playerIcon = new Icon(Util.getCharacterIcons(player.healthIcon), true);
 		playerIcon.y = healthBar.y - (playerIcon.height / 2);
+
 		add(playerIcon);
+		add(opponentIcon);
 
 		scoreText = new FlxText(0, healthBarBG.y + 35, 0, "", 18);
 		scoreText.screenCenter(X);

@@ -73,10 +73,10 @@ class StoryModeCharacter extends FlxSprite {
                 frames = Util.getSparrow('storymode/images/$name/assets', false);
             #end
 
-            if(json.scale != 1) {
+            //if(json.scale != 1) {
                 setGraphicSize(Std.int(width * json.scale));
                 updateHitbox();
-            }
+            //}
 
             antialiasing = Options.getData('anti-aliasing');
             position = json.position;
