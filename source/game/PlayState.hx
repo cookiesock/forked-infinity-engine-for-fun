@@ -537,7 +537,7 @@ class PlayState extends BasicState
 
 		updateAccuracyStuff();
 
-		Conductor.songPosition += Std.int(elapsed * 1000);
+		Conductor.songPosition += /*Std.int(*/elapsed * 1000/*)*/;
 
 		if(!countdownStarted)
 		{
