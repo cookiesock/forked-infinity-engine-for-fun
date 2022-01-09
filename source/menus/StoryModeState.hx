@@ -365,8 +365,12 @@ class StoryModeState extends BasicState {
 
         for(i in 0...weekChars.members.length)
         {
-            if(weekChars.members[i].name != swagChars[selectedWeek][i] || swagChars[selectedWeek][i] == "" /*because when the character is set to "" it just uses the last character displayed??*/)
-                weekChars.members[i].changeChar(swagChars[selectedWeek][i], true);
+            var the:Dynamic = swagChars[selectedWeek][i];
+            if(the == null)
+                the = "";
+
+            if(weekChars.members[i].name != the)
+                weekChars.members[i].changeChar(the, true);
         }
 
         FlxG.sound.play(Util.getSound('menus/scrollMenu'));

@@ -859,6 +859,8 @@ class PlayState extends BasicState
 
 	override public function beatHit()
 	{
+		super.beatHit();
+		
 		if (!countdownStarted) {
 			if (cameraZooms && FlxG.camera.zoom < 1.35 && curBeat % 4 == 0)
 			{
@@ -990,8 +992,6 @@ class PlayState extends BasicState
 			if(speakers.active)
 				speakers.dance();
 		}
-
-		super.beatHit();
 	}
 	
 	public function changeHealth(gainHealth:Bool)
