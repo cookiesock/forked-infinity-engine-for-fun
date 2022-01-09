@@ -59,7 +59,7 @@ class ModsState extends BasicState
 
         updateMods();
 
-        BasicState.changeAppTitle(Application.current.meta.get("title"), "Mods Menu");
+        BasicState.changeAppTitle(Util.engineName, "Mods Menu");
 
         super.create();
     }

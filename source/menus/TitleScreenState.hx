@@ -79,7 +79,7 @@ class TitleScreenState extends BasicState
 		if(Options.getData('volume') != null)
 			FlxG.sound.volume = Options.getData('volume');
 
-		BasicState.changeAppTitle(Application.current.meta.get("title"), "Title Screen");
+		BasicState.changeAppTitle(Util.engineName, "Title Screen");
 
 		super.create();
 	}

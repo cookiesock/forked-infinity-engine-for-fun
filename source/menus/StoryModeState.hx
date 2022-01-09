@@ -220,7 +220,7 @@ class StoryModeState extends BasicState {
         changeSelectedWeek();
         changeDifficulty();
 
-        BasicState.changeAppTitle(Application.current.meta.get("title"), "Story Mode Menu");
+        BasicState.changeAppTitle(Util.engineName, "Story Mode Menu");
         
         super.create();
     }

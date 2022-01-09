@@ -162,9 +162,9 @@ class MainMenuState extends BasicState
 		}
 		
 		if (FlxG.keys.justPressed.BACKSPACE)
-		{
 			transitionState(new TitleScreenState());
-		} // temporary way to go back to menus without restarting the game
+
+		BasicState.changeAppTitle(Util.engineName, "Main Menu");
 
 		super.update(elapsed);
 	}

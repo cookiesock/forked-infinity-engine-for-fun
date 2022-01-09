@@ -205,7 +205,7 @@ class PlayState extends BasicState
 
 			storyMode = storyModeBool;
 
-			BasicState.changeAppTitle(Application.current.meta.get("title"), "Playing " + songName + " on " + songMultiplier + "x Speed");
+			BasicState.changeAppTitle(Util.engineName, "Playing " + songName + " on " + songMultiplier + "x Speed");
 		}
 	}
 

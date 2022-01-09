@@ -86,6 +86,8 @@ class CreditsState extends BasicState {
             {
                 changeSelection(-1);
             }
+
+            BasicState.changeAppTitle(Util.engineName, "Credits Menu");
 		
             updateDesc(elapsed);
             super.update(elapsed);

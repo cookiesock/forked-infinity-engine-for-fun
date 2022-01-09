@@ -95,6 +95,6 @@ class BasicState extends FlxState
 			Application.current.window.title = prefix;
 
 		if(prefix == "" || prefix == null)
-			Application.current.window.title = Application.current.meta.get("title");
+			Application.current.window.title = Util.engineName;
 	}
 }

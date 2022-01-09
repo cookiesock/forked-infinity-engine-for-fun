@@ -132,7 +132,7 @@ class FreeplayMenuState extends BasicState
 
         updateSelection();
 
-        BasicState.changeAppTitle(Application.current.meta.get("title"), "Freeplay Menu");
+        BasicState.changeAppTitle(Util.engineName, "Freeplay Menu");
     }
 
     override function update(elapsed:Float)

@@ -92,7 +92,7 @@ class OptionsState extends BasicState
 		debugText.visible = false;
 		add(debugText);
 
-		BasicState.changeAppTitle(Application.current.meta.get("title"), "Options Menu");
+		BasicState.changeAppTitle(Util.engineName, "Options Menu");
 		
 		super.create();
 	}
