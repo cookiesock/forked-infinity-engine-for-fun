@@ -680,21 +680,23 @@ class PlayState extends BasicState
 
 		for(note in notes)
 		{
+			var funnyNoteThingyIGuessLol = note.mustPress ? playerStrumArrows.members[note.noteID] : opponentStrumArrows.members[note.noteID];
+
 			// please help me do note clipping
 			// the hold notes don't disappear very well on high scroll speeds
 			if(note.mustPress)
 			{
 				if(downscroll)
-					note.y = playerStrumArrows.members[note.noteID].y + (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
+					note.y = funnyNoteThingyIGuessLol.y + (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
 				else
-					note.y = playerStrumArrows.members[note.noteID].y - (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
+					note.y = funnyNoteThingyIGuessLol.y - (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
 			}
 			else
 			{
 				if(downscroll)
-					note.y = opponentStrumArrows.members[note.noteID].y + (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
+					note.y = funnyNoteThingyIGuessLol.y + (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
 				else
-					note.y = opponentStrumArrows.members[note.noteID].y - (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
+					note.y = funnyNoteThingyIGuessLol.y - (0.45 * (Conductor.songPosition - note.strum) * FlxMath.roundDecimal(speed, 2));
 
 				if(!countdownStarted)
 				{
@@ -710,11 +712,11 @@ class PlayState extends BasicState
 						note.kill();
 						note.destroy();
 
-						opponentStrumArrows.members[note.noteID].playAnim("confirm", true);
+						funnyNoteThingyIGuessLol.playAnim("confirm", true);
 
-						opponentStrumArrows.members[note.noteID].animation.finishCallback = function(name:String) {
+						funnyNoteThingyIGuessLol.animation.finishCallback = function(name:String) {
 							if(name == "confirm")
-								opponentStrumArrows.members[note.noteID].playAnim("strum", true);
+								funnyNoteThingyIGuessLol.playAnim("strum", true);
 						};
 
 						opponent.holdTimer = 0;
@@ -747,6 +749,28 @@ class PlayState extends BasicState
 						note.y += note.frameHeight / 2;
 					else
 						note.y += note.frameHeight / 2;
+				}
+
+				if(note.isSustainNote)
+				{
+					var center:Float = funnyNoteThingyIGuessLol.y + Note.swagWidth / 2;
+
+					var rect = new FlxRect();
+
+					rect.width = funnyNoteThingyIGuessLol.width;
+
+					if(downscroll)
+					{
+						rect.height = center - note.y;
+						rect.y = note.frameHeight - rect.height;
+					}
+					else
+					{
+						rect.y = center - note.y;
+						rect.height = note.frameHeight - rect.y;
+					}
+
+					note.clipRect = rect;
 				}
 			}
 
