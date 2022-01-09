@@ -20,9 +20,9 @@ class BasicState extends FlxState
 		//	FlxG.camera.fade(FlxColor.TRANSPARENT, 0.5, true);
 	}
 
-	public function funkyBpm(BPM:Float)
+	public function funkyBpm(BPM:Float, ?songMultiplier:Float = 1)
 	{
-		Conductor.changeBPM(BPM);
+		Conductor.changeBPM(BPM, songMultiplier); // love how this function is basically useless because Conductor.changeBPM itself is a function lol
 	}
 
 	override function update(elapsed:Float)
