@@ -703,7 +703,7 @@ class PlayState extends BasicState
 
 				if(!countdownStarted)
 				{
-					if(Conductor.songPosition >= note.strum)
+					if(Conductor.songPosition >= (!note.isSustainNote ? note.strum : note.strum - 83))
 					{
 						if(vocals != null)
 							vocals.volume = 1;
@@ -1070,7 +1070,7 @@ class PlayState extends BasicState
 			}
 			else
 			{
-				if(note.strum <= Conductor.songPosition && note.mustPress)
+				if((!note.isSustainNote ? note.strum : note.strum - 83) <= Conductor.songPosition && note.mustPress)
 					possibleNotes.push(note);
 			}
 		}
@@ -1250,7 +1250,7 @@ class PlayState extends BasicState
 			{
 				if(note.isSustainNote && note.mustPress)
 				{
-					if(pressed[note.noteID] && Conductor.songPosition >= note.strum)
+					if(pressed[note.noteID] && Conductor.songPosition >= (!note.isSustainNote ? note.strum : note.strum - 83))
 					{
 						hits += 1;
 						funnyHitStuffsLmao += 1;
