@@ -122,7 +122,7 @@ class ModsState extends BasicState
             var modName = Mods.mods[selected][0];
 
             modGroup.members[selected].funnyIndicator.text = Mods.getModActive(modName) == false ? "[ OFF ]" : "[ ON  ]";
-            modGroup.members[selected].funnyIndicator.color = Mods.getModActive(modName) == false ? FlxColor.RED : FlxColor.GREEN;
+            modGroup.members[selected].funnyIndicator.color = Mods.getModActive(modName) == false ? FlxColor.RED : FlxColor.LIME;
         }
     }
 }
@@ -197,7 +197,7 @@ class ModGroup extends FlxSpriteGroup
         funnyIndicator.borderSize = 1.5;
         funnyIndicator.borderColor = FlxColor.BLACK;
         funnyIndicator.y -= funnyIndicator.height;
-        funnyIndicator.color = Mods.getModActive(mod[0]) == false ? FlxColor.RED : FlxColor.GREEN;
+        funnyIndicator.color = Mods.getModActive(mod[0]) == false ? FlxColor.RED : FlxColor.LIME;
         add(funnyIndicator);
     }
 }

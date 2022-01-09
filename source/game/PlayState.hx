@@ -104,6 +104,8 @@ class PlayState extends BasicState
 	var msText:FlxText;
 	var scoreText:FlxText;
 
+	var ratingsText:FlxText;
+
 	static public var botplayText:FlxText;
 
 	var accuracy:Float = 0;
@@ -124,11 +126,11 @@ class PlayState extends BasicState
 	];
 
 	var swagRatings:Array<String> = [
-		"SFC",
-		"GFC",
-		"FC",
-		"SDCB",
-		"Clear",
+		'Clear',
+		'SDCB',
+		'FC',
+		'GFC',
+		'SFC'
 	];
 
 	var sicks:Int = 0;
@@ -429,19 +431,6 @@ class PlayState extends BasicState
 		scoreText.scrollFactor.set();
 		scoreText.borderSize = 2;
 		add(scoreText);
-		
-		// camera shit
-		opponentStrumArrows.cameras = [hudCam];
-		playerStrumArrows.cameras = [hudCam];
-		healthBarBG.cameras = [hudCam];
-		healthBar.cameras = [hudCam];
-		opponentIcon.cameras = [hudCam];
-		playerIcon.cameras = [hudCam];
-		funnyRating.cameras = [hudCam];
-		comboGroup.cameras = [hudCam];
-		msText.cameras = [hudCam];
-		scoreText.cameras = [hudCam];
-		botplayText.cameras = [hudCam];
 
 		if(song.chartOffset == null)
 			song.chartOffset = 0;
@@ -511,6 +500,28 @@ class PlayState extends BasicState
 		dialogueBoxTest.scrollFactor.set();
 		dialogueBoxTest.cameras = [otherCam];
 		//add(dialogueBoxTest);
+
+		ratingsText = new FlxText(8, 0, 0, "", 24);
+		ratingsText.setFormat("assets/fonts/vcr.ttf", 24, FlxColor.WHITE, LEFT);
+		ratingsText.borderColor = FlxColor.BLACK;
+		ratingsText.borderStyle = OUTLINE;
+		ratingsText.borderSize = 2;
+		ratingsText.screenCenter(Y);
+		add(ratingsText);
+
+		// camera shit
+		opponentStrumArrows.cameras = [hudCam];
+		playerStrumArrows.cameras = [hudCam];
+		healthBarBG.cameras = [hudCam];
+		healthBar.cameras = [hudCam];
+		opponentIcon.cameras = [hudCam];
+		playerIcon.cameras = [hudCam];
+		funnyRating.cameras = [hudCam];
+		comboGroup.cameras = [hudCam];
+		msText.cameras = [hudCam];
+		scoreText.cameras = [hudCam];
+		botplayText.cameras = [hudCam];
+		ratingsText.cameras = [hudCam];
 		
 		super.create();
 	}
@@ -624,6 +635,10 @@ class PlayState extends BasicState
 			playerStrumArrows.members[i].y = FlxMath.lerp(playerStrumArrows.members[i].y, strumArea.y, Math.max(0, Math.min(1, elapsed * 3)));
 			playerStrumArrows.members[i].alpha = FlxMath.lerp(playerStrumArrows.members[i].alpha, 1, Math.max(0, Math.min(1, elapsed * 3)));
 		}
+
+		// ratigns thign at the left of the scrnen!!!
+		ratingsText.text = "Sicks: " + sicks + "\nGoods: " + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses + "\n";
+		ratingsText.screenCenter(Y);
 		
 		// health icons!!!!!!!
 
@@ -1261,19 +1276,16 @@ class PlayState extends BasicState
 		else if(accuracyNum >= 20)	
 			rating1 = letterRatings[8];
 
-		if(goods == 0 && bads == 0 && shits == 0 && misses == 0)
-			rating2 = swagRatings[0];
-		
-		if(goods >= 1 && bads == 0 || shits == 0 && misses == 0)
-			rating2 = swagRatings[1];
-		
-		if(goods >= 1 && bads >= 1 || shits >= 1 && misses == 0)
-			rating2 = swagRatings[2];
-		
-		if(misses >= 1 && misses <= 9)
-			rating2 = swagRatings[3];
-		
-		if(misses >= 1 && misses > 9)
+		rating2 = swagRatings[0]; // just in case the shit below doesn't work
+		if (misses == 0 && goods == 0 && bads == 0 && shits == 0)
 			rating2 = swagRatings[4];
+		else if (misses == 0 && goods >= 1 && bads == 0 && shits == 0)
+			rating2 = swagRatings[3];
+		else if (misses == 0)
+			rating2 = swagRatings[2];
+		else if (misses < 10)
+			rating2 = swagRatings[1];
+		else
+			rating2 = swagRatings[0];
 	}
 }

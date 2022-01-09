@@ -264,8 +264,19 @@ class StoryModeState extends BasicState {
 
         if(up) changeSelectedWeek(-1);
         if(down) changeSelectedWeek(1);
-        if(left) changeDifficulty(-1);
-        if(right) changeDifficulty(1);
+        
+        if(left) {
+            changeDifficulty(-1);
+            
+            grpDifficulty.members[2].y = grpDifficulty.members[0].y - 10;
+            grpDifficulty.members[2].alpha = 0;
+        }
+        if(right) {
+            changeDifficulty(1);
+
+            grpDifficulty.members[2].y = grpDifficulty.members[0].y - 10;
+            grpDifficulty.members[2].alpha = 0;
+        }
 
         scoreText.text = "PERSONAL BEST: " + "0";
 
@@ -316,6 +327,8 @@ class StoryModeState extends BasicState {
                     grpDifficulty.members[i].screenCenter(X);
                     grpDifficulty.members[i].x += FlxG.width * 0.335;
                     grpDifficulty.members[i].scale.set(0.9, 0.9);
+                    grpDifficulty.members[i].y = FlxMath.lerp(grpDifficulty.members[i].y, grpDifficulty.members[0].y, Math.max(0, Math.min(1, elapsed * 10)));
+                    grpDifficulty.members[i].alpha = FlxMath.lerp(grpDifficulty.members[i].alpha, 1, Math.max(0, Math.min(1, elapsed * 10)));
             }
         }
     }
