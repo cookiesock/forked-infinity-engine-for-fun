@@ -35,9 +35,11 @@ class StoryModeCharacter extends FlxSprite {
         super.update(elapsed);
     }
 
-    public function changeChar(?name:String = "bf", ?removePreviousShit:Bool = false)
+    public function changeChar(?swagName:String = "bf", ?removePreviousShit:Bool = false)
     {
-        if(name == null || name == "")
+        name = swagName;
+        
+        if(swagName == null || swagName == "")
         {
             visible = false;
         }
@@ -45,9 +47,9 @@ class StoryModeCharacter extends FlxSprite {
         {
             visible = true;
             #if sys
-            if(Assets.exists('assets/storymode/$name.json'))
+            if(Assets.exists('assets/storymode/$swagName.json'))
             #end
-                json = Util.getJsonContents('assets/storymode/$name.json');
+                json = Util.getJsonContents('assets/storymode/$swagName.json');
             #if sys
             else
             {
@@ -55,9 +57,9 @@ class StoryModeCharacter extends FlxSprite {
                 {
                     for(mod in Mods.activeMods)
                     {
-                        if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/storymode/$name.json'))
+                        if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/storymode/$swagName.json'))
                         {
-                            json = Util.getJsonContents('mods/$mod/storymode/$name.json');
+                            json = Util.getJsonContents('mods/$mod/storymode/$swagName.json');
                         }
                     }
                 }
@@ -65,12 +67,12 @@ class StoryModeCharacter extends FlxSprite {
             #end
 
             #if sys
-            if(Assets.exists('assets/storymode/images/$name/assets.png', IMAGE))
+            if(Assets.exists('assets/storymode/images/$swagName/assets.png', IMAGE))
             #end
-                frames = Util.getSparrow('assets/storymode/images/$name/assets', false);
+                frames = Util.getSparrow('assets/storymode/images/$swagName/assets', false);
             #if sys
             else
-                frames = Util.getSparrow('storymode/images/$name/assets', false);
+                frames = Util.getSparrow('storymode/images/$swagName/assets', false);
             #end
 
             //if(json.scale != 1) {
