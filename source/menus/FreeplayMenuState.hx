@@ -36,8 +36,11 @@ class FreeplayMenuState extends BasicState
 
     private var scoreText:FlxText;
     private var difText:FlxText;
+    private var speedText:FlxText;
 
-    private var vocals:FlxSound;
+    private var curSpeed:Float = 1;
+
+    private var vocals:FlxSound = new FlxSound();
     
     public function new()
     {
@@ -98,7 +101,6 @@ class FreeplayMenuState extends BasicState
         box = new FlxSprite();
         box.makeGraphic(1,1,FlxColor.BLACK);
         box.alpha = 0.6;
-
         add(box);
 
         scoreText = new FlxText(0,0,0,"PERSONAL BEST: 0", 32);
@@ -109,6 +111,11 @@ class FreeplayMenuState extends BasicState
 		difText.font = scoreText.font;
 		difText.alignment = RIGHT;
 		add(difText);
+
+        speedText = new FlxText(0, difText.y + difText.height + 2, 0, "1", 24);
+		speedText.font = scoreText.font;
+		speedText.alignment = RIGHT;
+		add(speedText);
 
         selectedColor = songs[selectedSong].color;
         bg.color = selectedColor;
@@ -135,7 +142,7 @@ class FreeplayMenuState extends BasicState
         BasicState.changeAppTitle(Util.engineName, "Freeplay Menu");
     }
 
-    override function update(elapsed:Float)
+    override public function update(elapsed:Float)
     {
         super.update(elapsed);
 
@@ -181,13 +188,16 @@ class FreeplayMenuState extends BasicState
                 vocals = new FlxSound();*/
 
             FlxG.sound.list.add(vocals);
+
+            refreshSpeed();
         }
 
         var up = FlxG.keys.justPressed.UP;
         var down = FlxG.keys.justPressed.DOWN;
-
         var left = FlxG.keys.justPressed.LEFT;
         var right = FlxG.keys.justPressed.RIGHT;
+        var shiftP = FlxG.keys.pressed.SHIFT;
+        var reset = FlxG.keys.justPressed.R;
 
         if(up || down)
         {
@@ -200,7 +210,7 @@ class FreeplayMenuState extends BasicState
             updateSelection();
         }
 
-        if(left || right)
+        if(left && !shiftP || right && !shiftP)
         {
             if(left)
                 selectedDifIndex -= 1;
@@ -211,10 +221,32 @@ class FreeplayMenuState extends BasicState
             updateSelection();
         }
 
+        if(left && shiftP || right && shiftP)
+        {
+            var daMultiplier:Float = 0.05;
+
+            if(left)
+                changeSpeed(daMultiplier * -1);
+
+            if(right)
+                changeSpeed(daMultiplier);
+
+            refreshSpeed();
+        }
+
+        if(reset && shiftP)
+            curSpeed = 1;
+
         if(FlxG.keys.justPressed.ENTER)
+        {
+            game.PlayState.songMultiplier = curSpeed;
             FlxG.switchState(new game.PlayState(songs[selectedSong].songName.toLowerCase(), selectedDifficulty, false));
+        }
 
         var funnyObject:FlxText = scoreText;
+
+		if(speedText.width >= scoreText.width)
+			funnyObject = speedText;
 
 		if(difText.width >= scoreText.width)
 			funnyObject = difText;
@@ -222,12 +254,15 @@ class FreeplayMenuState extends BasicState
 		box.x = funnyObject.x - 6;
 
 		if(Std.int(box.width) != Std.int(funnyObject.width + 6))
-			box.makeGraphic(Std.int(funnyObject.width + 6), 64, FlxColor.BLACK);
+			box.makeGraphic(Std.int(funnyObject.width + 6), 90, FlxColor.BLACK);
 
 		scoreText.x = FlxG.width - scoreText.width;
 		scoreText.text = "PERSONAL BEST:" + "0" /*lerpScore*/;
 
 		difText.x = FlxG.width - difText.width;
+
+		speedText.x = FlxG.width - speedText.width;
+		speedText.text = "Speed: " + curSpeed + " (SHIFT+R)";
     }
 
     function updateSelection()
@@ -287,6 +322,28 @@ class FreeplayMenuState extends BasicState
         }
 
         FlxG.sound.play(Util.getSound('menus/scrollMenu'));
+    }
+
+    function changeSpeed(?change:Float = 0)
+    {
+        curSpeed += change;
+
+        if(curSpeed < 0.1)
+            curSpeed = 0.1;
+    }
+
+    function refreshSpeed()
+    {
+        #if cpp
+        @:privateAccess
+        {
+            if(FlxG.sound.music.active && FlxG.sound.music.playing)
+                lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, curSpeed);
+
+            if (vocals.active && vocals.playing)
+                lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, curSpeed);
+        }
+        #end
     }
 }
 

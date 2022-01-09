@@ -148,6 +148,8 @@ class PlayState extends BasicState
 
 	public static var storyPlaylist:Array<String> = [];
 
+	public static var songMultiplier:Float = 1;
+
 	// misc shit
 	var funnyHitStuffsLmao:Float = 0.0;
 	var totalNoteStuffs:Int = 0;
@@ -241,6 +243,23 @@ class PlayState extends BasicState
 		FlxG.camera.zoom = stageCamZoom;
 
 		speed = song.speed;
+
+		#if !sys
+		songMultiplier = 1;
+		#end
+
+		if(songMultiplier < 0.1)
+			songMultiplier = 0.1;
+
+		Conductor.changeBPM(song.bpm, songMultiplier);
+
+		speed /= songMultiplier;
+
+		if(speed < 0.1 && songMultiplier > 1)
+			speed = 0.1;
+
+		Conductor.recalculateStuff(songMultiplier);
+		Conductor.safeZoneOffset *= songMultiplier;
 
 		if(Options.getData('scroll-speed') > 1)
 			speed = Options.getData('scroll-speed');
@@ -441,6 +460,8 @@ class PlayState extends BasicState
 
 		for(section in song.notes)
 		{
+			Conductor.recalculateStuff(songMultiplier);
+
 			for(songNotes in section.sectionNotes)
 			{
 				var daStrumTime:Float = songNotes[0] + song.chartOffset + Options.getData('song-offset');
@@ -505,8 +526,8 @@ class PlayState extends BasicState
 		dialogueBoxTest.cameras = [otherCam];
 		//add(dialogueBoxTest);
 
-		ratingsText = new FlxText(8, 0, 0, "", 24);
-		ratingsText.setFormat("assets/fonts/vcr.ttf", 24, FlxColor.WHITE, LEFT);
+		ratingsText = new FlxText(8, 0, 0, "", 18);
+		ratingsText.setFormat("assets/fonts/vcr.ttf", 18, FlxColor.WHITE, LEFT);
 		ratingsText.borderColor = FlxColor.BLACK;
 		ratingsText.borderStyle = OUTLINE;
 		ratingsText.borderSize = 2;
@@ -544,15 +565,13 @@ class PlayState extends BasicState
 		});
 	}
 
-	public static var songMultiplier = 1;
-
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
 		updateAccuracyStuff();
 
-		Conductor.songPosition += /*Std.int(*/elapsed * 1000/*)*/;
+		Conductor.songPosition += (elapsed * 1000) * songMultiplier;
 
 		if(!countdownStarted)
 		{
@@ -565,18 +584,7 @@ class PlayState extends BasicState
 						Conductor.songPosition = FlxG.sound.music.time;
 					}
 	
-					if(vocals != null)
-					{
-						if(vocals.active)
-						{
-							if(vocals.time > FlxG.sound.music.time + 20 || vocals.time < FlxG.sound.music.time - 20)
-							{
-								vocals.pause();
-								vocals.time = FlxG.sound.music.time;
-								vocals.play();
-							}
-						}
-					}
+					resyncVocals();
 				}
 			}
 		}
@@ -680,6 +688,11 @@ class PlayState extends BasicState
 				opponentIcon.animation.play('winning', true);
 			else
 				opponentIcon.animation.play('default', true);
+
+		if(countdownStarted)
+			Conductor.songPosition += (FlxG.elapsed * 1000);
+		else
+			Conductor.songPosition += (FlxG.elapsed * 1000) * songMultiplier;
 
 		for(note in notes)
 		{
@@ -865,14 +878,23 @@ class PlayState extends BasicState
 		super.beatHit();
 		
 		if (!countdownStarted) {
+			if (song.notes[Math.floor(curStep / 16)] != null)
+			{
+				if (song.notes[Math.floor(curStep / 16)].changeBPM)
+				{
+					Conductor.changeBPM(song.notes[Math.floor(curStep / 16)].bpm, songMultiplier);
+					trace('CHANGED BPM TO ' + Conductor.bpm + 'SUCCESSFULLY!');
+				}
+			}
+
 			if (cameraZooms && FlxG.camera.zoom < 1.35 && curBeat % 4 == 0)
 			{
 				FlxG.camera.zoom += 0.03;
 				hudCam.zoom += 0.03;
 			}
 			
-			playerIcon.setGraphicSize(Std.int(playerIcon.width + 30));
-			opponentIcon.setGraphicSize(Std.int(opponentIcon.width + 30));
+			playerIcon.setGraphicSize(Std.int(playerIcon.width + (30 / (songMultiplier < 1 ? 1 : songMultiplier))));
+			opponentIcon.setGraphicSize(Std.int(opponentIcon.width + (30 / (songMultiplier < 1 ? 1 : songMultiplier))));
 
 			playerIcon.updateHitbox();
 			opponentIcon.updateHitbox();
@@ -893,6 +915,7 @@ class PlayState extends BasicState
 			{
 				case 0:
 					FlxG.sound.play(Util.getSound(filePath + 'intro3'), 0.6);
+					startSong();
 				case 1:
 					FlxG.sound.play(Util.getSound(filePath + 'intro2'), 0.6);
 					var countdown3:CountdownSprite = new CountdownSprite('ready', pixelStage);
@@ -936,6 +959,16 @@ class PlayState extends BasicState
 	
 						FlxG.sound.music.play();
 						vocals.play();
+
+						#if cpp
+						@:privateAccess
+						{
+							lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
+				
+							if (vocals.playing)
+								lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
+						}
+						#end
 					}
 					else 
 						vocals = new FlxSound();
@@ -996,6 +1029,16 @@ class PlayState extends BasicState
 				speakers.dance();
 		}
 	}
+
+	override public function stepHit()
+	{
+		super.stepHit();
+
+		var gamerValue = 20 * songMultiplier;
+		
+		if (FlxG.sound.music.time > Conductor.songPosition + gamerValue || FlxG.sound.music.time < Conductor.songPosition - gamerValue || FlxG.sound.music.time < 500 && (FlxG.sound.music.time > Conductor.songPosition + 5 || FlxG.sound.music.time < Conductor.songPosition - 5))
+			resyncVocals();
+	}
 	
 	public function changeHealth(gainHealth:Bool)
 	{
@@ -1003,6 +1046,38 @@ class PlayState extends BasicState
 			health += 0.023; // health you gain for hitting a note
 		} else { 
 			health -= 0.0475; // health you lose for getting a "SHIT" rating or missing a note
+		}
+	}
+
+	function startSong() // for doin shit when the song starts
+	{
+		Conductor.recalculateStuff(songMultiplier);
+		resyncVocals();
+	}
+
+	function resyncVocals()
+	{
+		if(vocals != null)
+		{
+			if(vocals.active)
+			{
+				if(vocals.time > FlxG.sound.music.time + 20 || vocals.time < FlxG.sound.music.time - 20)
+				{
+					vocals.pause();
+					vocals.time = FlxG.sound.music.time;
+					vocals.play();
+
+					#if cpp
+					@:privateAccess
+					{
+						lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
+			
+						if (vocals.playing)
+							lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
+					}
+					#end
+				}
+			}
 		}
 	}
 

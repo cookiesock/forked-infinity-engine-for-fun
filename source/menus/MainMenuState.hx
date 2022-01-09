@@ -82,6 +82,8 @@ class MainMenuState extends BasicState
 		add(camFollowPos);
 		
 		FlxG.camera.follow(camFollowPos, null, 1);
+
+		BasicState.changeAppTitle(Util.engineName, "Main Menu");
 	
 		super.create();
 	}
@@ -163,8 +165,6 @@ class MainMenuState extends BasicState
 		
 		if (FlxG.keys.justPressed.BACKSPACE)
 			transitionState(new TitleScreenState());
-
-		BasicState.changeAppTitle(Util.engineName, "Main Menu");
 
 		super.update(elapsed);
 	}
