@@ -150,6 +150,8 @@ class PlayState extends BasicState
 
 	public static var songMultiplier:Float = 1;
 
+	public static var paused:Bool = false;
+
 	// misc shit
 	var funnyHitStuffsLmao:Float = 0.0;
 	var totalNoteStuffs:Int = 0;
@@ -221,6 +223,7 @@ class PlayState extends BasicState
 		sickScore = 0;
 		misses = 0;
 		combo = 0;
+		paused = false;
 
 		botplay = Options.getData('botplay');
 			
@@ -631,6 +634,8 @@ class PlayState extends BasicState
 
 			persistentUpdate = false;
 
+			paused = true;
+
 			openSubState(new menus.PauseMenu());
 		}
 		
@@ -865,6 +870,16 @@ class PlayState extends BasicState
 	
 			if(vocals != null)
 				vocals.play();
+
+			if(paused)
+			{
+				if (FlxG.sound.music != null)
+				{
+					resyncVocals();
+				}
+
+				paused = false;
+			}
 		}
 	}
 
@@ -1066,17 +1081,17 @@ class PlayState extends BasicState
 					vocals.pause();
 					vocals.time = FlxG.sound.music.time;
 					vocals.play();
-
-					#if cpp
-					@:privateAccess
-					{
-						lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
-			
-						if (vocals.playing)
-							lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
-					}
-					#end
 				}
+
+				#if cpp
+				@:privateAccess
+				{
+					lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
+		
+					if (vocals.playing)
+						lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
+				}
+				#end
 			}
 		}
 	}
