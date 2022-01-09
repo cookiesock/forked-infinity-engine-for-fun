@@ -574,7 +574,7 @@ class PlayState extends BasicState
 
 		updateAccuracyStuff();
 
-		Conductor.songPosition += (elapsed * 1000) * songMultiplier;
+		Conductor.songPosition += (FlxG.elapsed * 1000) * songMultiplier;
 
 		if(!countdownStarted)
 		{
@@ -584,7 +584,7 @@ class PlayState extends BasicState
 				{
 					if(FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 					{
-						Conductor.songPosition = FlxG.sound.music.time;
+						//Conductor.songPosition = FlxG.sound.music.time;
 						resyncVocals();
 					}
 				}
@@ -692,11 +692,6 @@ class PlayState extends BasicState
 				opponentIcon.animation.play('winning', true);
 			else
 				opponentIcon.animation.play('default', true);
-
-		if(countdownStarted)
-			Conductor.songPosition += (FlxG.elapsed * 1000);
-		else
-			Conductor.songPosition += (FlxG.elapsed * 1000) * songMultiplier;
 
 		for(note in notes)
 		{
