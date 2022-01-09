@@ -1,5 +1,6 @@
 package mods;
 
+import lime.app.Application;
 import menus.MainMenuState;
 import openfl.display.BitmapData;
 import flixel.text.FlxText;
@@ -57,6 +58,8 @@ class ModsState extends BasicState
         FlxG.camera.follow(camFollow, LOCKON, 0.1 * (60 / Main.display.currentFPS));
 
         updateMods();
+
+        BasicState.changeAppTitle(Application.current.meta.get("title"), "Mods Menu");
 
         super.create();
     }

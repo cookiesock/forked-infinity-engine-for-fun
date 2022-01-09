@@ -1,5 +1,6 @@
 package menus;
 
+import lime.app.Application;
 import flixel.system.FlxSound;
 import lime.utils.Assets;
 import mods.Mods;
@@ -130,6 +131,8 @@ class FreeplayMenuState extends BasicState
         }
 
         updateSelection();
+
+        BasicState.changeAppTitle(Application.current.meta.get("title"), "Freeplay Menu");
     }
 
     override function update(elapsed:Float)

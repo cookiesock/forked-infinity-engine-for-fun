@@ -1,5 +1,6 @@
 package menus;
 
+import lime.app.Application;
 import flixel.FlxBasic;
 import flixel.FlxSubState;
 import flixel.text.FlxText;
@@ -90,6 +91,8 @@ class OptionsState extends BasicState
 		debugText = new FlxText(0,0,0,"",32,true);
 		debugText.visible = false;
 		add(debugText);
+
+		BasicState.changeAppTitle(Application.current.meta.get("title"), "Options Menu");
 		
 		super.create();
 	}

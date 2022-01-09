@@ -1,5 +1,6 @@
 package game;
 
+import lime.app.Application;
 import flixel.math.FlxRect;
 import mods.Mods;
 import openfl.media.Sound;
@@ -203,6 +204,8 @@ class PlayState extends BasicState
 			#end
 
 			storyMode = storyModeBool;
+
+			BasicState.changeAppTitle(Application.current.meta.get("title"), "Playing " + songName + " on " + songMultiplier + "x Speed");
 		}
 	}
 

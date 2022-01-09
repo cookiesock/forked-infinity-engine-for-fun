@@ -5,6 +5,7 @@ import flixel.FlxG;
 import game.Conductor;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import lime.app.Application;
 
 class BasicState extends FlxState
 {
@@ -84,5 +85,16 @@ class BasicState extends FlxState
 	public function beatHit():Void
 	{
 		//do literally nothing dumbass
+	}
+
+	public static function changeAppTitle(?prefix:String = "", ?suffix:String = ""):Void
+	{
+		if(suffix != "" || suffix != null)
+			Application.current.window.title = prefix + " - " + suffix;
+		else
+			Application.current.window.title = prefix;
+
+		if(prefix == "" || prefix == null)
+			Application.current.window.title = Application.current.meta.get("title");
 	}
 }

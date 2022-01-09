@@ -1,5 +1,6 @@
 package menus;
 
+import lime.app.Application;
 import mods.Mods;
 import flixel.util.FlxColor;
 import flixel.FlxG;
@@ -77,6 +78,8 @@ class TitleScreenState extends BasicState
 
 		if(Options.getData('volume') != null)
 			FlxG.sound.volume = Options.getData('volume');
+
+		BasicState.changeAppTitle(Application.current.meta.get("title"), "Title Screen");
 
 		super.create();
 	}

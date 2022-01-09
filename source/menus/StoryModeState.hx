@@ -1,5 +1,6 @@
 package menus;
 
+import lime.app.Application;
 import lime.utils.Assets;
 import mods.Mods;
 import flixel.FlxG;
@@ -218,6 +219,8 @@ class StoryModeState extends BasicState {
 
         changeSelectedWeek();
         changeDifficulty();
+
+        BasicState.changeAppTitle(Application.current.meta.get("title"), "Story Mode Menu");
         
         super.create();
     }
