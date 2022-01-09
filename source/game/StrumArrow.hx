@@ -40,25 +40,25 @@ class StrumArrow extends FlxSprite {
 			switch(Math.abs(noteID % 4))
 			{
 				case 0:
-					animation.addByPrefix('strum', 'left static', 24, false);
-					animation.addByPrefix('tap', 'left press', 24, false);
-					animation.addByPrefix('confirm', 'left confirm', 24, false);				
+					animation.addByPrefix('strum', 'left static0', 24, false);
+					animation.addByPrefix('tap', 'left press0', 24, false);
+					animation.addByPrefix('confirm', 'left confirm0', 24, false);				
 				case 1:
-					animation.addByPrefix('strum', 'down static', 24, false);
-					animation.addByPrefix('tap', 'down press', 24, false);
-					animation.addByPrefix('confirm', 'down confirm', 24, false);
+					animation.addByPrefix('strum', 'down static0', 24, false);
+					animation.addByPrefix('tap', 'down press0', 24, false);
+					animation.addByPrefix('confirm', 'down confirm0', 24, false);
 				case 2:
-					animation.addByPrefix('strum', 'up static', 24, false);
-					animation.addByPrefix('tap', 'up press', 24, false);
-					animation.addByPrefix('confirm', 'up confirm', 24, false);					
+					animation.addByPrefix('strum', 'up static0', 24, false);
+					animation.addByPrefix('tap', 'up press0', 24, false);
+					animation.addByPrefix('confirm', 'up confirm0', 24, false);					
 				case 3:
-					animation.addByPrefix('strum', 'right static', 24, false);
-					animation.addByPrefix('tap', 'right press', 24, false);
-					animation.addByPrefix('confirm', 'right confirm', 24, false);
+					animation.addByPrefix('strum', 'right static0', 24, false);
+					animation.addByPrefix('tap', 'right press0', 24, false);
+					animation.addByPrefix('confirm', 'right confirm0', 24, false);
 			}
 		} else { // if the note skin is INDEED pixel
 			loadGraphic(Util.getImage('noteskins/' + noteskin + '/notes'));
-			width = width / 4;
+			width = width / 9;
 			height = height / 5;
 			loadGraphic(Util.getImage('noteskins/' + noteskin + '/notes'), true, Math.floor(width), Math.floor(height));
 			
@@ -70,20 +70,20 @@ class StrumArrow extends FlxSprite {
 			{
 				case 0:
 					animation.add('strum', [0]);
-					animation.add('tap', [4, 8], 12, false);
-					animation.add('confirm', [12, 16], 24, false);
+					animation.add('tap', [9, 18], 12, false);
+					animation.add('confirm', [27, 36], 24, false);
 				case 1:
 					animation.add('strum', [1]);
-					animation.add('tap', [5, 9], 12, false);
-					animation.add('confirm', [13, 17], 24, false);
+					animation.add('tap', [10, 19], 12, false);
+					animation.add('confirm', [28, 37], 24, false);
 				case 2:
 					animation.add('strum', [2]);
-					animation.add('tap', [6, 10], 12, false);
-					animation.add('confirm', [14, 18], 12, false);
+					animation.add('tap', [11, 20], 12, false);
+					animation.add('confirm', [29, 38], 12, false);
 				case 3:
 					animation.add('strum', [3]);
-					animation.add('tap', [7, 11], 12, false);
-					animation.add('confirm', [15, 19], 24, false);
+					animation.add('tap', [12, 21], 12, false);
+					animation.add('confirm', [30, 39], 24, false);
 			}
 		}
 		

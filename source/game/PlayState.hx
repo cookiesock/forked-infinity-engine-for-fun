@@ -484,7 +484,7 @@ class PlayState extends BasicState
 						sustainNote.cameras = [hudCam];
 
 						if(!sustainNote.isPixel)
-							sustainNote.x += sustainNote.width / 3;
+							sustainNote.x += sustainNote.width / 1;
 						else
 							sustainNote.x += sustainNote.width / 1.5;
 

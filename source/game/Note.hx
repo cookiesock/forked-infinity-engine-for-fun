@@ -106,7 +106,7 @@ class Note extends FlxSprite {
 			}
 		} else { // if the note skin is INDEED pixel
 			loadGraphic(Util.getImage('noteskins/' + noteskin + '/notes'));
-			width = width / 4;
+			width = width / 9;
 			height = height / 5;
 			loadGraphic(Util.getImage('noteskins/' + noteskin + '/notes'), true, Math.floor(width), Math.floor(height));
 			
@@ -119,19 +119,19 @@ class Note extends FlxSprite {
 				switch(Math.abs(noteID % 4))
 				{
 					case 0:
-						animation.add('strum', [4]);
+						animation.add('strum', [9]);
 					case 1:
-						animation.add('strum', [5]);
+						animation.add('strum', [10]);
 					case 2:
-						animation.add('strum', [6]);
+						animation.add('strum', [11]);
 					case 3:
-						animation.add('strum', [7]);
+						animation.add('strum', [12]);
 				}
 			}
 			else
 			{
 				loadGraphic(Util.getImage('noteskins/' + noteskin + '/notesENDS'));
-				width = width / 4;
+				width = width / 9;
 				height = height / 2;
 				loadGraphic(Util.getImage('noteskins/' + noteskin + '/notesENDS'), true, Math.floor(width), Math.floor(height));
 				
@@ -162,13 +162,13 @@ class Note extends FlxSprite {
 					switch(Math.abs(noteID % 4))
 					{
 						case 0:
-							animation.add('strum', [4]);
+							animation.add('strum', [9]);
 						case 1:
-							animation.add('strum', [5]);
+							animation.add('strum', [10]);
 						case 2:
-							animation.add('strum', [6]);
+							animation.add('strum', [11]);
 						case 3:
-							animation.add('strum', [7]);
+							animation.add('strum', [12]);
 					}
 				}
 
