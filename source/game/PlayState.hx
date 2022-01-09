@@ -585,9 +585,8 @@ class PlayState extends BasicState
 					if(FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 					{
 						Conductor.songPosition = FlxG.sound.music.time;
+						resyncVocals();
 					}
-	
-					resyncVocals();
 				}
 			}
 		}
@@ -1085,7 +1084,7 @@ class PlayState extends BasicState
 						lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
 				}
 				#end
-				
+
 				if(vocals.time > FlxG.sound.music.time + 20 || vocals.time < FlxG.sound.music.time - 20)
 				{
 					vocals.pause();
