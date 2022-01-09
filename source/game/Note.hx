@@ -20,6 +20,7 @@ class Note extends FlxSprite {
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
+	public static var swagWidth:Float = 160 * 0.7;
 
 	public var lastNote:Note;
 
@@ -80,7 +81,7 @@ class Note extends FlxSprite {
 					}
 
 					@:privateAccess
-					scale.y *= (Conductor.stepCrochet / 100) * 1.5 * PlayState.instance.speed;
+					scale.y *= (Conductor.stepCrochet / 100) * 1.52 * PlayState.instance.speed;
 					updateHitbox();
 				}
 				else

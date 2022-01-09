@@ -1,5 +1,6 @@
 package game;
 
+import flixel.math.FlxRect;
 import mods.Mods;
 import openfl.media.Sound;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -679,6 +680,8 @@ class PlayState extends BasicState
 
 		for(note in notes)
 		{
+			// please help me do note clipping
+			// the hold notes don't disappear very well on high scroll speeds
 			if(note.mustPress)
 			{
 				if(downscroll)
