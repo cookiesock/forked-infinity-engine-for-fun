@@ -1076,13 +1076,6 @@ class PlayState extends BasicState
 		{
 			if(vocals.active)
 			{
-				if(vocals.time > FlxG.sound.music.time + 20 || vocals.time < FlxG.sound.music.time - 20)
-				{
-					vocals.pause();
-					vocals.time = FlxG.sound.music.time;
-					vocals.play();
-				}
-
 				#if cpp
 				@:privateAccess
 				{
@@ -1092,6 +1085,13 @@ class PlayState extends BasicState
 						lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
 				}
 				#end
+				
+				if(vocals.time > FlxG.sound.music.time + 20 || vocals.time < FlxG.sound.music.time - 20)
+				{
+					vocals.pause();
+					vocals.time = FlxG.sound.music.time;
+					vocals.play();
+				}
 			}
 		}
 	}
