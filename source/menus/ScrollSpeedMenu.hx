@@ -91,8 +91,8 @@ class ScrollSpeedMenu extends BasicSubState
 			var speed:Float = Options.getData('scroll-speed');
 			speed += change;
 
-			if(speed < 1)
-				speed = 1;
+			if(speed < 0.1)
+				speed = 0.1;
 
 			if(speed > maxSpeed)
 				speed = maxSpeed;
