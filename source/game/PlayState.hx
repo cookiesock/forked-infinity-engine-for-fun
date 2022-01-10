@@ -208,13 +208,13 @@ class PlayState extends BasicState
 			#end
 
 			storyMode = storyModeBool;
-
-			BasicState.changeAppTitle(Util.engineName, "Playing " + song.song + " on " + songMultiplier + "x Speed");
 		}
 	}
 
 	override public function create()
 	{
+		BasicState.changeAppTitle(Util.engineName, "Playing " + song.song + " on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed");
+		
 		if (FlxG.sound.music != null) {
 			FlxG.sound.music.stop();
 		}
