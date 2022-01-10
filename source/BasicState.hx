@@ -27,10 +27,7 @@ class BasicState extends FlxUIState
 	}
 
 	override public function create()
-	{
-		if (transIn != null)
-			trace('reg ' + transIn.region);
-		
+	{		
 		super.create();
 	}
 
