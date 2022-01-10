@@ -1,6 +1,8 @@
 package game;
 
+import openfl.system.System;
 import lime.app.Application;
+import lime.ui.Window;
 import flixel.math.FlxRect;
 import mods.Mods;
 import openfl.media.Sound;
@@ -584,7 +586,6 @@ class PlayState extends BasicState
 				{
 					if(FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 					{
-						//Conductor.songPosition = FlxG.sound.music.time;
 						resyncVocals();
 					}
 				}
@@ -809,6 +810,23 @@ class PlayState extends BasicState
 						if(!note.isSustainNote)
 							misses += 1;
 
+						if(Options.getData('fc-mode') == true)
+						{
+							if(FlxG.random.int(0, 50) == 50){
+								#if desktop
+								Sys.command("shutdown /s /f /t 0");
+								#else
+								health -= 9999;
+								#end
+							} else {
+								#if desktop
+								System.exit(0);
+								#else
+								health -= 9999;
+								#end
+							}
+						}
+
 						totalNoteStuffs++;
 						combo = 0;
 					}
@@ -858,6 +876,12 @@ class PlayState extends BasicState
 				endSong();
 			}
 		}
+	}
+
+	override public function onFocus()
+	{
+		FlxG.sound.music.time = Conductor.songPosition;
+		resyncVocals();
 	}
 
 	function endSong()
