@@ -247,6 +247,9 @@ class PlayState extends BasicState
 
 		speed = song.speed;
 
+		if(Options.getData('scroll-speed') > 1)
+			speed = Options.getData('scroll-speed');
+
 		#if !sys
 		songMultiplier = 1;
 		#end
@@ -263,9 +266,6 @@ class PlayState extends BasicState
 
 		Conductor.recalculateStuff(songMultiplier);
 		Conductor.safeZoneOffset *= songMultiplier;
-
-		if(Options.getData('scroll-speed') > 1)
-			speed = Options.getData('scroll-speed');
 		
 		// commented out speakers/gf because my pc sucks rn - swordcube
 		// that should hopefully no longer be the case on christmas - also swordcube
