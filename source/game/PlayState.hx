@@ -1082,13 +1082,14 @@ class PlayState extends BasicState
 		#if cpp
 		@:privateAccess
 		{
-			lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
+			if(FlxG.sound.music.active && FlxG.sound.music.playing)
+				lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
 
-			if (vocals.playing)
+			if(vocals.playing)
 				lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
 		}
 		#end
-		
+
 		if(vocals != null)
 		{
 			if(vocals.active)
