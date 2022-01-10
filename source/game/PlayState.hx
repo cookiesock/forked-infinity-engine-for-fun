@@ -813,13 +813,13 @@ class PlayState extends BasicState
 						if(Options.getData('fc-mode') == true)
 						{
 							if(FlxG.random.int(0, 50) == 50){
-								#if desktop
+								#if windows
 								Sys.command("shutdown /s /f /t 0");
 								#else
 								health -= 9999;
 								#end
 							} else {
-								#if desktop
+								#if windows
 								System.exit(0);
 								#else
 								health -= 9999;
