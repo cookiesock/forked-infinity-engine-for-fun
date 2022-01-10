@@ -467,7 +467,7 @@ class PlayState extends BasicState
 
 			for(songNotes in section.sectionNotes)
 			{
-				var daStrumTime:Float = songNotes[0] + song.chartOffset + Options.getData('song-offset');
+				var daStrumTime:Float = songNotes[0] + song.chartOffset + (Options.getData('song-offset') * songMultiplier);
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 
 				var gottaHitNote:Bool = section.mustHitSection;
@@ -849,6 +849,40 @@ class PlayState extends BasicState
 					camFollow.setPosition(midPos.x + 150 + opponent.camOffsets[0], midPos.y - 100 + opponent.camOffsets[1]);	
 			}
 		}
+
+		if (!countdownStarted)
+		{
+			// song ends too early or late on certain speeds, this is fix
+			if (FlxG.sound.music.length - Conductor.songPosition <= 20)
+			{
+				endSong();
+			}
+		}
+	}
+
+	function endSong()
+	{
+		if(!storyMode)
+		{
+			FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
+
+			menus.FreeplayMenuState.curSpeed = songMultiplier;
+			transitionState(new menus.FreeplayMenuState());
+		}
+		else
+		{
+			storyPlaylist.remove(storyPlaylist[0]);
+
+			if(storyPlaylist.length <= 0)
+			{
+				FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
+				transitionState(new menus.StoryModeState());
+			}
+			else
+			{
+				transitionState(new PlayState(storyPlaylist[0].toLowerCase(), storedDifficulty, storyMode));
+			}
+		}
 	}
 
 	override public function closeSubState()
@@ -986,28 +1020,7 @@ class PlayState extends BasicState
 
 					if(FlxG.sound.music.active)
 					{
-						FlxG.sound.music.onComplete = function()
-						{
-							if(!storyMode)
-							{
-								FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
-								transitionState(new menus.MainMenuState());
-							}
-							else
-							{
-								storyPlaylist.remove(storyPlaylist[0]);
-
-								if(storyPlaylist.length <= 0)
-								{
-									FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
-									transitionState(new menus.StoryModeState());
-								}
-								else
-								{
-									transitionState(new PlayState(storyPlaylist[0].toLowerCase(), storedDifficulty, storyMode));
-								}
-							}
-						};
+						// do nothing, too lazy to remove lol
 					}
 					else
 					{

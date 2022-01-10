@@ -1,5 +1,6 @@
 package menus;
 
+import flixel.math.FlxMath;
 import lime.app.Application;
 import flixel.system.FlxSound;
 import lime.utils.Assets;
@@ -38,7 +39,7 @@ class FreeplayMenuState extends BasicState
     private var difText:FlxText;
     private var speedText:FlxText;
 
-    private var curSpeed:Float = 1;
+    public static var curSpeed:Float = 1;
 
     private var vocals:FlxSound = new FlxSound();
     
@@ -46,6 +47,7 @@ class FreeplayMenuState extends BasicState
     {
         super();
 
+        curSpeed = 1;
         var rawSongListData:FreeplayList = Util.getJsonContents(Util.getJsonPath("data/freeplaySongs"));
         var songListData:Array<FreeplaySong> = rawSongListData.songs;
 
@@ -262,7 +264,7 @@ class FreeplayMenuState extends BasicState
 		difText.x = FlxG.width - difText.width;
 
 		speedText.x = FlxG.width - speedText.width;
-		speedText.text = "Speed: " + curSpeed + " (SHIFT+R)";
+		speedText.text = "Speed: " + FlxMath.roundDecimal(curSpeed, 2) + " (SHIFT+R)";
     }
 
     function updateSelection()
