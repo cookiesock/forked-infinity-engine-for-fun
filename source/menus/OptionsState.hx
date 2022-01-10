@@ -11,6 +11,7 @@ import flixel.FlxState;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.addons.transition.FlxTransitionableState;
 
 class OptionsState extends BasicState
 {
@@ -61,6 +62,12 @@ class OptionsState extends BasicState
 
     override public function create()
 	{
+		transIn = FlxTransitionableState.defaultTransIn;
+		transOut = FlxTransitionableState.defaultTransOut;
+
+		FlxTransitionableState.skipNextTransIn = false;
+		FlxTransitionableState.skipNextTransOut = false;
+
 		optionsList = defaultOptionsList["selectables"];
 
         menuBG = new FlxSprite().loadGraphic(Util.getImage("menuDesat"));
@@ -190,7 +197,7 @@ class OptionsState extends BasicState
 
 		for(i in 0...optionsList.length)
 		{
-			var swagOption = new AlphabetText(0, 0, optionsList[i][0]);
+			var swagOption = new AlphabetText(0, (70 * i) + 30, optionsList[i][0]);
 			swagOption.isMenuItem = true;
 			swagOption.targetY = i;
 			swagOption.ID = i;

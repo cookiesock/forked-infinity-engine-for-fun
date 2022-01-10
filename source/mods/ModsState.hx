@@ -1,5 +1,6 @@
 package mods;
 
+import flixel.addons.transition.FlxTransitionableState;
 import lime.app.Application;
 import menus.MainMenuState;
 import openfl.display.BitmapData;
@@ -26,6 +27,12 @@ class ModsState extends BasicState
 
     override public function create()
     {
+		transIn = FlxTransitionableState.defaultTransIn;
+		transOut = FlxTransitionableState.defaultTransOut;
+
+		FlxTransitionableState.skipNextTransIn = false;
+		FlxTransitionableState.skipNextTransOut = false;
+        
         FlxG.camera.scroll.set();
 		FlxG.camera.target = null;
 

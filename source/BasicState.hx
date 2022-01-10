@@ -1,13 +1,13 @@
 package;
 
-import flixel.util.FlxColor;
 import flixel.FlxG;
 import game.Conductor;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import lime.app.Application;
+import flixel.addons.ui.FlxUIState;
 
-class BasicState extends FlxState
+class BasicState extends FlxUIState
 {
 	//bpm and step
 	var curStep:Int = 0;
@@ -26,7 +26,15 @@ class BasicState extends FlxState
 		Conductor.changeBPM(BPM, songMultiplier); // love how this function is basically useless because Conductor.changeBPM itself is a function lol
 	}
 
-	override function update(elapsed:Float)
+	override public function create()
+	{
+		if (transIn != null)
+			trace('reg ' + transIn.region);
+		
+		super.create();
+	}
+
+	override public function update(elapsed:Float)
 	{
 		var oldStep:Int = curStep;
 

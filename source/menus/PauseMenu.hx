@@ -108,6 +108,9 @@ class PauseMenu extends BasicSubState
 		if(up) changeSelection(-1);
 		if(down) changeSelection(1);
 
+		if (-1 * Math.floor(FlxG.mouse.wheel) != 0)
+			changeSelection(-1 * Math.floor(FlxG.mouse.wheel));
+
 		if(accept)
 		{
 			var selectedItem:String = pauseOptions[selectedOption];

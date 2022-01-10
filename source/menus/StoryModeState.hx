@@ -12,6 +12,7 @@ import flixel.util.FlxColor;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxObject;
 import flixel.math.FlxMath;
+import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -248,6 +249,11 @@ class StoryModeState extends BasicState {
         if(FlxG.keys.justPressed.BACKSPACE)
         {
             FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
+			transIn = FlxTransitionableState.defaultTransIn;
+			transOut = FlxTransitionableState.defaultTransOut;
+
+            FlxTransitionableState.skipNextTransIn = false;
+            FlxTransitionableState.skipNextTransOut = false;
             transitionState(new MainMenuState());
         }
 

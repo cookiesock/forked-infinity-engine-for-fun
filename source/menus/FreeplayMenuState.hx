@@ -13,6 +13,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.addons.transition.FlxTransitionableState;
 
 using StringTools;
 
@@ -46,6 +47,12 @@ class FreeplayMenuState extends BasicState
     public function new()
     {
         super();
+
+        transIn = FlxTransitionableState.defaultTransIn;
+        transOut = FlxTransitionableState.defaultTransOut;
+
+		FlxTransitionableState.skipNextTransIn = false;
+		FlxTransitionableState.skipNextTransOut = false;
 
         curSpeed = 1;
         var rawSongListData:FreeplayList = Util.getJsonContents(Util.getJsonPath("data/freeplaySongs"));
@@ -129,7 +136,7 @@ class FreeplayMenuState extends BasicState
         {
             var songData = songs[songDataIndex];
 
-            var alphabet = new AlphabetText(0, 0, songData.songName);
+            var alphabet = new AlphabetText(0, (70 * songDataIndex) + 30, songData.songName);
             alphabet.targetY = songDataIndex;
             alphabet.isMenuItem = true;
 
@@ -213,6 +220,12 @@ class FreeplayMenuState extends BasicState
                 selectedSong += 1;
             
             updateSelection();
+        }
+
+		if (-1 * Math.floor(FlxG.mouse.wheel) != 0)
+        {
+            selectedSong += -1 * Math.floor(FlxG.mouse.wheel);
+			updateSelection();
         }
 
         if(left && !shiftP || right && !shiftP)

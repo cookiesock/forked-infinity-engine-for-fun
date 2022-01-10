@@ -13,6 +13,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.math.FlxMath;
+import flixel.addons.transition.FlxTransitionableState;
 
 class MainMenuState extends BasicState
 {
@@ -34,6 +35,14 @@ class MainMenuState extends BasicState
 
 	override public function create()
 	{
+		transIn = FlxTransitionableState.defaultTransIn;
+		transOut = FlxTransitionableState.defaultTransOut;
+
+		FlxTransitionableState.skipNextTransIn = false;
+		FlxTransitionableState.skipNextTransOut = false;
+
+		persistentUpdate = persistentDraw = true;
+
 		TitleScreenState.hasAlreadyAccepted = true;
 		
 		camFollow = new FlxObject(0, 0, 1, 1);
@@ -111,56 +120,58 @@ class MainMenuState extends BasicState
 		}
 		if (FlxG.keys.justPressed.ENTER)
 		{
-			// seriously pls use switch cases for shit like this - swordcmube
-			FlxG.sound.play(Util.getSound('menus/confirmMenu'));
+			if(!hasSelected)
+			{
+				FlxG.sound.play(Util.getSound('menus/confirmMenu'));
+				
+				FlxFlicker.flicker(menuBGMagenta, 1.1, 0.15, false);
+
+				menuButtons.forEach(function(spr:FlxSprite)
+					{
+						if (selectedMenu != spr.ID)
+						{
+							FlxTween.tween(spr, {alpha: 0}, 0.4, {
+								ease: FlxEase.quadOut,
+								onComplete: function(twn:FlxTween)
+								{
+									spr.kill();
+								}
+							});
+						}
+						else
+						{
+							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
+							{
+								var daChoice:String = swagMenuButtons[selectedMenu];
+
+								switch (daChoice)
+								{
+									case 'StoryMode':
+										transitionState(new menus.StoryModeState());
+										trace("entered story mode");
+										
+									case 'Freeplay':
+										transitionState(new menus.FreeplayMenuState());
+										trace("entered freeplay");
+										
+									case 'Credits':
+										transitionState(new menus.CreditsState());
+										trace("entered credits");
+
+									case 'Options':
+										transitionState(new menus.OptionsState());
+										trace("entered options");
+
+									case 'Mods':
+										transitionState(new mods.ModsState());
+										trace("entered mods");
+								}
+							});
+						}
+					});
+			}
 
 			hasSelected = true;
-
-			FlxFlicker.flicker(menuBGMagenta, 1.1, 0.15, false);
-
-			menuButtons.forEach(function(spr:FlxSprite)
-				{
-					if (selectedMenu != spr.ID)
-					{
-						FlxTween.tween(spr, {alpha: 0}, 0.4, {
-							ease: FlxEase.quadOut,
-							onComplete: function(twn:FlxTween)
-							{
-								spr.kill();
-							}
-						});
-					}
-					else
-					{
-						FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
-						{
-							var daChoice:String = swagMenuButtons[selectedMenu];
-
-							switch (daChoice)
-							{
-								case 'StoryMode':
-									transitionState(new menus.StoryModeState());
-									trace("entered story mode");
-									
-								case 'Freeplay':
-									transitionState(new menus.FreeplayMenuState());
-									trace("entered freeplay");
-									
-								case 'Credits':
-									transitionState(new menus.CreditsState());
-									trace("entered credits");
-
-								case 'Options':
-									transitionState(new menus.OptionsState());
-									trace("entered options");
-
-								case 'Mods':
-									transitionState(new mods.ModsState());
-									trace("entered mods");
-							}
-						});
-					}
-				});
 		}
 		
 		if (FlxG.keys.justPressed.BACKSPACE)

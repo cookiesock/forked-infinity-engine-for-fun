@@ -13,6 +13,26 @@ class Icon extends TrackerSprite
 	{
 		super(tracker, xOff, yOff, direction);
 
+        #if sys
+        if(Assets.exists('assets/characters/$name.json'))
+        #end
+            json = Util.getJsonContents('assets/characters/$name.json');
+        #if sys
+        else
+        {
+            if(Mods.activeMods.length > 0)
+            {
+                for(mod in Mods.activeMods)
+                {
+                    if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/characters/$name.json'))
+                    {
+                        json = Util.getJsonContents('mods/$mod/characters/$name.json');
+                    }
+                }
+            }
+        }
+        #end
+
 		if(iconPath.contains('-pixel'))
 			antialiasing = false;
 		else

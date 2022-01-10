@@ -11,6 +11,7 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxTween;
+import flixel.addons.transition.FlxTransitionableState;
 
 class CreditsState extends BasicState {
     var menuBG:FlxSprite;
@@ -26,6 +27,12 @@ class CreditsState extends BasicState {
 	override public function create()
         {
             super.create();
+
+			transIn = FlxTransitionableState.defaultTransIn;
+			transOut = FlxTransitionableState.defaultTransOut;
+
+            FlxTransitionableState.skipNextTransIn = false;
+            FlxTransitionableState.skipNextTransOut = false;
 
             creditGroup = new FlxTypedGroup();
             creditIconGroup = new FlxTypedGroup();

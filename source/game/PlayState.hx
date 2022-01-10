@@ -1,5 +1,6 @@
 package game;
 
+import flixel.addons.transition.FlxTransitionableState;
 import openfl.system.System;
 import lime.app.Application;
 import lime.ui.Window;
@@ -216,6 +217,9 @@ class PlayState extends BasicState
 	override public function create()
 	{
 		BasicState.changeAppTitle(Util.engineName, "Playing " + song.song + " on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed");
+
+		persistentUpdate = true;
+		persistentDraw = true;
 		
 		if (FlxG.sound.music != null) {
 			FlxG.sound.music.stop();
@@ -882,6 +886,7 @@ class PlayState extends BasicState
 	{
 		FlxG.sound.music.time = Conductor.songPosition;
 		resyncVocals();
+		super.onFocus(); // this might be important lmao
 	}
 
 	function endSong()
@@ -891,6 +896,9 @@ class PlayState extends BasicState
 			FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
 
 			menus.FreeplayMenuState.curSpeed = songMultiplier;
+
+			transIn = FlxTransitionableState.defaultTransIn;
+			transOut = FlxTransitionableState.defaultTransOut;
 			transitionState(new menus.FreeplayMenuState());
 		}
 		else
@@ -899,11 +907,17 @@ class PlayState extends BasicState
 
 			if(storyPlaylist.length <= 0)
 			{
+				transIn = FlxTransitionableState.defaultTransIn;
+				transOut = FlxTransitionableState.defaultTransOut;
+				FlxTransitionableState.skipNextTransIn = false;
+				FlxTransitionableState.skipNextTransOut = false;
 				FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
 				transitionState(new menus.StoryModeState());
 			}
 			else
 			{
+				FlxTransitionableState.skipNextTransIn = true;
+				FlxTransitionableState.skipNextTransOut = true;
 				transitionState(new PlayState(storyPlaylist[0].toLowerCase(), storedDifficulty, storyMode));
 			}
 		}
@@ -927,6 +941,7 @@ class PlayState extends BasicState
 			{
 				if (FlxG.sound.music != null)
 				{
+					FlxG.sound.music.time = Conductor.songPosition;
 					resyncVocals();
 				}
 
