@@ -2,7 +2,7 @@
 -----
 ![](https://media.discordapp.net/attachments/869237278642417665/922557605501599784/funkyLogo.png)
 -----
-Made by 3 people literally out of pure boredom, Aiming to recreate the entirety of FNF [mostly lmao] from [scratch](https://scratch.mit.edu).
+Made by 3 people literally out of pure boredom, Aiming to recreate the entirety of FNF [mostly lmao] from [scratch](https://scratch.mit.edu) in the HaxeFlixel game engine.
 
 ## Credits
 - Raf - Project Owner, Coder and Artist ([GitHub](https://github.com/RafaelGiacom)) ([GameJolt](https://gamejolt.com/@RafaelGiacom)) ([GameBanana](https://gamebanana.com/members/1739332))
