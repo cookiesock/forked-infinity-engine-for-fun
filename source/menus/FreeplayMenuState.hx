@@ -149,7 +149,10 @@ class FreeplayMenuState extends BasicState
         super.update(elapsed);
 
         if(FlxG.keys.justPressed.BACKSPACE)
+        {
+            FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
             FlxG.switchState(new menus.MainMenuState());
+        }
 
         if(FlxG.keys.justPressed.SPACE) {
             if (FlxG.sound.music != null) {

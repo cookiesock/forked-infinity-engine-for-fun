@@ -247,6 +247,7 @@ class StoryModeState extends BasicState {
 
         if(FlxG.keys.justPressed.BACKSPACE)
         {
+            FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
             transitionState(new MainMenuState());
         }
 

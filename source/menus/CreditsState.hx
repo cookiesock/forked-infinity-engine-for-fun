@@ -69,8 +69,9 @@ class CreditsState extends BasicState {
         {
             if (FlxG.keys.justPressed.BACKSPACE)
             {
+                FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
                 FlxG.switchState(new menus.MainMenuState());
-            } // temporary way to go back to menus without restarting the game
+            }
 
             if(FlxG.keys.justPressed.ENTER)
             {

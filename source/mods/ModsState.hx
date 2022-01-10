@@ -102,7 +102,10 @@ class ModsState extends BasicState
         }
 
         if(FlxG.keys.justPressed.BACKSPACE)
+        {
+            FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
             FlxG.switchState(new MainMenuState());
+        }
     }
 
     function updateMods()
