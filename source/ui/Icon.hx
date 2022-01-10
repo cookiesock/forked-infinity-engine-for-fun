@@ -9,31 +9,19 @@ using StringTools;
 
 class Icon extends TrackerSprite
 {
-	public function new(?iconPath:String = "test", ?tracker:FlxSprite, ?isPlayer:Bool = false, ?xOff:Float = 10, ?yOff:Float = -30, ?direction:TrackerDirection = RIGHT)
+	var isPixel:Bool = false;
+
+	public function new(?iconPath:String = "test", ?tracker:FlxSprite, ?isPlayer:Bool = false, ?xOff:Float = 10, ?yOff:Float = -30, ?direction:TrackerDirection = RIGHT, ?swagChar:String = "bf")
 	{
 		super(tracker, xOff, yOff, direction);
 
-        #if sys
-        if(Assets.exists('assets/characters/$name.json'))
-        #end
-            json = Util.getJsonContents('assets/characters/$name.json');
-        #if sys
-        else
-        {
-            if(Mods.activeMods.length > 0)
-            {
-                for(mod in Mods.activeMods)
-                {
-                    if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/characters/$name.json'))
-                    {
-                        json = Util.getJsonContents('mods/$mod/characters/$name.json');
-                    }
-                }
-            }
-        }
-        #end
+		switch(swagChar)
+		{
+			case "senpai" | "senpai-angry" | "spirit": // hardcoded char override bc i can't be bothered rn
+				isPixel = true;
+		}
 
-		if(iconPath.contains('-pixel'))
+		if(iconPath.contains('-pixel') || isPixel)
 			antialiasing = false;
 		else
 			antialiasing = Options.getData('anti-aliasing');

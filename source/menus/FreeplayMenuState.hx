@@ -142,7 +142,7 @@ class FreeplayMenuState extends BasicState
 
             songAlphabets.add(alphabet);
 
-            var icon = new Icon(Util.getCharacterIcons(songData.songCharacter), alphabet);
+            var icon = new Icon(Util.getCharacterIcons(songData.songCharacter), alphabet, null, null, null, null, songData.songCharacter);
             songIcons.add(icon);
         }
 

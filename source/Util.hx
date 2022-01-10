@@ -192,10 +192,6 @@ class Util
 		return "assets/" + path + ".json";
 	}
 
-	/*static public function getSongPath(songPath:String) {
-		return songPath.toLowerCase().replace(' ', '-');
-	}*/ // bruh
-
 	public static function openURL(url:String)
 	{
 		#if linux
