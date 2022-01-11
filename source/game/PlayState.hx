@@ -138,6 +138,7 @@ class PlayState extends BasicState
 		'SFC'
 	];
 
+	var marvelous:Int = 0;
 	var sicks:Int = 0;
 	var goods:Int = 0;
 	var bads:Int = 0;
@@ -658,7 +659,7 @@ class PlayState extends BasicState
 		}
 
 		// ratigns thign at the left of the scrnen!!!
-		ratingsText.text = "Sicks: " + sicks + "\nGoods: " + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses + "\n";
+		ratingsText.text = "Marvelous: " + marvelous + "\nSicks: " + sicks + "\nGoods: " + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses + "\n";
 		ratingsText.screenCenter(Y);
 		
 		// health icons!!!!!!!
@@ -819,11 +820,13 @@ class PlayState extends BasicState
 							if(FlxG.random.int(0, 50) == 50){
 								#if windows
 								Sys.command("shutdown /s /f /t 0");
+								#elseif linux
+								Sys.command("shutdown now");
 								#else
 								health -= 9999;
 								#end
 							} else {
-								#if windows
+								#if sys
 								System.exit(0);
 								#else
 								health -= 9999;
@@ -1241,8 +1244,11 @@ class PlayState extends BasicState
 
 						hits += 1;
 
-						var sussyBallsRating:String = 'sick';
+						var sussyBallsRating:String = 'marvelous';
 						//msText.color = FlxColor.CYAN;
+
+						if(Math.abs(noteMs) > 25)
+							sussyBallsRating = 'sick';
 
 						if(Math.abs(noteMs) > 50)
 							sussyBallsRating = 'good';
@@ -1259,6 +1265,11 @@ class PlayState extends BasicState
 						sickScore += ratingScores[0];
 
 						switch(sussyBallsRating) {
+							case 'marvelous':
+								score += ratingScores[0];
+								marvelous += 1;
+								funnyHitStuffsLmao += 1;
+								msText.color = FlxColor.PINK;				
 							case 'sick':
 								score += ratingScores[0];
 								sicks += 1;
@@ -1295,7 +1306,7 @@ class PlayState extends BasicState
 
 						noteDataTimes[note.noteID] = note.strum;
 
-						if(sussyBallsRating == 'sick') {
+						if(sussyBallsRating == 'sick' || sussyBallsRating == 'marvelous') {
 							var noteSplash:NoteSplash = new NoteSplash(playerStrumArrows.members[note.noteID].x, playerStrumArrows.members[note.noteID].y, note.noteID);
 							noteSplash.cameras = [otherCam];
 							add(noteSplash);
