@@ -1,0 +1,20 @@
+{
+    "hitsounds": [
+        {
+            "name": "None",
+            "fileName": ""
+        },
+        {
+            "name": "osu!",
+            "fileName": "osu"
+        },
+        {
+            "name": "Screen Tap",
+            "fileName": "tap"
+        },
+        {
+            "name": "Vine Boom",
+            "fileName": "vineBoom"
+        }
+    ]
+}

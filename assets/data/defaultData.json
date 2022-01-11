@@ -13,6 +13,14 @@
             "value": false
         },
         {
+            "name": "fc-mode",
+            "value": false
+        },
+        {
+            "name": "hitsound",
+            "value": 0
+        },
+        {
             "name": "anti-aliasing",
             "value": true
         },

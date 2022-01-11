@@ -14,8 +14,6 @@ import haxe.Json;
 
 using StringTools;
 
-// i'm actually trying to write shit myself here - swordcube
-// fucking e - ZonianDX
 class Util
 {
 	static public var soundExt:String = #if web '.mp3' #else '.ogg' #end;

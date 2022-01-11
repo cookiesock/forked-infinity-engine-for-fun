@@ -44,7 +44,7 @@ class OptionsState extends BasicState
 		],
 		"gameplay" => [
 			["Back", "menu", ""],
-			["Hitsounds", "menu", "Change what sound plays when you hit a note."],
+			["Adjust Hitsounds", "menu", "Change what sound plays when you hit a note."],
 			["Adjust Offset", "menu", "Change how early/late notes appear on-screen."],
 			["Manage Keybinds", "menu", "Change the keys used to press arrows."],
 			["Adjust Scroll Speed", "menu", "Change how fast your notes fall on-screen."],
@@ -157,6 +157,8 @@ class OptionsState extends BasicState
 							Options.resetData();
 						case "FPS Cap":
 							openSubState(new FPSCapMenu());
+						case "Adjust Hitsounds":
+							openSubState(new HitsoundMenu());
 					}
 				case "checkbox":
 					Options.saveData(optionsList[selectedOption][3], !Options.getData(optionsList[selectedOption][3]));

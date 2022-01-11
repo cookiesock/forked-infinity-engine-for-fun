@@ -221,6 +221,8 @@ class PlayState extends BasicState
 
 		persistentUpdate = true;
 		persistentDraw = true;
+
+		playCurrentHitsound(0.1); // preload hitsound lol
 		
 		if (FlxG.sound.music != null) {
 			FlxG.sound.music.stop();
@@ -1350,6 +1352,12 @@ class PlayState extends BasicState
 
 						combo += 1;
 
+						var theReal:Array<Dynamic> = menus.HitsoundMenu.getHitsounds();
+						if(theReal[Options.getData('hitsound')].name != "None")
+						{
+							playCurrentHitsound();
+						}
+
 						if(combo > 9999)
 							combo = 9999; // you should never be able to get a combo this high, if you do, you're nuts.
 					}
@@ -1430,6 +1438,30 @@ class PlayState extends BasicState
 		if(player.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !pressed.contains(true))
 			if(player.animation.curAnim.name.startsWith('sing'))
 				player.dance();
+	}
+
+	function playCurrentHitsound(?volume:Float = 1)
+	{
+		var hitsoundList:Dynamic = menus.HitsoundMenu.getHitsounds();
+		var daHitsound:Dynamic;
+
+		daHitsound = 'assets/sounds/gameplay/hitsounds/' + hitsoundList[Options.getData('hitsound')].fileName + Util.soundExt;
+		
+        #if sys
+        Mods.updateActiveMods();
+        
+        if(Mods.activeMods.length > 0)
+        {
+            for(mod in Mods.activeMods)
+            {
+                if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/sounds/gameplay/hitsounds/' + hitsoundList[Options.getData('hitsound')].fileName + Util.soundExt))
+                {
+					daHitsound = 'mods/$mod/sounds/gameplay/hitsounds/' + hitsoundList[Options.getData('hitsound')].fileName + Util.soundExt;
+                }
+            }
+        }
+        #end
+		FlxG.sound.play(daHitsound, volume, false);
 	}
 
 	function updateAccuracyStuff()
