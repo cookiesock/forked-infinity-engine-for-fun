@@ -659,7 +659,7 @@ class PlayState extends BasicState
 		}
 
 		// ratigns thign at the left of the scrnen!!!
-		ratingsText.text = "Marvelous: " + marvelous + "\nSicks: " + sicks + "\nGoods: " + goods + "\nBads: " + bads + "\nShits: " + shits + "\nMisses: " + misses + "\n";
+		ratingsText.text = "Marvelous: " + marvelous + "\nSick: " + sicks + "\nGood: " + goods + "\nBad: " + bads + "\nShit: " + shits + "\nMisses: " + misses + "\n";
 		ratingsText.screenCenter(Y);
 		
 		// health icons!!!!!!!
@@ -888,7 +888,7 @@ class PlayState extends BasicState
 	override public function onFocus()
 	{
 		FlxG.sound.music.time = Conductor.songPosition;
-		resyncVocals();
+		resyncVocals(true);
 		super.onFocus(); // this might be important lmao
 	}
 
@@ -945,7 +945,7 @@ class PlayState extends BasicState
 				if (FlxG.sound.music != null)
 				{
 					FlxG.sound.music.time = Conductor.songPosition;
-					resyncVocals();
+					resyncVocals(true);
 				}
 
 				paused = false;
@@ -961,6 +961,8 @@ class PlayState extends BasicState
 	override public function beatHit()
 	{
 		super.beatHit();
+
+		resyncVocals();
 		
 		if (!countdownStarted) {
 			if (song.notes[Math.floor(curStep / 16)] != null)
@@ -1116,21 +1118,12 @@ class PlayState extends BasicState
 	function startSong() // for doin shit when the song starts
 	{
 		Conductor.recalculateStuff(songMultiplier);
-		resyncVocals();
+		resyncVocals(true);
 	}
 
-	function resyncVocals()
+	function resyncVocals(?force:Bool = false)
 	{
-		#if cpp
-		@:privateAccess
-		{
-			if(FlxG.sound.music != null && FlxG.sound.music.active && FlxG.sound.music.playing)
-				lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
-
-			if(vocals != null && vocals.playing)
-				lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
-		}
-		#end
+		setPitch();
 
 		if(vocals != null)
 		{
@@ -1144,6 +1137,20 @@ class PlayState extends BasicState
 				}
 			}
 		}
+	}
+
+	function setPitch()
+	{
+		#if cpp
+		@:privateAccess
+		{
+			if(FlxG.sound.music != null && FlxG.sound.music.active && FlxG.sound.music.playing)
+				lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
+
+			if(vocals != null && vocals.playing)
+				lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
+		}
+		#end
 	}
 
 	function sortByShit(Obj1:Note, Obj2:Note):Int

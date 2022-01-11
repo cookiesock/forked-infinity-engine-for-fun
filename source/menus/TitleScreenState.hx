@@ -42,8 +42,8 @@ class TitleScreenState extends BasicState
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
-		FlxTransitionableState.skipNextTransIn = false;
-		FlxTransitionableState.skipNextTransOut = false;
+		FlxTransitionableState.skipNextTransIn = true;
+		FlxTransitionableState.skipNextTransOut = true;
 
 		/*var sprite = new FlxSprite();
 		sprite.makeGraphic(15, 15, FlxColor.TRANSPARENT);
@@ -115,7 +115,8 @@ class TitleScreenState extends BasicState
 			FlxG.sound.play(Util.getSound("menus/confirmMenu", true));
 			hasAlreadyAccepted = true; // prevents title music from restarting if it's already playing
 			accepted = true; // prevents spamming enter
-			// there's probably a better way to do this but i don't give a shi
+			FlxTransitionableState.skipNextTransIn = false;
+			FlxTransitionableState.skipNextTransOut = false;
 
 			pressAccept.animation.play('pressed');
 			FlxG.camera.flash(FlxColor.WHITE, 2);
