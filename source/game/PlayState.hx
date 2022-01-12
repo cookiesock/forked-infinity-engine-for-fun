@@ -974,7 +974,7 @@ class PlayState extends BasicState
 				if (song.notes[Math.floor(curStep / 16)].changeBPM)
 				{
 					Conductor.changeBPM(song.notes[Math.floor(curStep / 16)].bpm, songMultiplier);
-					trace('CHANGED BPM TO ' + Conductor.bpm + 'SUCCESSFULLY!');
+					trace('CHANGED BPM TO ' + Conductor.bpm + ' SUCCESSFULLY!');
 				}
 			}
 
