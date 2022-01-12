@@ -980,7 +980,7 @@ class PlayState extends BasicState
 
 			if (cameraZooms && FlxG.camera.zoom < 1.35 && curBeat % 4 == 0)
 			{
-				FlxG.camera.zoom += 0.03;
+				FlxG.camera.zoom += 0.015;
 				hudCam.zoom += 0.03;
 			}
 			
