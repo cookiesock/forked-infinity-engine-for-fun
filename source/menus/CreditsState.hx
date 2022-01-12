@@ -108,13 +108,13 @@ class CreditsState extends BasicState
             for(credit in 0...creditGroup.members.length) {
                 if(credit == curSelected)
                 {
-                    creditGroup.members[credit].x = Std.int(FlxMath.lerp(creditGroup.members[credit].x, FlxG.width / 6 + credit * 5 + 96, funnyLerpValue));
+                    creditGroup.members[credit].x = FlxMath.lerp(creditGroup.members[credit].x, FlxG.width / 6 + credit * 5 + 96, funnyLerpValue);
                     creditGroup.members[credit].alpha = 1;
                     creditIconGroup.members[credit].alpha = 1;
                 }
                 else
                 {
-                    creditGroup.members[credit].x = Std.int(FlxMath.lerp(creditGroup.members[credit].x, FlxG.width / 6 + credit * 5, funnyLerpValue));
+                    creditGroup.members[credit].x = FlxMath.lerp(creditGroup.members[credit].x, FlxG.width / 6 + credit * 5, funnyLerpValue);
                     creditGroup.members[credit].alpha = 0.6;
                     creditIconGroup.members[credit].alpha = 0.6;
                 }
