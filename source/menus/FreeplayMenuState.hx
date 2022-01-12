@@ -48,6 +48,8 @@ class FreeplayMenuState extends BasicState
     {
         super();
 
+        Util.clearMemoryStuff();
+
         transIn = FlxTransitionableState.defaultTransIn;
         transOut = FlxTransitionableState.defaultTransOut;
 
@@ -170,22 +172,12 @@ class FreeplayMenuState extends BasicState
                 vocals.stop();
             }
 
-            #if sys
-            if(!Assets.exists(Util.getInst(songs[selectedSong].songName.toLowerCase())))
-                FlxG.sound.music = Util.loadModSound("songs/" + songs[selectedSong].songName.toLowerCase() + "/Inst", true, true);
-            else
-            #end
             FlxG.sound.playMusic(Util.getInst(songs[selectedSong].songName.toLowerCase()), 1, false);
 
             /*if(song.needsVoices)
             {*/
                 FlxG.sound.music.pause();
 
-                #if sys
-                if(!Assets.exists(Util.getVoices(songs[selectedSong].songName.toLowerCase())))
-                    vocals = Util.loadModSound("songs/" + songs[selectedSong].songName.toLowerCase() + "/Voices", true, false);
-                else
-                #end
                 vocals = FlxG.sound.play(Util.getVoices(songs[selectedSong].songName.toLowerCase()));
 
                 vocals.pause();

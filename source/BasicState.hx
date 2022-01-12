@@ -27,8 +27,10 @@ class BasicState extends FlxUIState
 	}
 
 	override public function create()
-	{		
+	{
 		super.create();
+
+		Util.clearMemoryStuff();
 	}
 
 	override public function update(elapsed:Float)

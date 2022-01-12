@@ -1,5 +1,6 @@
 package;
 
+import flixel.graphics.FlxGraphic;
 import openfl.display.BitmapData;
 import openfl.events.Event;
 import mods.ModSoundUtil;
@@ -102,21 +103,38 @@ class Util
 				if(sys.FileSystem.exists(Sys.getCwd() + newPng + ".png") && sys.FileSystem.exists(Sys.getCwd() + newXml + ".xml"))
 				{
 					var xmlData = sys.io.File.getContent(Sys.getCwd() + newXml + ".xml");
-					var bitmapData = BitmapData.fromFile(Sys.getCwd() + newPng + ".png");
+
+					if(Cache.getFromCache(newPng, "image") == null)
+					{
+						var graphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(Sys.getCwd() + newPng + ".png"), false, newPng, false);
+						graphic.destroyOnNoUse = false;
+
+						Cache.addToCache(newPng, graphic, "image");
+					}
 	
-					return FlxAtlasFrames.fromSparrow(bitmapData, xmlData);
+					return FlxAtlasFrames.fromSparrow(Cache.getFromCache(newPng, "image"), xmlData);
 				}
 			}
 
-			return FlxAtlasFrames.fromSparrow("assets/characters/images/bf/assets" + ".png", "assets/characters/images/bf/assets" + ".xml");
+			return FlxAtlasFrames.fromSparrow("assets/images/StoryMode_UI_Assets" + ".png", "assets/images/StoryMode_UI_Assets" + ".xml");
 		}
 		else
 		{
-		#end
-		return FlxAtlasFrames.fromSparrow(png + ".png", xml + ".xml");
-		#if sys
+			var xmlData = Assets.getText(xml + ".xml");
+
+			if(Cache.getFromCache(png, "image") == null)
+			{
+				var graphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(Sys.getCwd() + png + ".png"), false, png, false);
+				graphic.destroyOnNoUse = false;
+
+				Cache.addToCache(png, graphic, "image");
+			}
+
+			return FlxAtlasFrames.fromSparrow(Cache.getFromCache(png, "image"), xmlData);
 		}
 		#end
+
+		return FlxAtlasFrames.fromSparrow(png + ".png", xml + ".xml");
 	}
 
 	static public function getImage(filePath:String, ?fromImagesFolder:Bool = true):Dynamic
@@ -141,33 +159,95 @@ class Util
 					png = "mods/" + mod + "/" + png;
 
 				if(sys.FileSystem.exists(Sys.getCwd() + png + ".png"))
-					return BitmapData.fromFile(Sys.getCwd() + png + ".png");
+				{
+					if(Cache.getFromCache(png, "image") == null)
+					{
+						var graphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(Sys.getCwd() + png + ".png"), false, png, false);
+						graphic.destroyOnNoUse = false;
+
+						Cache.addToCache(png, graphic, "image");
+					}
+					
+					return Cache.getFromCache(png, "image");
+				}
 			}
 
 			return "oof.png";
 		}
 		else
 		{
-		#end
-		return png + '.png';
-		#if sys
+			if(Cache.getFromCache(png, "image") == null)
+			{
+				var graphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(Sys.getCwd() + png + ".png"), false, png, false);
+				graphic.destroyOnNoUse = false;
+
+				Cache.addToCache(png, graphic, "image");
+			}
+			
+			return Cache.getFromCache(png, "image");
 		}
 		#end
+
+		return png + '.png';
 	}
 
-	static public function getSound(filePath:String, ?fromSoundsFolder:Bool = true, ?useUrOwnFolderLmfao:Bool = false)
+	static public function getSound(filePath:String, ?fromSoundsFolder:Bool = true, ?useUrOwnFolderLmfao:Bool = false):Dynamic
 	{
-		var base:String = "assets/";
+		var base:String = "";
 
 		if(!useUrOwnFolderLmfao)
 		{
 			if(fromSoundsFolder)
-				base += "sounds/";
+				base = "sounds/";
 			else
-				base += "music/";
+				base = "music/";
 		}
 
-		return base + filePath + soundExt;
+		var gamingPath = base + filePath + soundExt;
+
+		if(Assets.exists("assets/" + gamingPath))
+		{
+			if(Cache.getFromCache(gamingPath, "sound") == null)
+			{
+				var sound:Sound = null;
+
+				#if sys
+				sound = Sound.fromFile("assets/" + gamingPath);
+				Cache.addToCache(gamingPath, sound, "sound");
+				#else
+				return "assets/" + gamingPath;
+				#end
+			}
+
+			return Cache.getFromCache(gamingPath, "sound");
+		}
+		else
+		{
+			if(Cache.getFromCache(gamingPath, "sound") == null)
+			{
+				var sound:Sound = null;
+
+				#if sys
+				var modFoundFirst:String = "";
+		
+				for(mod in Mods.activeMods)
+				{
+					if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/' + gamingPath))
+						modFoundFirst = mod;
+				}
+		
+				if(modFoundFirst != "")
+				{
+					sound = Sound.fromFile('mods/$modFoundFirst/' + gamingPath);
+					Cache.addToCache(gamingPath, sound, "sound");
+				}
+				else
+				#end
+					return "assets/" + gamingPath;
+			}
+
+			return Cache.getFromCache(gamingPath, "sound");
+		}
 	}
 
 	// haha leather goes coding---
@@ -218,33 +298,29 @@ class Util
 	}
 
 	
-	public static function loadModSound(path:String, ?autoPlay:Bool = false, ?persist:Bool = false):FlxSound
+	public static function clearMemoryStuff()
 	{
-		#if sys
-		var modFoundFirst:String = "";
-
-		for(mod in Mods.activeMods)
+		for (key in Cache.imageCache.keys())
 		{
-			if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/' + path + soundExt))
-				modFoundFirst = mod;
+			if (key != null)
+			{
+				Assets.cache.clear(key);
+				Cache.imageCache.remove(key);
+			}
 		}
 
-		if(modFoundFirst != "")
+		Cache.imageCache = [];
+		
+		for (key in Cache.soundCache.keys())
 		{
-			var sound = new ModSoundUtil().loadCoolModdedSound('mods/$modFoundFirst/' + path + soundExt);
-
-			sound.persist = persist;
-
-			if(autoPlay)
-				sound.play();
-
-			sound.active = true;
-
-			return sound;
+			if (key != null)
+			{
+				openfl.Assets.cache.clear(key);
+				Cache.soundCache.remove(key);
+			}
 		}
-		#end
 
-		return new FlxSound();
+		Cache.soundCache = [];
 	}
 }
 

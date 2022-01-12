@@ -107,26 +107,13 @@ class HitsoundMenu extends BasicSubState
 
 	function playCurrentHitsound()
 	{
-		var hitsoundList:Dynamic = getHitsounds();
-		var daHitsound:Dynamic;
+		var hitsoundList:Dynamic = menus.HitsoundMenu.getHitsounds();
 
-		daHitsound = 'assets/sounds/gameplay/hitsounds/' + hitsoundList[Options.getData('hitsound')].fileName + Util.soundExt;
-		
-        #if sys
-        Mods.updateActiveMods();
-        
-        if(Mods.activeMods.length > 0)
-        {
-            for(mod in Mods.activeMods)
-            {
-                if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/sounds/gameplay/hitsounds/' + hitsoundList[Options.getData('hitsound')].fileName + Util.soundExt))
-                {
-					daHitsound = 'mods/$mod/sounds/gameplay/hitsounds/' + hitsoundList[Options.getData('hitsound')].fileName + Util.soundExt;
-                }
-            }
-        }
-        #end
-		FlxG.sound.play(daHitsound, 1, false);
+		var hitSound:FlxSound;
+
+		hitSound = FlxG.sound.load(Util.getSound('gameplay/hitsounds/${hitsoundList[Options.getData('hitsound')].fileName}'));
+
+		hitSound.play(true);
 	}
 
 	public static function getHitsounds()

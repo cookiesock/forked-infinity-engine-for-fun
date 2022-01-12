@@ -178,6 +178,8 @@ class PlayState extends BasicState
 
 		super();
 
+		//new Handler("test", true, "godielmfao", true);
+
 		if(songName != null)
 		{
 			songName = songName.toLowerCase();
@@ -222,7 +224,7 @@ class PlayState extends BasicState
 		persistentUpdate = true;
 		persistentDraw = true;
 
-		playCurrentHitsound(0.1); // preload hitsound lol
+		playCurrentHitsound(0); // preload hitsound lol
 		
 		if (FlxG.sound.music != null) {
 			FlxG.sound.music.stop();
@@ -274,7 +276,7 @@ class PlayState extends BasicState
 			speed = 0.1;
 
 		Conductor.recalculateStuff(songMultiplier);
-		Conductor.safeZoneOffset *= songMultiplier;
+		//Conductor.safeZoneOffset *= songMultiplier;
 		
 		// commented out speakers/gf because my pc sucks rn - swordcube
 		// that should hopefully no longer be the case on christmas - also swordcube
@@ -531,7 +533,7 @@ class PlayState extends BasicState
 
 		notes.sort(sortByShit);
 
-		Conductor.songPosition = 0 - (Conductor.crochet * 4.5);
+		Conductor.songPosition = 0 - ((Conductor.crochet * songMultiplier) * 4.5);
 
 		var dialogueBoxTest:DialogueBox = new DialogueBox(100, FlxG.height * 0.65);
 		dialogueBoxTest.scrollFactor.set();
@@ -561,6 +563,8 @@ class PlayState extends BasicState
 		ratingsText.cameras = [hudCam];
 		
 		super.create();
+
+		trace(Conductor.safeZoneOffset);
 	}
 
 	public function msTextFade()
@@ -581,11 +585,14 @@ class PlayState extends BasicState
 	{
 		super.update(elapsed);
 
+		setPitch();
+
 		updateAccuracyStuff();
 
-		Conductor.songPosition += (FlxG.elapsed * 1000) * songMultiplier;
+		if(!endingSong)
+			Conductor.songPosition += (FlxG.elapsed * 1000) * songMultiplier;
 
-		if(!countdownStarted)
+		if(!countdownStarted && !endingSong)
 		{
 			if(FlxG.sound.music != null) // resync song pos lol
 			{
@@ -593,6 +600,8 @@ class PlayState extends BasicState
 				{
 					if(FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 					{
+						FlxG.sound.music.time = Conductor.songPosition;
+						
 						resyncVocals();
 					}
 				}
@@ -723,7 +732,7 @@ class PlayState extends BasicState
 
 				if(!countdownStarted)
 				{
-					if(Conductor.songPosition >= (!note.isSustainNote ? note.strum : note.strum - 83))
+					if(Conductor.songPosition >= (!note.isSustainNote ? note.strum : note.strum - (Conductor.safeZoneOffset / 2)))
 					{
 						if(vocals != null)
 							vocals.volume = 1;
@@ -889,41 +898,50 @@ class PlayState extends BasicState
 
 	override public function onFocus()
 	{
-		FlxG.sound.music.time = Conductor.songPosition;
-		resyncVocals(true);
 		super.onFocus(); // this might be important lmao
+
+		FlxG.sound.music.time = Conductor.songPosition;
+					
+		resyncVocals(true);
 	}
+
+	var endingSong:Bool = false;
 
 	function endSong()
 	{
-		if(!storyMode)
+		if(!endingSong)
 		{
-			FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
+			endingSong = true;
 
-			menus.FreeplayMenuState.curSpeed = songMultiplier;
-
-			transIn = FlxTransitionableState.defaultTransIn;
-			transOut = FlxTransitionableState.defaultTransOut;
-			transitionState(new menus.FreeplayMenuState());
-		}
-		else
-		{
-			storyPlaylist.remove(storyPlaylist[0]);
-
-			if(storyPlaylist.length <= 0)
+			if(!storyMode)
 			{
+				FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
+	
+				menus.FreeplayMenuState.curSpeed = songMultiplier;
+	
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
-				FlxTransitionableState.skipNextTransIn = false;
-				FlxTransitionableState.skipNextTransOut = false;
-				FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
-				transitionState(new menus.StoryModeState());
+				transitionState(new menus.FreeplayMenuState());
 			}
 			else
 			{
-				FlxTransitionableState.skipNextTransIn = true;
-				FlxTransitionableState.skipNextTransOut = true;
-				transitionState(new PlayState(storyPlaylist[0].toLowerCase(), storedDifficulty, storyMode));
+				storyPlaylist.remove(storyPlaylist[0]);
+	
+				if(storyPlaylist.length <= 0)
+				{
+					transIn = FlxTransitionableState.defaultTransIn;
+					transOut = FlxTransitionableState.defaultTransOut;
+					FlxTransitionableState.skipNextTransIn = false;
+					FlxTransitionableState.skipNextTransOut = false;
+					FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
+					transitionState(new menus.StoryModeState());
+				}
+				else
+				{
+					FlxTransitionableState.skipNextTransIn = true;
+					FlxTransitionableState.skipNextTransOut = true;
+					transitionState(new PlayState(storyPlaylist[0].toLowerCase(), storedDifficulty, storyMode));
+				}
 			}
 		}
 	}
@@ -947,6 +965,7 @@ class PlayState extends BasicState
 				if (FlxG.sound.music != null)
 				{
 					FlxG.sound.music.time = Conductor.songPosition;
+
 					resyncVocals(true);
 				}
 
@@ -963,8 +982,6 @@ class PlayState extends BasicState
 	override public function beatHit()
 	{
 		super.beatHit();
-
-		resyncVocals();
 		
 		if (!countdownStarted) {
 			if (song.notes[Math.floor(curStep / 16)] != null)
@@ -1021,24 +1038,16 @@ class PlayState extends BasicState
 					countdown1.cameras = [otherCam];
 					add(countdown1);
 				case 4:
+					Conductor.songPosition = 0;
+
 					countdownStarted = false;
 
-					#if sys
-					if(!Assets.exists(Util.getInst(song.song.toLowerCase())))
-						FlxG.sound.music = Util.loadModSound("songs/" + song.song.toLowerCase() + "/Inst", true, true);
-					else
-					#end
 					FlxG.sound.playMusic(Util.getInst(song.song.toLowerCase()), 1, false);
 
 					if(song.needsVoices)
 					{
 						FlxG.sound.music.pause();
 
-						#if sys
-						if(!Assets.exists(Util.getVoices(song.song.toLowerCase())))
-							vocals = Util.loadModSound("songs/" + song.song.toLowerCase() + "/Voices", true, false);
-						else
-						#end
 						vocals = FlxG.sound.play(Util.getVoices(song.song.toLowerCase()));
 
 						vocals.pause();
@@ -1064,11 +1073,7 @@ class PlayState extends BasicState
 
 					FlxG.sound.list.add(vocals);
 
-					if(FlxG.sound.music.active)
-					{
-						// do nothing, too lazy to remove lol
-					}
-					else
+					if(!FlxG.sound.music.active)
 					{
 						FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
 						transitionState(new menus.MainMenuState());
@@ -1105,7 +1110,11 @@ class PlayState extends BasicState
 		var gamerValue = 20 * songMultiplier;
 		
 		if (FlxG.sound.music.time > Conductor.songPosition + gamerValue || FlxG.sound.music.time < Conductor.songPosition - gamerValue || FlxG.sound.music.time < 500 && (FlxG.sound.music.time > Conductor.songPosition + 5 || FlxG.sound.music.time < Conductor.songPosition - 5))
+		{
+			FlxG.sound.music.time = Conductor.songPosition;
+
 			resyncVocals();
+		}
 	}
 	
 	public function changeHealth(gainHealth:Bool)
@@ -1120,6 +1129,7 @@ class PlayState extends BasicState
 	function startSong() // for doin shit when the song starts
 	{
 		Conductor.recalculateStuff(songMultiplier);
+
 		resyncVocals(true);
 	}
 
@@ -1131,8 +1141,12 @@ class PlayState extends BasicState
 		{
 			if(vocals.active)
 			{
-				if(vocals.time > FlxG.sound.music.time + 20 || vocals.time < FlxG.sound.music.time - 20)
+				if((vocals.time > FlxG.sound.music.time + 20 || vocals.time < FlxG.sound.music.time - 20) || force)
 				{
+					FlxG.sound.music.pause();
+					FlxG.sound.music.time = Conductor.songPosition;
+					FlxG.sound.music.play();
+
 					vocals.pause();
 					vocals.time = FlxG.sound.music.time;
 					vocals.play();
@@ -1219,7 +1233,7 @@ class PlayState extends BasicState
 			}
 			else
 			{
-				if((!note.isSustainNote ? note.strum : note.strum - 83) <= Conductor.songPosition && note.mustPress)
+				if((!note.isSustainNote ? note.strum : note.strum - (Conductor.safeZoneOffset / 2)) <= Conductor.songPosition && note.mustPress)
 					possibleNotes.push(note);
 			}
 		}
@@ -1241,7 +1255,7 @@ class PlayState extends BasicState
 
 					if(!note.isSustainNote)
 					{
-						var noteMs = Conductor.songPosition - note.strum;
+						var noteMs = (Conductor.songPosition - note.strum) / songMultiplier;
 
 						if(botplay)
 							noteMs = 0;
@@ -1443,25 +1457,12 @@ class PlayState extends BasicState
 	function playCurrentHitsound(?volume:Float = 1)
 	{
 		var hitsoundList:Dynamic = menus.HitsoundMenu.getHitsounds();
-		var daHitsound:Dynamic;
 
-		daHitsound = 'assets/sounds/gameplay/hitsounds/' + hitsoundList[Options.getData('hitsound')].fileName + Util.soundExt;
-		
-        #if sys
-        Mods.updateActiveMods();
-        
-        if(Mods.activeMods.length > 0)
-        {
-            for(mod in Mods.activeMods)
-            {
-                if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/sounds/gameplay/hitsounds/' + hitsoundList[Options.getData('hitsound')].fileName + Util.soundExt))
-                {
-					daHitsound = 'mods/$mod/sounds/gameplay/hitsounds/' + hitsoundList[Options.getData('hitsound')].fileName + Util.soundExt;
-                }
-            }
-        }
-        #end
-		FlxG.sound.play(daHitsound, volume, false);
+		var hitSound:FlxSound;
+
+		hitSound = FlxG.sound.load(Util.getSound('gameplay/hitsounds/${hitsoundList[Options.getData('hitsound')].fileName}'), volume);
+
+		hitSound.play(true);
 	}
 
 	function updateAccuracyStuff()
