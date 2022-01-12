@@ -533,7 +533,7 @@ class PlayState extends BasicState
 
 		notes.sort(sortByShit);
 
-		Conductor.songPosition = 0 - ((Conductor.crochet * songMultiplier) * 4.5);
+		Conductor.songPosition = 0 - (Conductor.crochet * 4.5); // leather i'm pretty sure whatever the fuck you did to this causes issues
 
 		var dialogueBoxTest:DialogueBox = new DialogueBox(100, FlxG.height * 0.65);
 		dialogueBoxTest.scrollFactor.set();
