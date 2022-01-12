@@ -50,8 +50,9 @@ class OptionsState extends BasicState
 			["Adjust Scroll Speed", "menu", "Change how fast your notes fall on-screen."],
 			["Downscroll", "checkbox", "Makes the notes scroll downwards instead of upwards.", "downscroll"],
 			["Middlescroll", "checkbox", "Makes the notes centered on-screen.", "middlescroll"],
+			["Ghost Tapping", "checkbox", "When disabled, If you try to hit a note that doesn't exist\nThen you will get a miss.", "ghost-tapping"],
 			["Botplay", "checkbox", "When enabled, All notes will get hit for you.", "botplay"],
-			["FC Mode", "checkbox", "When enabled, you MUST get 0 misses on a song\nor else the game closes/you get blueballed.", "fc-mode"]
+			["FC Mode", "checkbox", "When enabled, you MUST get 0 misses on a song\nor else the game closes/you get blueballed.", "fc-mode"],
 		],
 	];
 

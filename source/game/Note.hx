@@ -100,7 +100,7 @@ class Note extends FlxSprite {
 				}
 
 				@:privateAccess
-				if(PlayState.instance.downscroll)
+				if(Options.getData('downscroll'))
 					flipY = true;
 
 				alpha = 0.6;
@@ -174,7 +174,7 @@ class Note extends FlxSprite {
 				}
 
 				@:privateAccess
-				if(PlayState.instance.downscroll)
+				if(Options.getData('downscroll'))
 					flipY = true;
 
 				alpha = 0.6;
