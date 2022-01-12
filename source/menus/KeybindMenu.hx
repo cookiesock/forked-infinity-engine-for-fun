@@ -71,6 +71,8 @@ class KeybindMenu extends BasicSubState
 			daKeybinds.add(daKeybindText);
 		}
 
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+
 		changeSelection();
 	}
 

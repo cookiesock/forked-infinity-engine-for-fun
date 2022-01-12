@@ -53,6 +53,8 @@ class HitsoundMenu extends BasicSubState
 		scrollSpeedWarning.borderSize = 2.4;
 		add(scrollSpeedWarning);
 
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+
 		super.create();
 	}
 

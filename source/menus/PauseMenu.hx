@@ -1,5 +1,7 @@
 package menus;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import menus.FreeplayMenuState;
 import flixel.FlxG;
 import flixel.FlxCamera;
@@ -30,6 +32,9 @@ class PauseMenu extends BasicSubState
 		"Back",
 		"Botplay",
 		"Ghost Tapping",
+		"Note Splashes",
+		"Adjust Hitsounds",
+		"Manage Keybinds",
 	];
 
 	var pauseOptions:Array<String> = [];
@@ -39,6 +44,7 @@ class PauseMenu extends BasicSubState
 	var practiceText:FlxText;
 	var botplayText:FlxText;
 	var descText:FlxText;
+	var warningText:FlxText; // shows up if you've changed smth like note splashes
 	var bg:FlxSprite;
 
 	public function new(?x:Float, ?y:Float)
@@ -46,8 +52,6 @@ class PauseMenu extends BasicSubState
 		super();
 
 		pauseOptions = defaultPauseOptions;
-
-		// if it crashes i am WAY too tired to fix rn - sworduceb
 
 		pauseMusic = new FlxSound().loadEmbedded('assets/music/breakfast' + Util.soundExt, true, true);
 		pauseMusic.volume = 0;
@@ -59,6 +63,13 @@ class PauseMenu extends BasicSubState
 		bg.alpha = 0;
 		bg.scrollFactor.set();
 		add(bg);
+
+		warningText = new FlxText(0, FlxG.height * 0.95, 0, "", 24);
+		warningText.setFormat("assets/fonts/vcr.ttf", 24, FlxColor.WHITE, RIGHT);
+		warningText.borderStyle = OUTLINE;
+		warningText.borderSize = 2;
+		warningText.borderColor = FlxColor.BLACK;
+		add(warningText);
 
 		grpOptions = new FlxTypedGroup<AlphabetText>();
 		add(grpOptions);
@@ -94,7 +105,19 @@ class PauseMenu extends BasicSubState
 			}
 	}
 
-	override function update(elapsed:Float)
+	/*override public function openSubState(SubState:flixel.FlxSubState)
+	{
+		persistentDraw = false;
+		super.openSubState(SubState);
+	}
+
+	override public function closeSubState()
+	{
+		persistentDraw = true;
+		super.closeSubState();
+	}*/
+
+	override public function update(elapsed:Float)
 	{
 		if (pauseMusic.volume < 0.5)
 			pauseMusic.volume += 0.01 * elapsed;
@@ -149,17 +172,63 @@ class PauseMenu extends BasicSubState
 					changeSelection();
 
 				case 'Botplay':
-					game.PlayState.botplay = !game.PlayState.botplay;
-					Options.saveData('botplay', game.PlayState.botplay);
+					Options.saveData('botplay', !Options.getData('botplay'));
 					game.PlayState.botplayText.visible = Options.getData('botplay');
+					showOptionWarning(0);
 
 				case 'Ghost Tapping':
-					game.PlayState.ghostTapping = !game.PlayState.ghostTapping;
-					Options.saveData('ghost-tapping', game.PlayState.ghostTapping);
+					Options.saveData('ghost-tapping', !Options.getData('ghost-tapping'));
+					showOptionWarning(1);
+
+				case 'Note Splashes':
+					Options.saveData('note-splashes', !Options.getData('note-splashes'));
+					showOptionWarning(2);
+
+				case 'Adjust Hitsounds':
+					openSubState(new HitsoundMenu()); // can you open substates in substates? sure hope you can
+
+				case 'Manage Keybinds':
+					openSubState(new KeybindMenu());
+
+				case 'FPS Cap':
+					openSubState(new FPSCapMenu());
 			}
 		}
 
 		super.update(elapsed);
+	}
+
+	function showOptionWarning(?warning:Int = 0)
+	{
+		var swagText:String = "";
+		var daString:String = "";
+
+		switch(warning)
+		{
+			case 0:
+				swagText = Options.getData('botplay') ? "On" : "Off";
+				daString = "Botplay is now " + swagText.toLowerCase() + "!";
+			case 1:
+				swagText = Options.getData('ghost-tapping') ? "On" : "Off";
+				daString = "Ghost Tapping is now " + swagText.toLowerCase() + "!";
+			case 2:
+				swagText = Options.getData('note-splashes') ? "On" : "Off";
+				daString = "Note Splashes are now " + swagText.toLowerCase() + "!";
+		}
+
+		warningText.text = daString;
+		warningText.x = FlxG.width - warningText.width;
+
+		FlxTween.cancelTweensOf(warningText);
+		warningText.alpha = 1;
+		FlxTween.tween(warningText, {x: FlxG.width + 15, alpha: 0}, 0.4, {
+			ease: FlxEase.cubeInOut,
+			startDelay: 1,
+			onComplete: function(twn:FlxTween)
+			{
+				// do nothign because uhsdcjnkALehds
+			}
+		});
 	}
 
 	override function destroy()
