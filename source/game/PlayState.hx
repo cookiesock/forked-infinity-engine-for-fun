@@ -309,41 +309,44 @@ class PlayState extends BasicState
 
 		noteSplashFrames = Util.getSparrow('noteskins/' + game.PlayState.song.ui_Skin + '/noteSplashes');
 
-		if(!song.player2.startsWith("gf"))
+		if(!Options.getData('optimization'))
 		{
-			speakers = new Character(400, 130, song.gf);
-			//speakers.screenCenter(X);
-			speakers.scrollFactor.set(0.95, 0.95);
-			add(speakers);
+			if(!song.player2.startsWith("gf"))
+			{
+				speakers = new Character(400, 130, song.gf);
+				//speakers.screenCenter(X);
+				speakers.scrollFactor.set(0.95, 0.95);
+				add(speakers);
 
-			opponent = new Character(100, 100, song.player2);
-			//opponent.screenCenter();
-			add(opponent);
+				opponent = new Character(100, 100, song.player2);
+				//opponent.screenCenter();
+				add(opponent);
 
-			opponent.x += opponent.position[0];
-			opponent.y += opponent.position[1];
+				opponent.x += opponent.position[0];
+				opponent.y += opponent.position[1];
 
-			speakers.x += speakers.position[0];
-			speakers.y += speakers.position[1];
+				speakers.x += speakers.position[0];
+				speakers.y += speakers.position[1];
+			}
+			else
+			{
+				opponent = new Character(400, 130, song.gf);
+				//opponent.screenCenter(X);
+				opponent.scrollFactor.set(0.95, 0.95);
+				add(opponent);
+
+				opponent.x += opponent.position[0];
+				opponent.y += opponent.position[1];
+			}
+
+			player = new Character(770, 0, song.player1);
+			player.flipX = !player.flipX;
+			player.isPlayer = true;
+			add(player);
+
+			player.x += player.position[0];
+			player.y += player.position[1];
 		}
-		else
-		{
-			opponent = new Character(400, 130, song.gf);
-			//opponent.screenCenter(X);
-			opponent.scrollFactor.set(0.95, 0.95);
-			add(opponent);
-
-			opponent.x += opponent.position[0];
-			opponent.y += opponent.position[1];
-		}
-
-		player = new Character(770, 0, song.player1);
-		player.flipX = !player.flipX;
-		player.isPlayer = true;
-		add(player);
-
-		player.x += player.position[0];
-		player.y += player.position[1];
 		
 		// bpm init shit
 		bpm = song.bpm;
@@ -351,7 +354,8 @@ class PlayState extends BasicState
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 
-		camFollow.setPosition(opponent.getMidpoint().x + 150 + opponent.camOffsets[0], opponent.getMidpoint().y - 100 + opponent.camOffsets[1]);
+		if(opponent != null && opponent.active)
+			camFollow.setPosition(opponent.getMidpoint().x + 150 + opponent.camOffsets[0], opponent.getMidpoint().y - 100 + opponent.camOffsets[1]);
 
 		add(camFollow);
 
@@ -438,18 +442,36 @@ class PlayState extends BasicState
 
 		if(Options.getData('downscroll'))
 			healthBarBG.y = 60;
+
+		var healthColor1:Int = 0xFFA1A1A1;
+		var healthColor2:Int = 0xFFA1A1A1;
+
+		var icon1:String = "";
+		var icon2:String = "";
+
+		if(opponent != null && opponent.active)
+		{
+			healthColor1 = opponent.healthColor;
+			icon1 = opponent.healthIcon;
+		}
+
+		if(player != null && player.active)
+		{
+			healthColor2 = player.healthColor;
+			icon2 = player.healthIcon;
+		}
 		
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
 		healthBar.scrollFactor.set();
-		healthBar.createFilledBar(opponent.healthColor, player.healthColor);
+		healthBar.createFilledBar(healthColor1, healthColor2);
 		add(healthBar);
 
 		// health bar icons
-		opponentIcon = new Icon(Util.getCharacterIcons(opponent.healthIcon), false);
+		opponentIcon = new Icon(Util.getCharacterIcons(icon1), null, false, null, null, null, icon1);
 		opponentIcon.y = healthBar.y - (opponentIcon.height / 2);
 		
-		playerIcon = new Icon(Util.getCharacterIcons(player.healthIcon), true);
+		playerIcon = new Icon(Util.getCharacterIcons(icon2), null, true, null, null, null, icon1);
 		playerIcon.y = healthBar.y - (playerIcon.height / 2);
 
 		add(playerIcon);
@@ -727,7 +749,8 @@ class PlayState extends BasicState
 						if(vocals != null)
 							vocals.volume = 1;
 
-						opponent.playAnim(singAnims[note.noteID % 4], true);
+						if(opponent != null && opponent.active)
+							opponent.playAnim(singAnims[note.noteID % 4], true);
 
 						note.active = false;
 						notes.remove(note);
@@ -741,7 +764,8 @@ class PlayState extends BasicState
 								funnyNoteThingyIGuessLol.playAnim("strum", true);
 						};
 
-						opponent.holdTimer = 0;
+						if(opponent != null && opponent.active)
+							opponent.holdTimer = 0;
 					}
 				}
 			}
@@ -807,8 +831,12 @@ class PlayState extends BasicState
 
 						changeHealth(false);
 
-						player.holdTimer = 0;
-						player.playAnim(singAnims[note.noteID % 4] + "miss", true);
+						if(player != null && player.active)
+						{
+							player.holdTimer = 0;
+							player.playAnim(singAnims[note.noteID % 4] + "miss", true);
+						}
+
 						FlxG.sound.play(Util.getSound('gameplay/missnote' + FlxG.random.int(1, 3)), 0.6);
 
 						score -= 10;
@@ -865,14 +893,17 @@ class PlayState extends BasicState
 
 		if(song.notes[Std.int(curStep / 16)] != null)
 		{
-			var midPos = song.notes[Std.int(curStep / 16)].mustHitSection ? player.getMidpoint() : opponent.getMidpoint();
-			if(song.notes[Std.int(curStep / 16)].mustHitSection)
+			if((opponent != null && opponent.active) && (player != null && player.active))
 			{
-				if(camFollow.x != midPos.x - 100 + player.camOffsets[0])
-					camFollow.setPosition(midPos.x - 100 + player.camOffsets[0], midPos.y - 100 + player.camOffsets[1]);
-			} else {
-				if(camFollow.x != midPos.x + 150 + opponent.camOffsets[0])
-					camFollow.setPosition(midPos.x + 150 + opponent.camOffsets[0], midPos.y - 100 + opponent.camOffsets[1]);	
+				var midPos = song.notes[Std.int(curStep / 16)].mustHitSection ? player.getMidpoint() : opponent.getMidpoint();
+				if(song.notes[Std.int(curStep / 16)].mustHitSection)
+				{
+					if(camFollow.x != midPos.x - 100 + player.camOffsets[0])
+						camFollow.setPosition(midPos.x - 100 + player.camOffsets[0], midPos.y - 100 + player.camOffsets[1]);
+				} else {
+					if(camFollow.x != midPos.x + 150 + opponent.camOffsets[0])
+						camFollow.setPosition(midPos.x + 150 + opponent.camOffsets[0], midPos.y - 100 + opponent.camOffsets[1]);	
+				}
 			}
 		}
 
@@ -990,10 +1021,10 @@ class PlayState extends BasicState
 			playerIcon.updateHitbox();
 			opponentIcon.updateHitbox();
 
-			if(player.active)
+			if(player != null && player.active)
 				playerIcon.antialiasing = player.antialiasing;
 
-			if(opponent.active)
+			if(opponent != null && opponent.active)
 				opponentIcon.antialiasing = opponent.antialiasing;
 		} else {
 			countdownNum += 1;
@@ -1057,19 +1088,25 @@ class PlayState extends BasicState
 			}
 		}
 		
-		if(opponent.active)
+		if(opponent != null)
 		{
-			if((!opponent.animation.curAnim.name.startsWith("sing") || (opponent.animation.curAnim.name.startsWith("sing") && opponent.holdTimer >= Conductor.crochet / 1000)))
+			if(opponent.active)
 			{
-				opponent.dance();
-				opponent.holdTimer = 0;
+				if((!opponent.animation.curAnim.name.startsWith("sing") || (opponent.animation.curAnim.name.startsWith("sing") && opponent.holdTimer >= Conductor.crochet / 1000)))
+				{
+					opponent.dance();
+					opponent.holdTimer = 0;
+				}
 			}
 		}
 
-		if(player.active)
+		if(player != null)
 		{
-			if(!player.animation.curAnim.name.startsWith("sing"))
-				player.dance();
+			if(player.active)
+			{
+				if(!player.animation.curAnim.name.startsWith("sing"))
+					player.dance();
+			}
 		}
 
 		if(speakers != null)
@@ -1330,8 +1367,11 @@ class PlayState extends BasicState
 
 					dontHitTheseDirectionsLol[note.noteID] = true;
 
-					player.holdTimer = 0;
-					player.playAnim(singAnims[note.noteID % 4], true);
+					if(player != null && player.active)
+					{
+						player.holdTimer = 0;
+						player.playAnim(singAnims[note.noteID % 4], true);
+					}
 
 					pressed[note.noteID] = true;
 
@@ -1390,8 +1430,12 @@ class PlayState extends BasicState
 				{
 					changeHealth(false);
 		
-					player.holdTimer = 0;
-					player.playAnim(singAnims[i] + "miss", true);
+					if(player != null && player.active)
+					{
+						player.holdTimer = 0;
+						player.playAnim(singAnims[i] + "miss", true);
+					}
+
 					FlxG.sound.play(Util.getSound('gameplay/missnote' + FlxG.random.int(1, 3)), 0.6);
 		
 					score -= 10;
@@ -1416,8 +1460,12 @@ class PlayState extends BasicState
 
 						changeHealth(true);
 
-						player.holdTimer = 0;
-						player.playAnim(singAnims[note.noteID % 4], true);
+						if(player != null && player.active)
+						{
+							player.holdTimer = 0;
+							player.playAnim(singAnims[note.noteID % 4], true);
+						}
+
 						playerStrumArrows.members[note.noteID].playAnim("confirm", true);
 
 						note.active = false;
@@ -1429,7 +1477,7 @@ class PlayState extends BasicState
 			}
 		}
 
-		if(player.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !pressed.contains(true))
+		if(player != null && player.active && (player.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !pressed.contains(true)))
 			if(player.animation.curAnim.name.startsWith('sing'))
 				player.dance();
 	}

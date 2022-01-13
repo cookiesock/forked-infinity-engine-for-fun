@@ -1,5 +1,6 @@
 package ui;
 
+import flixel.graphics.FlxGraphic;
 import mods.Mods;
 import lime.utils.Assets;
 import ui.TrackerSprite.TrackerDirection;
@@ -14,6 +15,14 @@ class Icon extends TrackerSprite
 	public function new(?iconPath:String = "test", ?tracker:FlxSprite, ?isPlayer:Bool = false, ?xOff:Float = 10, ?yOff:Float = -30, ?direction:TrackerDirection = RIGHT, ?swagChar:String = "bf")
 	{
 		super(tracker, xOff, yOff, direction);
+
+		if(!Std.isOfType(Util.getImage(iconPath, false), FlxGraphic))
+		{
+			trace("Oops! Looks like the icon you tried to load: " + iconPath + " doesn't exist.");
+			iconPath = "characters/images/placeholder/icons";
+		}
+
+		trace(iconPath);
 
 		switch(swagChar)
 		{
