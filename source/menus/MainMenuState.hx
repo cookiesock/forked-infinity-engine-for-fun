@@ -95,6 +95,10 @@ class MainMenuState extends BasicState
 		BasicState.changeAppTitle(Util.engineName, "Main Menu");
 	
 		super.create();
+
+        #if discord_rpc
+        DiscordRPC.changePresence("In Main Menu", null);
+        #end
 	}
 
 	override public function update(elapsed:Float)

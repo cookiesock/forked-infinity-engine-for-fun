@@ -13,6 +13,7 @@ import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+import DiscordRPC;
 
 using flixel.util.FlxSpriteUtil;
 
@@ -30,6 +31,8 @@ class TitleScreenState extends BasicState
 
 	override public function create():Void
 	{
+		super.create();
+
 		var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
 		diamond.persist = true;
 		diamond.destroyOnNoUse = false;
@@ -44,13 +47,6 @@ class TitleScreenState extends BasicState
 
 		FlxTransitionableState.skipNextTransIn = true;
 		FlxTransitionableState.skipNextTransOut = true;
-
-		/*var sprite = new FlxSprite();
-		sprite.makeGraphic(15, 15, FlxColor.TRANSPARENT);
-		sprite.drawCircle();
-		FlxG.mouse.load(sprite.pixels);*/
-
-		//k but what if no, the cursor shouldn't have to be a circle ldkskl
 
 		Options.init();
 		Mods.init();
@@ -93,19 +89,19 @@ class TitleScreenState extends BasicState
 		add(new AlphabetText(0, 100, '"the quick brown fox jumps \nover the lazy dog"\n\n1234567890\n\n!?.-+()*><&_\'', 35));
 		#end
 
-		/*#if desktop
+		#if discord_rpc
+		if(!DiscordRPC.started && Options.getData("discord-rpc"))
+			DiscordRPC.initialize();
+
 		Application.current.onExit.add(function (exitCode) {
-			Options.saveSettings();
-			trace("GAME CLOSED WITH CODE: " + exitCode);
-		});
-		#end*/
+			DiscordRPC.shutdown();
+		}, false, 100);
+		#end
 
 		if(Options.getData('volume') != null)
 			FlxG.sound.volume = Options.getData('volume');
 
 		BasicState.changeAppTitle(Util.engineName, "Title Screen");
-
-		super.create();
 	}
 
 	override public function update(elapsed:Float):Void

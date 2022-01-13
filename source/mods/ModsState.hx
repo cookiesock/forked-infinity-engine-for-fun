@@ -69,6 +69,10 @@ class ModsState extends BasicState
         BasicState.changeAppTitle(Util.engineName, "Mods Menu");
 
         super.create();
+
+        #if discord_rpc
+        DiscordRPC.changePresence("In Mods Menu", null);
+        #end
     }
 
     override function update(elapsed:Float)

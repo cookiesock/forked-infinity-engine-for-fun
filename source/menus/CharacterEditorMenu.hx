@@ -100,6 +100,8 @@ class CharacterEditorMenu extends BasicState
 
         offsetX = character.offset.x;
         offsetY = character.offset.y;
+
+        refreshDiscordRPC();
     }
 
     override public function update(elapsed:Float)
@@ -198,6 +200,13 @@ class CharacterEditorMenu extends BasicState
 
             updateAnimList();
         }
+    }
+
+    function refreshDiscordRPC()
+    {
+        #if discord_rpc
+        DiscordRPC.changePresence("In Character Editor - Editing " + curChar, null);
+        #end
     }
 
     function changeAnim(?change:Int = 0)

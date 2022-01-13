@@ -33,6 +33,10 @@
             "value": true
         },
         {
+            "name": "discord-rpc",
+            "value": true
+        },
+        {
             "name": "remove-bg",
             "value": false
         },

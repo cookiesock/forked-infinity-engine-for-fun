@@ -14,6 +14,7 @@ import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
+import DiscordRPC;
 
 using StringTools;
 
@@ -151,6 +152,15 @@ class FreeplayMenuState extends BasicState
         updateSelection();
 
         BasicState.changeAppTitle(Util.engineName, "Freeplay Menu");
+    }
+
+    override public function create()
+    {
+        super.create();
+
+        #if discord_rpc
+        DiscordRPC.changePresence("In Freeplay", null);
+        #end
     }
 
     override public function update(elapsed:Float)

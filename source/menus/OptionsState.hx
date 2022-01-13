@@ -34,7 +34,8 @@ class OptionsState extends BasicState
 			["Graphics", "menu", "Change how things look in menus/gameplay."],
 			["Gameplay", "menu", "Change how things behave during gameplay."],
 			["Tools", "menu", "Tools for making a mod easier."],
-			["Reset Data", "menu", "Reset all your save data."],
+			["Misc", "menu", "Change miscellaneous game behaviors such as Discord RPC."],
+			["Reset Save Data", "menu", "Reset all your save data."],
 		],
 		"graphics" => [
 			["Back", "menu", ""],
@@ -59,6 +60,10 @@ class OptionsState extends BasicState
 			["Back", "menu", ""],
 			["Character Editor", "menu", "Make a new character with the Character Editor."],
 		],
+		"misc" => [
+			["Back", "menu", ""],
+			["Discord RPC", "checkbox", "When disabled, Discord will not let your friends know\nthat you are playing " + Util.engineName + "." + "\nThe game must be restarted for this to take effect.", "discord-rpc"]
+		]
 	];
 
 	var optionsList:Array<Dynamic> = [];
@@ -109,6 +114,10 @@ class OptionsState extends BasicState
 		BasicState.changeAppTitle(Util.engineName, "Options Menu");
 		
 		super.create();
+
+        #if discord_rpc
+        DiscordRPC.changePresence("In Options", null);
+        #end
 	}
 
 	override public function update(elapsed:Float)
@@ -159,6 +168,12 @@ class OptionsState extends BasicState
 							reloadOptionsList(true);
 							selectedOption = 0;
 							changeSelection();
+						case "Misc":
+							optionsState = 'misc';
+							optionsList = defaultOptionsList["misc"];
+							reloadOptionsList(true);
+							selectedOption = 0;
+							changeSelection();
 						// gameplay
 						case "Adjust Offset":
 							openSubState(new OffsetMenu());
@@ -166,7 +181,7 @@ class OptionsState extends BasicState
 							openSubState(new KeybindMenu());
 						case "Adjust Scroll Speed":
 							openSubState(new ScrollSpeedMenu());
-						case "Reset Data":
+						case "Reset Save Data":
 							openSubState(new ResetDataMenu());
 						case "FPS Cap":
 							openSubState(new FPSCapMenu());

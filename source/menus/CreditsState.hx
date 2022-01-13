@@ -71,6 +71,10 @@ class CreditsState extends BasicState
 
             add(description);
             updateDesc(0);
+
+            #if discord_rpc
+            DiscordRPC.changePresence("In Credits", null);
+            #end
         }
     
         override public function update(elapsed:Float)

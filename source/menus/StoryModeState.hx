@@ -224,6 +224,10 @@ class StoryModeState extends BasicState {
         BasicState.changeAppTitle(Util.engineName, "Story Mode Menu");
         
         super.create();
+
+        #if discord_rpc
+        DiscordRPC.changePresence("In Story Mode", null);
+        #end
     }
 
     var daRawSongs:Dynamic;

@@ -216,6 +216,10 @@ class PlayState extends BasicState
 	{
 		BasicState.changeAppTitle(Util.engineName, "Playing " + song.song + " on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed");
 
+        #if discord_rpc
+        DiscordRPC.changePresence("Playing " + song.song + " on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed", null);
+        #end
+
 		persistentUpdate = true;
 		persistentDraw = true;
 
@@ -613,7 +617,7 @@ class PlayState extends BasicState
 			{
 				if(FlxG.sound.music.active) // resync song pos lol
 				{
-					if(FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
+					if((FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20) && Conductor.songPosition > Conductor.safeZoneOffset)
 					{
 						resyncVocals(true);
 					}
