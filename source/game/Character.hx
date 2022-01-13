@@ -56,14 +56,8 @@ class Character extends FlxSprite {
             frames = Util.getSparrow('characters/images/$name/assets', false);
         #end
 
-        // SPIRIT FUCKING CRASHES THE GAME IF THIS IS REMOVED, EITHER RE-EXPORT HIM AS AN XML
-        // OR LEAVE HIM AS IS NOW, OTHERWISE THE GAME WILL CRASH
-        // fuck you
-
-        if(json.scale != 1) {
-            setGraphicSize(Std.int(width * json.scale));
-            updateHitbox();
-        }
+        setGraphicSize(Std.int(width * json.scale));
+        updateHitbox();
 
         flipX = json.flip_x;
         antialiasing = !json.no_antialiasing;
@@ -100,11 +94,15 @@ class Character extends FlxSprite {
             holdTimer += elapsed;
     }
 
-    public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0) {
+    public function playAnim(AnimName:String, Force:Null<Bool> = false, Reversed:Null<Bool> = false, Frame:Null<Int> = 0, ?offsetX:Null<Float>, ?offsetY:Null<Float>) {
         if(animation.getByName(AnimName) != null)
         {
             animation.play(AnimName, Force, Reversed, Frame);
-            offset.set(offsetMap[AnimName][0], offsetMap[AnimName][1]);
+
+            if(offsetX != null)
+                offset.set(offsetX, offsetY);
+            else
+                offset.set(offsetMap[AnimName][0], offsetMap[AnimName][1]);
         }
     }
 

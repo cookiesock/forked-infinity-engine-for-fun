@@ -33,6 +33,7 @@ class OptionsState extends BasicState
 		"selectables" => [
 			["Graphics", "menu", "Change how things look in menus/gameplay."],
 			["Gameplay", "menu", "Change how things behave during gameplay."],
+			["Tools", "menu", "Tools for making a mod easier."],
 			["Reset Data", "menu", "Reset all your save data."],
 		],
 		"graphics" => [
@@ -53,6 +54,10 @@ class OptionsState extends BasicState
 			["Ghost Tapping", "checkbox", "When disabled, If you try to hit a note that doesn't exist\nThen you will get a miss.", "ghost-tapping"],
 			["Botplay", "checkbox", "When enabled, All notes will get hit for you.", "botplay"],
 			["FC Mode", "checkbox", "When enabled, you MUST get 0 misses on a song\nor else the game closes/you get blueballed.", "fc-mode"],
+		],
+		"tools" => [
+			["Back", "menu", ""],
+			["Character Editor", "menu", "Make a new character with the Character Editor."],
 		],
 	];
 
@@ -148,6 +153,13 @@ class OptionsState extends BasicState
 							reloadOptionsList(true);
 							selectedOption = 0;
 							changeSelection();
+						case "Tools":
+							optionsState = 'tools';
+							optionsList = defaultOptionsList["tools"];
+							reloadOptionsList(true);
+							selectedOption = 0;
+							changeSelection();
+						// gameplay
 						case "Adjust Offset":
 							openSubState(new OffsetMenu());
 						case "Manage Keybinds":
@@ -160,6 +172,9 @@ class OptionsState extends BasicState
 							openSubState(new FPSCapMenu());
 						case "Adjust Hitsounds":
 							openSubState(new HitsoundMenu());
+						// tools
+						case "Character Editor":
+							transitionState(new CharacterEditorMenu());
 					}
 				case "checkbox":
 					Options.saveData(optionsList[selectedOption][3], !Options.getData(optionsList[selectedOption][3]));
