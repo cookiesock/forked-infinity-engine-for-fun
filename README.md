@@ -7,10 +7,14 @@ With (hopefully) easier modding with slightly more organized folder layouts, new
 
 # What we have planned
 - Easy Modding (Working on it)
-- Add Stages
-- Add Modcharts/Lua Scripting
-- Add Custom Notes
-- Add Extra Keys (1k to 9k, Could change)
+- Stages/Backgrounds (Yes we did characters before stages)
+- Modcharts/Lua Scripting
+- Custom Notes (Using LUA or smth, could have a json for storing shit like "act like death note or use lua file")
+- Extra Keys (1k to 9k, Could change eventually)
+
+# Finished
+- Basic Gameplay (Characters, Health, Score/Accuracy/Misses, Notes)
+- Menus (Title Screen is slightly unfinished)
 
 ## Credits
 - Raf - Project Owner, Coder and Artist ([GitHub](https://github.com/RafaelGiacom)) ([GameJolt](https://gamejolt.com/@RafaelGiacom)) ([GameBanana](https://gamebanana.com/members/1739332))
