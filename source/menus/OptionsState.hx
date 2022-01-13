@@ -155,7 +155,7 @@ class OptionsState extends BasicState
 						case "Adjust Scroll Speed":
 							openSubState(new ScrollSpeedMenu());
 						case "Reset Data":
-							Options.resetData();
+							openSubState(new ResetDataMenu());
 						case "FPS Cap":
 							openSubState(new FPSCapMenu());
 						case "Adjust Hitsounds":
