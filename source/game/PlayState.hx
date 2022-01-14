@@ -412,10 +412,23 @@ class PlayState extends BasicState
 
 		for(i in 0...8) { // add strum arrows
 			var isPlayerArrow:Bool = i > 3;
-			var funnyArrowX:Float = 65;
-			
-			if(isPlayerArrow) {
-				funnyArrowX += 242;
+			var funnyArrowX:Float = 0;
+
+			if(!Options.getData('middlescroll'))
+			{
+				funnyArrowX = 65;
+				
+				if(isPlayerArrow) {
+					funnyArrowX += 242;
+				}
+			}
+			else
+			{
+				funnyArrowX = -9999;
+				
+				if(isPlayerArrow) {
+					funnyArrowX = -35;
+				}
 			}
 			
 			var theRealStrumArrow:StrumArrow = new StrumArrow(funnyArrowX + i * 112, strumArea.y - (i % 4 + 1) * (7 + i * 1), i, song.ui_Skin);
@@ -1369,7 +1382,7 @@ class PlayState extends BasicState
 								score += ratingScores[0];
 								marvelous += 1;
 								funnyHitStuffsLmao += 1;
-								msText.color = FlxColor.PINK;				
+								msText.color = 0xFFB042F5;				
 							case 'sick':
 								score += ratingScores[0];
 								sicks += 1;

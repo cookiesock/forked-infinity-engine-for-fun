@@ -283,6 +283,8 @@ class FreeplayMenuState extends BasicState
 
 		speedText.x = FlxG.width - speedText.width;
 		speedText.text = "Speed: " + FlxMath.roundDecimal(curSpeed, 2) + " (SHIFT+R)";
+
+        refreshSpeed();
     }
 
     function updateSelection()
