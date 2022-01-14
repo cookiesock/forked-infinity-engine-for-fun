@@ -427,7 +427,7 @@ class PlayState extends BasicState
 				funnyArrowX = -9999;
 				
 				if(isPlayerArrow) {
-					funnyArrowX = -35;
+					funnyArrowX = -30;
 				}
 			}
 			
