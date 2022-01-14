@@ -85,6 +85,7 @@ class KeybindMenu extends BasicSubState
 		var left = Controls.UI_LEFT;
 		var right = Controls.UI_RIGHT;
 		var accept = Controls.accept;
+		var acceptP = Controls.acceptP;
 
 		if(Controls.back)
 			close();
@@ -105,7 +106,7 @@ class KeybindMenu extends BasicSubState
 				FlxG.sound.play(Util.getSound('menus/confirmMenu'));
 			}
 		} else {
-			if(!Controls.accept)
+			if(!acceptP)
 			{
 				checkingForKeys = true;
 			}

@@ -950,11 +950,11 @@ class PlayState extends BasicState
 			{
 				FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
 	
-				menus.FreeplayMenuState.curSpeed = songMultiplier;
-	
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
 				transitionState(new menus.FreeplayMenuState());
+
+				menus.FreeplayMenuState.curSpeed = songMultiplier;
 			}
 			else
 			{
