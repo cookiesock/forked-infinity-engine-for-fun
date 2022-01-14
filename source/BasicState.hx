@@ -1,5 +1,6 @@
 package;
 
+import menus.TitleScreenState;
 import flixel.FlxG;
 import game.Conductor;
 import flixel.FlxSprite;
@@ -16,6 +17,9 @@ class BasicState extends FlxUIState
 	public function new()
 	{
 		super();
+
+		if(TitleScreenState.optionsInitialized)
+			Controls.refreshControls();
 
 		//if(FlxG.camera != null)
 		//	FlxG.camera.fade(FlxColor.TRANSPARENT, 0.5, true);
@@ -45,6 +49,9 @@ class BasicState extends FlxUIState
 
 		FlxG.stage.frameRate = Options.getData('fpsCap');
 
+		if(TitleScreenState.optionsInitialized)
+			Controls.refreshControls();
+
 		super.update(elapsed);
 	}
 
@@ -54,6 +61,9 @@ class BasicState extends FlxUIState
 	public function transitionState(state:FlxState)
 	{
 		FlxG.switchState(state);
+
+		if(TitleScreenState.optionsInitialized)
+			Controls.refreshControls();
 		//FlxG.camera.fade(FlxColor.BLACK, 0.5, true, function(){ FlxG.switchState(state); }, true);
 	}
 

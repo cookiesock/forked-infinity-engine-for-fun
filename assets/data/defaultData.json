@@ -57,6 +57,14 @@
             "value": ["LEFT", "DOWN", "UP", "RIGHT"]
         },
         {
+            "name": "uiBinds",
+            "value": ["LEFT", "DOWN", "UP", "RIGHT", "BACKSPACE", "SHIFT", "ENTER", "R"]
+        },
+        {
+            "name": "uiBindsAlt",
+            "value": ["A", "S", "W", "D", "ESCAPE", "SHIFT", "ENTER", "X"]
+        },
+        {
             "name": "scroll-speed",
             "value": 1
         },

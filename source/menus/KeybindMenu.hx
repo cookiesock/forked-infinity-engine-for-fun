@@ -78,13 +78,13 @@ class KeybindMenu extends BasicSubState
 
 	override public function update(elapsed:Float)
 	{
-		var up = FlxG.keys.justPressed.UP;
-		var down = FlxG.keys.justPressed.DOWN;
-		var left = FlxG.keys.justPressed.LEFT;
-		var right = FlxG.keys.justPressed.RIGHT;
-		var accept = FlxG.keys.justPressed.ENTER;
+		var up = Controls.UI_UP;
+		var down = Controls.UI_DOWN;
+		var left = Controls.UI_LEFT;
+		var right = Controls.UI_RIGHT;
+		var accept = Controls.accept;
 
-		if(FlxG.keys.justPressed.BACKSPACE)
+		if(Controls.back)
 			close();
 
 		for(i in 0...daKeybinds.members.length)
@@ -103,7 +103,7 @@ class KeybindMenu extends BasicSubState
 				FlxG.sound.play(Util.getSound('menus/confirmMenu'));
 			}
 		} else {
-			if(!FlxG.keys.pressed.ENTER)
+			if(!Controls.accept)
 			{
 				checkingForKeys = true;
 			}

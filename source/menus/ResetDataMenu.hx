@@ -56,7 +56,7 @@ class ResetDataMenu extends BasicSubState
 			close();
 		}
 
-		if(FlxG.keys.justPressed.BACKSPACE || no)
+		if(Controls.back || no)
 			close();
 
 		funnyScrollSpeed.text = "All of your options will be reset\nand all of your mods will be turned off\n";

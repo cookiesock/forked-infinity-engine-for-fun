@@ -124,9 +124,9 @@ class PauseMenu extends BasicSubState
 
 		bg.alpha = FlxMath.lerp(bg.alpha, 0.6, Math.max(0, Math.min(1, elapsed * 6)));
 
-		var up = FlxG.keys.justPressed.UP;
-		var down = FlxG.keys.justPressed.DOWN;
-		var accept = FlxG.keys.justPressed.ENTER;
+		var up = Controls.UI_UP;
+		var down = Controls.UI_DOWN;
+		var accept = Controls.accept;
 
 		if(up) changeSelection(-1);
 		if(down) changeSelection(1);

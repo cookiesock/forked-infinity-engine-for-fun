@@ -81,9 +81,9 @@ class ModsState extends BasicState
 
         FlxG.camera.followLerp = 0.1 * (60 / Main.display.currentFPS);
 
-        var up = FlxG.keys.justPressed.UP;
-        var down = FlxG.keys.justPressed.DOWN;
-        var accept = FlxG.keys.justPressed.ENTER;
+        var up = Controls.UI_UP;
+        var down = Controls.UI_DOWN;
+        var accept = Controls.accept;
 
         if(up || down)
         {
@@ -112,10 +112,10 @@ class ModsState extends BasicState
             updateMods();
         }
 
-        if(FlxG.keys.justPressed.BACKSPACE)
+        if(Controls.back)
         {
             FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
-            FlxG.switchState(new MainMenuState());
+            transitionState(new MainMenuState());
         }
     }
 

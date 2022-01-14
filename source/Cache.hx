@@ -1,3 +1,5 @@
+package;
+
 import flixel.graphics.FlxGraphic;
 import openfl.media.Sound;
 

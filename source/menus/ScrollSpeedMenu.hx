@@ -58,13 +58,13 @@ class ScrollSpeedMenu extends BasicSubState
 
 	override public function update(elapsed:Float)
 	{
-		leftP = FlxG.keys.justPressed.LEFT;
-		left = FlxG.keys.pressed.LEFT;
-		rightP = FlxG.keys.justPressed.RIGHT;
-		right = FlxG.keys.pressed.RIGHT;
-		accept = FlxG.keys.justPressed.ENTER;
+		leftP = Controls.UI_LEFT;
+		left = Controls.UI_LEFT_P;
+		rightP = Controls.UI_RIGHT;
+		right = Controls.UI_RIGHT_P;
+		accept = Controls.accept;
 
-		if(FlxG.keys.justPressed.BACKSPACE)
+		if(Controls.back)
 			close();
 
 		if(left || right) {

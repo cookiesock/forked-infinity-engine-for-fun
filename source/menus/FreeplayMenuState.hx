@@ -167,10 +167,10 @@ class FreeplayMenuState extends BasicState
     {
         super.update(elapsed);
 
-        if(FlxG.keys.justPressed.BACKSPACE)
+        if(Controls.back)
         {
             FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
-            FlxG.switchState(new menus.MainMenuState());
+            transitionState(new menus.MainMenuState());
         }
 
         if(FlxG.keys.justPressed.SPACE) {
@@ -206,12 +206,12 @@ class FreeplayMenuState extends BasicState
             refreshSpeed();
         }
 
-        var up = FlxG.keys.justPressed.UP;
-        var down = FlxG.keys.justPressed.DOWN;
-        var left = FlxG.keys.justPressed.LEFT;
-        var right = FlxG.keys.justPressed.RIGHT;
-        var shiftP = FlxG.keys.pressed.SHIFT;
-        var reset = FlxG.keys.justPressed.R;
+        var up = Controls.UI_UP;
+        var down = Controls.UI_DOWN;
+        var left = Controls.UI_LEFT;
+        var right = Controls.UI_RIGHT;
+        var shiftP = Controls.shiftP;
+        var reset = Controls.reset;
 
         if(up || down)
         {
@@ -257,7 +257,7 @@ class FreeplayMenuState extends BasicState
         if(reset && shiftP)
             curSpeed = 1;
 
-        if(FlxG.keys.justPressed.ENTER)
+        if(Controls.accept)
         {
             game.PlayState.songMultiplier = curSpeed;
             FlxG.switchState(new game.PlayState(songs[selectedSong].songName.toLowerCase(), selectedDifficulty, false));

@@ -239,18 +239,18 @@ class StoryModeState extends BasicState {
     {
         super.update(elapsed);
 
-        var up = FlxG.keys.justPressed.UP;
-        var down = FlxG.keys.justPressed.DOWN;
-        var left = FlxG.keys.justPressed.LEFT;
-        var leftP = FlxG.keys.pressed.LEFT;
-        var right = FlxG.keys.justPressed.RIGHT;
-        var rightP = FlxG.keys.pressed.RIGHT;
-        var accept = FlxG.keys.justPressed.ENTER;
+        var up = Controls.UI_UP;
+        var down = Controls.UI_DOWN;
+        var left = Controls.UI_LEFT;
+        var leftP = Controls.UI_LEFT_P;
+        var right = Controls.UI_RIGHT;
+        var rightP = Controls.UI_RIGHT_P;
+        var accept = Controls.accept;
 
 		var lerpVal:Float = Util.boundTo(elapsed * 5.6, 0, 1);
 		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 
-        if(FlxG.keys.justPressed.BACKSPACE)
+        if(Controls.back)
         {
             FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
 			transIn = FlxTransitionableState.defaultTransIn;

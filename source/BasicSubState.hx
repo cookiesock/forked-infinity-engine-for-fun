@@ -1,5 +1,6 @@
 package;
 
+import menus.TitleScreenState;
 import flixel.FlxState;
 import flixel.FlxSubState;
 import flixel.util.FlxColor;
@@ -17,17 +18,22 @@ class BasicSubState extends FlxSubState
 	{
 		super();
 
+		if(TitleScreenState.optionsInitialized)
+			Controls.refreshControls();
+
 		//if(FlxG.camera != null)
 		//	FlxG.camera.fade(FlxColor.TRANSPARENT, 0.5, true);
 	}
 
-	public function funkyBpm(BPM:Float)
+	public function funkyBpm(BPM:Float, ?songMultiplier:Float = 1)
 	{
-		Conductor.changeBPM(BPM);
+		Conductor.changeBPM(BPM, songMultiplier);
 	}
 
 	override function update(elapsed:Float)
 	{
+		super.update(elapsed);
+		
 		var oldStep:Int = curStep;
 
 		updateCurStep();
@@ -38,7 +44,8 @@ class BasicSubState extends FlxSubState
 
 		FlxG.stage.frameRate = Options.getData('fpsCap');
 
-		super.update(elapsed);
+		if(TitleScreenState.optionsInitialized)
+			Controls.refreshControls();
 	}
 
 	//transition
@@ -47,6 +54,9 @@ class BasicSubState extends FlxSubState
 	public function transitionState(state:FlxState)
 	{
 		FlxG.switchState(state);
+
+		if(TitleScreenState.optionsInitialized)
+			Controls.refreshControls();
 		//FlxG.camera.fade(FlxColor.BLACK, 0.5, true, function(){ FlxG.switchState(state); }, true);
 	}
 

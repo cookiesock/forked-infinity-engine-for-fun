@@ -1,5 +1,6 @@
 package menus;
 
+import openfl.system.System;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.graphics.FlxGraphic;
 import flixel.addons.transition.TransitionData;
@@ -27,11 +28,14 @@ class TitleScreenState extends BasicState
 	
 	// static vars
 	static public var hasAlreadyAccepted:Bool = false; // controls music
+	static public var optionsInitialized:Bool = false;
 	var accepted:Bool = false; // controls the ability to spam enter lol
 
 	override public function create():Void
 	{
 		super.create();
+
+		optionsInitialized = false;
 
 		var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
 		diamond.persist = true;
@@ -50,6 +54,7 @@ class TitleScreenState extends BasicState
 
 		Options.init();
 		Mods.init();
+		optionsInitialized = true;
 		
 		persistentUpdate = true;
 		persistentDraw = true;
@@ -106,7 +111,7 @@ class TitleScreenState extends BasicState
 
 	override public function update(elapsed:Float):Void
 	{
-		if (FlxG.keys.justPressed.ENTER && !accepted || Util.mouseOverlappingSprite(pressAccept) && FlxG.mouse.justPressed)
+		if (Controls.accept && !accepted || Util.mouseOverlappingSprite(pressAccept) && FlxG.mouse.justPressed)
 		{
 			FlxG.sound.play(Util.getSound("menus/confirmMenu", true));
 			hasAlreadyAccepted = true; // prevents title music from restarting if it's already playing

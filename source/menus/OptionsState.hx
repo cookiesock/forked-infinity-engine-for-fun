@@ -124,11 +124,11 @@ class OptionsState extends BasicState
 	{
 		super.update(elapsed);
 
-		var up = FlxG.keys.justPressed.UP;
-		var down = FlxG.keys.justPressed.DOWN;
-		var accept = FlxG.keys.justPressed.ENTER;
+		var up = Controls.UI_UP;
+		var down = Controls.UI_DOWN;
+		var accept = Controls.accept;
 
-		if(FlxG.keys.justPressed.BACKSPACE)
+		if(Controls.accept)
 		{
 			FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
 			transitionState(new MainMenuState());

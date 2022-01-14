@@ -14,6 +14,7 @@ class Options
         FlxG.save.bind("project-refunked", "project-refunked-team");
 
         defaultData = Util.getJsonContents('assets/data/defaultData.json');
+        trace(defaultData);
 
         for(data in defaultData.dataObjects)
         {

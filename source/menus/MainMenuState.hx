@@ -116,13 +116,13 @@ class MainMenuState extends BasicState
 			var btn:FlxSprite = menuButtons.members[i];
 			btn.screenCenter(X);
 		}
-		if (FlxG.keys.justPressed.UP && !hasSelected) {
+		if (Controls.UI_UP && !hasSelected) {
 			changeSelection(-1);
 		}
-		if (FlxG.keys.justPressed.DOWN && !hasSelected) {
+		if (Controls.UI_DOWN && !hasSelected) {
 			changeSelection(1);
 		}
-		if (FlxG.keys.justPressed.ENTER)
+		if (Controls.accept)
 		{
 			if(!hasSelected)
 			{
@@ -178,7 +178,7 @@ class MainMenuState extends BasicState
 			hasSelected = true;
 		}
 		
-		if (FlxG.keys.justPressed.BACKSPACE)
+		if (Controls.back)
 		{
 			FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
 			transitionState(new TitleScreenState());
