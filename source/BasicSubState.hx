@@ -25,6 +25,13 @@ class BasicSubState extends FlxSubState
 		//	FlxG.camera.fade(FlxColor.TRANSPARENT, 0.5, true);
 	}
 
+	override function create() {
+		super.create();
+
+		if(TitleScreenState.optionsInitialized)
+			Controls.refreshControls();
+	}
+
 	public function funkyBpm(BPM:Float, ?songMultiplier:Float = 1)
 	{
 		Conductor.changeBPM(BPM, songMultiplier);
@@ -53,6 +60,9 @@ class BasicSubState extends FlxSubState
 
 	public function transitionState(state:FlxState)
 	{
+		if(TitleScreenState.optionsInitialized)
+			Controls.refreshControls();
+
 		FlxG.switchState(state);
 
 		if(TitleScreenState.optionsInitialized)

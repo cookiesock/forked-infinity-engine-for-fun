@@ -1,5 +1,7 @@
 package game;
 
+import openfl.display3D.Context3DProgramFormat;
+import menus.TitleScreenState;
 import flixel.addons.transition.FlxTransitionableState;
 import openfl.system.System;
 import lime.app.Application;
@@ -654,7 +656,7 @@ class PlayState extends BasicState
 
 		botplayText.visible = Options.getData('botplay');
 
-		var accept = FlxG.keys.justPressed.ENTER;
+		var accept = Controls.accept;
 
 		if(accept)
 		{
@@ -667,6 +669,11 @@ class PlayState extends BasicState
 			persistentUpdate = false;
 
 			paused = true;
+
+			if(TitleScreenState.optionsInitialized)
+				Controls.refreshControls();
+
+			Controls.accept = false;
 
 			openSubState(new menus.PauseMenu());
 		}
