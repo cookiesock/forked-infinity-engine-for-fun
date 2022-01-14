@@ -33,7 +33,7 @@ class StrumArrow extends FlxSprite {
 		if(!isPixel) { // if the note skin is NOT pixel
 			frames = Util.getSparrow('noteskins/' + noteskin + '/noteStrums');
 			
-			antialiasing = true;
+			antialiasing = Options.getData('anti-aliasing');
 			setGraphicSize(Std.int(width * 0.7));
 			updateHitbox();
 			

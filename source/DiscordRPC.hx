@@ -105,7 +105,8 @@ class DiscordRPC
             endTimestamp : Std.int(endTimestamp / 1000)
 		});
 
-		trace('Discord RPC Updated. Arguments: $details, $state, $smallImageKey, $hasStartTimestamp, $endTimestamp');
+		//trace('Discord RPC Updated. Arguments: $details, $state, $smallImageKey, $hasStartTimestamp, $endTimestamp');
+		// no trace because lag
 	}
 	#end
 }

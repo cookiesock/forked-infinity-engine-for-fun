@@ -1,5 +1,6 @@
 package menus;
 
+import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.effects.FlxFlicker;
@@ -33,8 +34,20 @@ class MainMenuState extends BasicState
 	
 	var swagMenuButtons:Array<String> = ['StoryMode', 'Freeplay', 'Credits', 'Options', 'Mods'];
 
+	var menuWatermarks:Array<String> = []; // because you can't access variables in variable initialization
+	var menuWatermarksText:FlxTypedGroup<FlxText>;
+
 	override public function create()
 	{
+		menuWatermarks = [
+			'Press SHIFT+C to see the changelog for this version!',
+			#if debug
+			'Project Re-Funked v' + Util.engineVersion + ' (DEBUG)',
+			#else
+			'Project Re-Funked Release v' + Util.engineVersion,
+			#end
+		];
+
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
@@ -50,28 +63,32 @@ class MainMenuState extends BasicState
 		menuBG = new FlxSprite(-80).loadGraphic(Util.getImage('menuBG'));
 		menuBG.scrollFactor.x = 0;
 		menuBG.scrollFactor.y = 0.18;
-		menuBG.setGraphicSize(Std.int(menuBG.width * 1.175));
+		menuBG.setGraphicSize(Std.int(menuBG.width * 1.275));
 		menuBG.updateHitbox();
 		menuBG.screenCenter();
-		menuBG.antialiasing = true;
+		menuBG.antialiasing = Options.getData('anti-aliasing');
 		add(menuBG);
 
 		menuBGMagenta = new FlxSprite(-80).loadGraphic(Util.getImage('menuDesat'));
 		menuBGMagenta.scrollFactor.x = 0;
 		menuBGMagenta.scrollFactor.y = 0.18;
-		menuBGMagenta.setGraphicSize(Std.int(menuBGMagenta.width * 1.175));
+		menuBGMagenta.setGraphicSize(Std.int(menuBGMagenta.width * 1.275));
 		menuBGMagenta.updateHitbox();
 		menuBGMagenta.screenCenter();
 		menuBGMagenta.visible = false;
-		menuBGMagenta.antialiasing = true;
-		menuBGMagenta.color = 0xFFfd719b; // <<<<< this is here for a reason, changed the image back to menuDesat because of this
+		menuBGMagenta.antialiasing = Options.getData('anti-aliasing');
+		menuBGMagenta.color = 0xFFfd719b;
 		add(menuBGMagenta);
 
 		menuButtons = new FlxTypedGroup<FlxSprite>();
 		add(menuButtons);
 
+		menuWatermarksText = new FlxTypedGroup<FlxText>();
+		add(menuWatermarksText);
+
 		for (i in 0...swagMenuButtons.length)
 		{
+			var coolLength = swagMenuButtons.length;
 			var menuButton:FlxSprite = new FlxSprite(0, (i * 160) + 80);
 			menuButton.frames = Util.getSparrow('mainmenu/' + swagMenuButtons[i]);
 			menuButton.animation.addByPrefix('super idle', "basic", 24);
@@ -79,11 +96,10 @@ class MainMenuState extends BasicState
 			menuButton.animation.play('super idle');
 			menuButton.ID = i;
 			menuButton.screenCenter(X);
-			menuButton.scrollFactor.set(0, 0);
-			menuButton.antialiasing = true;
+			menuButton.scrollFactor.set(0, swagMenuButtons.length / coolLength);
+			menuButton.antialiasing = Options.getData('anti-aliasing');
 			menuButtons.add(menuButton);
 		}
-		changeSelection();
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollowPos = new FlxObject(0, 0, 1, 1);
@@ -91,6 +107,19 @@ class MainMenuState extends BasicState
 		add(camFollowPos);
 		
 		FlxG.camera.follow(camFollowPos, null, 1);
+
+		for(i in 0...menuWatermarks.length)
+		{
+			var watermark:FlxText = new FlxText(8, FlxG.height - (30 + i * 20), 0, menuWatermarks[i], 16);
+			watermark.setFormat("assets/fonts/vcr.ttf", 16, FlxColor.WHITE, LEFT);
+			watermark.borderStyle = OUTLINE;
+			watermark.borderSize = 1.5;
+			watermark.borderColor = FlxColor.BLACK;
+			watermark.scrollFactor.set();
+			menuWatermarksText.add(watermark);	
+		}
+
+		changeSelection();
 
 		BasicState.changeAppTitle(Util.engineName, "Main Menu");
 	
@@ -116,12 +145,16 @@ class MainMenuState extends BasicState
 			var btn:FlxSprite = menuButtons.members[i];
 			btn.screenCenter(X);
 		}
-		if (Controls.UI_UP && !hasSelected) {
+
+		if (Controls.UI_UP && !hasSelected)
 			changeSelection(-1);
-		}
-		if (Controls.UI_DOWN && !hasSelected) {
+		
+		if (Controls.UI_DOWN && !hasSelected)
 			changeSelection(1);
-		}
+
+		if (Controls.shiftP && FlxG.keys.justPressed.C)
+			Util.openURL("https://github.com/CubeSword/Project-ReFunked/blob/main/CHANGELOG.md");
+
 		if (Controls.accept)
 		{
 			if(!hasSelected)

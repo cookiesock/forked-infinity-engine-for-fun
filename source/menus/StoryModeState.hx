@@ -188,6 +188,7 @@ class StoryModeState extends BasicState {
         leftDiffArrow.animation.addByPrefix("push", "arrow push left0", 24, false);
         leftDiffArrow.animation.play("static");
         leftDiffArrow.scrollFactor.set();
+        leftDiffArrow.antialiasing = Options.getData('anti-aliasing');
         grpDifficulty.add(leftDiffArrow);
 
         var rightDiffArrow = new FlxSprite(FlxG.width * 0.95, leftDiffArrow.y);
@@ -196,10 +197,12 @@ class StoryModeState extends BasicState {
         rightDiffArrow.animation.addByPrefix("push", "arrow push right0", 24, false);
         rightDiffArrow.animation.play("static");
         rightDiffArrow.scrollFactor.set();
+        rightDiffArrow.antialiasing = Options.getData('anti-aliasing');
         grpDifficulty.add(rightDiffArrow);
 
         var difficultyImage = new FlxSprite(0, leftDiffArrow.y).loadGraphic(Util.getImage('weeks/difficulties/' + difficulties[selectedDifficulty].toLowerCase(), false));
         difficultyImage.scrollFactor.set();
+        difficultyImage.antialiasing = Options.getData('anti-aliasing');
         grpDifficulty.add(difficultyImage);
 
         funkyBpm(102);

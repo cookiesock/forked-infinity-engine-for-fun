@@ -20,7 +20,7 @@ class Checkbox extends FlxSprite
 		animation.addByPrefix("checked", "checked anim0", 24, false);
 		animation.addByPrefix("no", "no", 24, false);
 
-		antialiasing = true;
+		antialiasing = Options.getData('anti-aliasing');
 		setGraphicSize(Std.int(0.5 * width));
 		updateHitbox();
 
@@ -56,7 +56,7 @@ class Checkbox extends FlxSprite
 			daValueOld = daValue;
 		}
 		
-		antialiasing = true;
+		antialiasing = Options.getData('anti-aliasing');
 		
 		super.update(elapsed);
 	}

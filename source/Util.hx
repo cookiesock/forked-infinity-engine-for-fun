@@ -20,6 +20,7 @@ class Util
 	static public var soundExt:String = #if web '.mp3' #else '.ogg' #end;
 	static public var funnyStringArray:Array<String> = [];
 	static public var engineName:String = "Project Re-Funked";
+	static public var engineVersion:String = "0.1a";
 
 	static public function getJsonContents(path:String):Dynamic {
 		#if sys

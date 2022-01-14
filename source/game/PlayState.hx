@@ -168,6 +168,8 @@ class PlayState extends BasicState
 
 	public static var storedDifficulty:String;
 
+	var songTime:String = "";
+
 	// shit other than variables
 	public function new(?songName:String, ?difficulty:String, ?storyModeBool:Bool = false)
 	{
@@ -214,13 +216,21 @@ class PlayState extends BasicState
 		}
 	}
 
+	function refreshDiscordRPC(?basic:Bool = false)
+	{
+		#if discord_rpc
+		if(!basic)
+        	DiscordRPC.changePresence("Playing " + song.song + " on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed", "Time Left: " + songTime);
+		else
+        	DiscordRPC.changePresence("Playing " + song.song + " on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed", null);
+        #end
+	}
+
 	override public function create()
 	{
 		BasicState.changeAppTitle(Util.engineName, "Playing " + song.song + " on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed");
 
-        #if discord_rpc
-        DiscordRPC.changePresence("Playing " + song.song + " on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed", null);
-        #end
+		refreshDiscordRPC(true);
 
 		persistentUpdate = true;
 		persistentDraw = true;
@@ -353,6 +363,18 @@ class PlayState extends BasicState
 			player.x += player.position[0];
 			player.y += player.position[1];
 		}
+
+		if(Options.getData('anti-aliasing') == false)
+		{
+			if(opponent != null && opponent.active)
+				opponent.antialiasing = false;
+
+			if(speakers != null && speakers.active)
+				speakers.antialiasing = false;
+
+			if(player != null && player.active)
+				player.antialiasing = false;
+		}
 		
 		// bpm init shit
 		bpm = song.bpm;
@@ -408,6 +430,7 @@ class PlayState extends BasicState
 
 		funnyRating = new RatingSprite(FlxG.width * 0.55, 300);
 		funnyRating.alpha = 0;
+		funnyRating.antialiasing = Options.getData('anti-aliasing');
 		add(funnyRating);
 
 		comboGroup = new FlxTypedGroup<ComboSprite>();
@@ -420,6 +443,7 @@ class PlayState extends BasicState
 			newComboNum.y = funnyRating.y + 85;
 			newComboNum.stupidY = newComboNum.y;
 			newComboNum.alpha = 0;
+			newComboNum.antialiasing = Options.getData('anti-aliasing');
 
 			comboGroup.add(newComboNum);
 		}
@@ -444,6 +468,7 @@ class PlayState extends BasicState
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Util.getImage('healthBar'));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
+		healthBarBG.antialiasing = Options.getData('anti-aliasing');
 		add(healthBarBG);
 
 		if(Options.getData('downscroll'))
@@ -608,6 +633,22 @@ class PlayState extends BasicState
 
 		if(!endingSong)
 			Conductor.songPosition += (FlxG.elapsed * 1000) * songMultiplier;
+
+		var curTime:Float = FlxG.sound.music.time - Options.getData('song-offset');
+		if(curTime < 0) curTime = 0;
+
+		var secondsTotal:Int = Math.floor((FlxG.sound.music.length - curTime) / 1000);
+		if(secondsTotal < 0) secondsTotal = 0;
+
+		var minutesRemaining:Int = Math.floor(secondsTotal / 60);
+		var secondsRemaining:String = '' + secondsTotal % 60;
+		if(secondsRemaining.length < 2) secondsRemaining = '0' + secondsRemaining;
+
+		songTime = minutesRemaining + ":" + secondsRemaining;
+
+		refreshDiscordRPC();
+
+		// ^^^ used in discord rpc only for now
 		
 		//setPitch();
 
@@ -619,13 +660,15 @@ class PlayState extends BasicState
 			{
 				if(FlxG.sound.music.active) // resync song pos lol
 				{
-					if((FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20) && Conductor.songPosition > Conductor.safeZoneOffset)
+					if(FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 					{
 						resyncVocals(true);
 					}
 				}
 			}
 		}
+
+		//resyncVocals(true);
 
 		FlxG.camera.followLerp = 0.04 * (60 / Main.display.currentFPS);
 
@@ -1033,10 +1076,20 @@ class PlayState extends BasicState
 			opponentIcon.updateHitbox();
 
 			if(player != null && player.active)
-				playerIcon.antialiasing = player.antialiasing;
+			{
+				if(Options.getData('anti-aliasing') == true)
+					playerIcon.antialiasing = player.antialiasing;
+				else
+					playerIcon.antialiasing = false;
+			}
 
 			if(opponent != null && opponent.active)
-				opponentIcon.antialiasing = opponent.antialiasing;
+			{
+				if(Options.getData('anti-aliasing') == true)
+					opponentIcon.antialiasing = opponent.antialiasing;
+				else
+					opponentIcon.antialiasing = false;
+			}
 		} else {
 			countdownNum += 1;
 
@@ -1074,7 +1127,7 @@ class PlayState extends BasicState
 					{
 						FlxG.sound.music.pause();
 
-						vocals = FlxG.sound.play(Util.getVoices(song.song.toLowerCase()));
+						vocals = new FlxSound().loadEmbedded(Util.getVoices(song.song.toLowerCase()));
 
 						vocals.pause();
 
@@ -1157,25 +1210,26 @@ class PlayState extends BasicState
 
 	function resyncVocals(?force:Bool = false, ?doSetPitch:Bool = true)
 	{
-		if(vocals != null)
+		if(FlxG.sound.music != null && FlxG.sound.music.active)
 		{
-			if(vocals.active)
-			{
-				if((vocals.time > FlxG.sound.music.time + 20 || vocals.time < FlxG.sound.music.time - 20) || force)
-				{
-					FlxG.sound.music.pause();
-					FlxG.sound.music.time = Conductor.songPosition;
-					FlxG.sound.music.play();
+			trace("SONG POS: " + Conductor.songPosition + " | Musice: " + FlxG.sound.music.time + " / " + FlxG.sound.music.length);
 
-					vocals.pause();
-					vocals.time = FlxG.sound.music.time;
-					vocals.play();
-				}
-			}
+			vocals.pause();
+			FlxG.sound.music.pause();
+
+			/*if(FlxG.sound.music.time >= FlxG.sound.music.length)
+				Conductor.songPosition = FlxG.sound.music.length;
+			else
+				Conductor.songPosition = FlxG.sound.music.time;*/
+
+			FlxG.sound.music.time = Conductor.songPosition;
+			vocals.time = Conductor.songPosition;
+			
+			FlxG.sound.music.play();
+			vocals.play();
 		}
 
-		if(doSetPitch)
-			setPitch();
+		setPitch();
 	}
 
 	function setPitch()

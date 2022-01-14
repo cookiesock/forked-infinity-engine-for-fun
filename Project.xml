@@ -51,10 +51,12 @@
 	<assets path="assets/sounds" exclude="*.mp3" unless="web"/>
 
 	<assets path="assets/data" />
-
 	<assets path="assets/fonts" embed='true'/>
 
 	<assets path="mods" />
+
+	<assets path="CHANGELOG.md" rename='changelog.txt'/>
+
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />

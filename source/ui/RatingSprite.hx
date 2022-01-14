@@ -14,7 +14,9 @@ class RatingSprite extends FlxSprite
 		stupidY = y;
 		super(x, y);
 		if(!game.PlayState.pixelStage)
-			antialiasing = true;
+			antialiasing = Options.getData('anti-aliasing');
+		else
+			antialiasing = false;
 
 		loadRating('sick');
 	}

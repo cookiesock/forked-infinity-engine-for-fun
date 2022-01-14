@@ -17,7 +17,9 @@ class ComboSprite extends FlxSprite
 		isComboText = isComboTextB;
 		super(x, y);
 		if(!game.PlayState.pixelStage)
-			antialiasing = true;
+			antialiasing = Options.getData('anti-aliasing');
+		else
+			antialiasing = false;
 
 		loadCombo('0');
 	}

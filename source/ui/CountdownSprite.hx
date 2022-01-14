@@ -11,7 +11,7 @@ class CountdownSprite extends FlxSprite {
 	{
 		super();
 		if(!pixel)
-			antialiasing = true;
+			antialiasing = Options.getData('anti-aliasing');
 
 		if(pixel)
 			filePath = 'countdown/pixel/';

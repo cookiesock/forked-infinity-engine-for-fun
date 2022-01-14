@@ -60,7 +60,12 @@ class Character extends FlxSprite {
         updateHitbox();
 
         flipX = json.flip_x;
+        
         antialiasing = !json.no_antialiasing;
+        
+        if(antialiasing == true)
+            antialiasing = Options.getData('anti-aliasing');
+
         camOffsets = json.camera_position;
         healthColor = FlxColor.fromRGB(json.healthbar_colors[0], json.healthbar_colors[1], json.healthbar_colors[2]);
         position = json.position;
