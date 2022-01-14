@@ -673,9 +673,12 @@ class PlayState extends BasicState
 		{
 			if(FlxG.sound.music != null) // resync song pos lol
 			{
-				if(FlxG.sound.music.time > Conductor.songPosition + swagThing || FlxG.sound.music.time < Conductor.songPosition - swagThing)
+				if(FlxG.sound.music.active)
 				{
-					resyncVocals(true);
+					if(FlxG.sound.music.time > Conductor.songPosition + swagThing || FlxG.sound.music.time < Conductor.songPosition - swagThing)
+					{
+						resyncVocals(true);
+					}
 				}
 			}
 		}
@@ -1196,12 +1199,17 @@ class PlayState extends BasicState
 
 		var gamerValue = 20 * songMultiplier;
 		
-		/*if (FlxG.sound.music.time > Conductor.songPosition + gamerValue || FlxG.sound.music.time < Conductor.songPosition - gamerValue || FlxG.sound.music.time < 500 && (FlxG.sound.music.time > Conductor.songPosition + 5 || FlxG.sound.music.time < Conductor.songPosition - 5))
+		if(songMultiplier < 1)
+			resyncVocals(true);
+		else
 		{
-			resyncVocals();
-		}*/
+			if (FlxG.sound.music.time > Conductor.songPosition + gamerValue || FlxG.sound.music.time < Conductor.songPosition - gamerValue || FlxG.sound.music.time < 500 && (FlxG.sound.music.time > Conductor.songPosition + 5 || FlxG.sound.music.time < Conductor.songPosition - 5))
+			{
+				resyncVocals();
+			}
+		}
 
-		resyncVocals(true); // attempt to fix a fucking speed issue that is pain and pain
+		// this might be dumb but if it works then it works
 	}
 	
 	public function changeHealth(gainHealth:Bool)
@@ -1570,6 +1578,9 @@ class PlayState extends BasicState
 
 	function updateAccuracyStuff()
 	{
+		if(Options.getData('botplay'))
+			accuracyNum == 100;
+
 		if(accuracyNum == 100)
 			rating1 = letterRatings[0];
 		
