@@ -667,21 +667,18 @@ class PlayState extends BasicState
 
 		super.update(elapsed);
 
+		var swagThing = 20 * 1;
+
 		if(!countdownStarted && !endingSong)
 		{
 			if(FlxG.sound.music != null) // resync song pos lol
 			{
-				if(FlxG.sound.music.active) // resync song pos lol
+				if(FlxG.sound.music.time > Conductor.songPosition + swagThing || FlxG.sound.music.time < Conductor.songPosition - swagThing)
 				{
-					if(FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
-					{
-						resyncVocals(true);
-					}
+					resyncVocals(true);
 				}
 			}
 		}
-
-		//resyncVocals(true);
 
 		FlxG.camera.followLerp = 0.04 * (60 / Main.display.currentFPS);
 
@@ -1199,10 +1196,12 @@ class PlayState extends BasicState
 
 		var gamerValue = 20 * songMultiplier;
 		
-		if (FlxG.sound.music.time > Conductor.songPosition + gamerValue || FlxG.sound.music.time < Conductor.songPosition - gamerValue || FlxG.sound.music.time < 500 && (FlxG.sound.music.time > Conductor.songPosition + 5 || FlxG.sound.music.time < Conductor.songPosition - 5))
+		/*if (FlxG.sound.music.time > Conductor.songPosition + gamerValue || FlxG.sound.music.time < Conductor.songPosition - gamerValue || FlxG.sound.music.time < 500 && (FlxG.sound.music.time > Conductor.songPosition + 5 || FlxG.sound.music.time < Conductor.songPosition - 5))
 		{
 			resyncVocals();
-		}
+		}*/
+
+		resyncVocals(true); // attempt to fix a fucking speed issue that is pain and pain
 	}
 	
 	public function changeHealth(gainHealth:Bool)
@@ -1225,8 +1224,6 @@ class PlayState extends BasicState
 	{
 		if(FlxG.sound.music != null && FlxG.sound.music.active)
 		{
-			trace("SONG POS: " + Conductor.songPosition + " | Musice: " + FlxG.sound.music.time + " / " + FlxG.sound.music.length);
-
 			vocals.pause();
 			FlxG.sound.music.pause();
 
