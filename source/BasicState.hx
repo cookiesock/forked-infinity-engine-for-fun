@@ -34,6 +34,9 @@ class BasicState extends FlxUIState
 	{
 		super.create();
 
+		if(TitleScreenState.optionsInitialized)
+			Controls.refreshControls();
+
 		Util.clearMemoryStuff();
 	}
 
@@ -60,6 +63,9 @@ class BasicState extends FlxUIState
 
 	public function transitionState(state:FlxState)
 	{
+		if(TitleScreenState.optionsInitialized)
+			Controls.refreshControls();
+		
 		FlxG.switchState(state);
 
 		if(TitleScreenState.optionsInitialized)

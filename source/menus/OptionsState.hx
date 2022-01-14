@@ -128,7 +128,7 @@ class OptionsState extends BasicState
 		var down = Controls.UI_DOWN;
 		var accept = Controls.accept;
 
-		if(Controls.accept)
+		if(Controls.back)
 		{
 			FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
 			transitionState(new MainMenuState());

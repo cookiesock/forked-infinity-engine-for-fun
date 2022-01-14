@@ -78,6 +78,8 @@ class KeybindMenu extends BasicSubState
 
 	override public function update(elapsed:Float)
 	{
+		super.update(elapsed);
+		
 		var up = Controls.UI_UP;
 		var down = Controls.UI_DOWN;
 		var left = Controls.UI_LEFT;
@@ -125,8 +127,6 @@ class KeybindMenu extends BasicSubState
 		keybindWarning.screenCenter(X);
 
 		bg.alpha = FlxMath.lerp(bg.alpha, 0.6, Math.max(0, Math.min(1, elapsed * 6)));
-
-		super.update(elapsed);
 	}
 
 	public function changeSelection(?change:Int = 0)
