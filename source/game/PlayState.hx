@@ -667,15 +667,13 @@ class PlayState extends BasicState
 
 		super.update(elapsed);
 
-		var swagThing = 20 * 1;
-
 		if(!countdownStarted && !endingSong)
 		{
 			if(FlxG.sound.music != null) // resync song pos lol
 			{
 				if(FlxG.sound.music.active)
 				{
-					if(FlxG.sound.music.time > Conductor.songPosition + swagThing || FlxG.sound.music.time < Conductor.songPosition - swagThing)
+					if(FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 					{
 						resyncVocals(true);
 					}
