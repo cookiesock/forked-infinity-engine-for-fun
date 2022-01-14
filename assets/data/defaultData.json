@@ -69,12 +69,20 @@
             "value": 1
         },
         {
+            "name": "camera-zooms",
+            "value": true
+        },
+        {
+            "name": "anti-mash",
+            "value": true
+        },
+        {
             "name": "mods",
             "value": []
         },
         {
             "name": "fpsCap",
-            "value": 120
+            "value": 60
         }
     ] 
 }

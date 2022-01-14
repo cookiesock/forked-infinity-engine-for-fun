@@ -44,7 +44,7 @@ using StringTools;
 class PlayState extends BasicState
 {
 	var singAnims:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
-	var cameraZooms:Bool = true;
+	var cameraZooms:Bool = false;
 	static public var bpm:Float = 0;
 
 	public var vocals:FlxSound;
@@ -431,8 +431,11 @@ class PlayState extends BasicState
 				}
 			}
 			
-			var theRealStrumArrow:StrumArrow = new StrumArrow(funnyArrowX + i * 112, strumArea.y - (i % 4 + 1) * (7 + i * 1), i, song.ui_Skin);
+			var theRealStrumArrow:StrumArrow = new StrumArrow(funnyArrowX + i * 112, strumArea.y, i, song.ui_Skin);
+
+			theRealStrumArrow.y -= 10;
 			theRealStrumArrow.alpha = 0;
+			FlxTween.tween(theRealStrumArrow, {y: theRealStrumArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: (0.2 * i) - 0.4});
 			
 			if(!isPlayerArrow) {
 				opponentStrumArrows.add(theRealStrumArrow);	
@@ -440,6 +443,72 @@ class PlayState extends BasicState
 				playerStrumArrows.add(theRealStrumArrow);
 			}
 		}
+
+		if(song.chartOffset == null)
+			song.chartOffset = 0;
+
+		for(section in song.notes)
+		{
+			Conductor.recalculateStuff(songMultiplier);
+
+			for(songNotes in section.sectionNotes)
+			{
+				var daStrumTime:Float = songNotes[0] + song.chartOffset + (Options.getData('song-offset') * songMultiplier);
+				var daNoteData:Int = Std.int(songNotes[1] % 4);
+
+				var gottaHitNote:Bool = section.mustHitSection;
+
+				if(songNotes[1] >= 4)
+					gottaHitNote = !section.mustHitSection;
+
+				/*
+				var oldNote:Note;
+
+				if (unspawnNotes.length > 0)
+					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+				else
+					oldNote = null;*/
+
+				var swagNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime, gottaHitNote, song.ui_Skin);
+				swagNote.sustainLength = songNotes[2];
+				swagNote.scrollFactor.set(0,0);
+				swagNote.cameras = [hudCam];
+
+				var susLength:Float = swagNote.sustainLength;
+				susLength = susLength / Conductor.stepCrochet;
+
+				var floorSus:Int = Math.floor(susLength);
+
+				if(floorSus > 0)
+				{
+					for (susNote in 0...floorSus)
+					{
+						var sustainNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, gottaHitNote, song.ui_Skin, true, susNote == floorSus - 1);
+						sustainNote.cameras = [hudCam];
+
+						if(!sustainNote.isPixel)
+							sustainNote.x += sustainNote.width / 1;
+						else
+							sustainNote.x += sustainNote.width / 1.5;
+
+						if(susNote != 0)
+							sustainNote.lastNote = notes[notes.length - 1];
+
+						add(sustainNote);
+
+						notes.push(sustainNote);
+					}
+				}
+
+				add(swagNote);
+
+				notes.push(swagNote);
+			}
+		}
+
+		notes.sort(sortByShit);
+
+		Conductor.songPosition = 0 - (Conductor.crochet * 4.5);
 
 		funnyRating = new RatingSprite(FlxG.width * 0.55, 300);
 		funnyRating.alpha = 0;
@@ -527,72 +596,6 @@ class PlayState extends BasicState
 		scoreText.scrollFactor.set();
 		scoreText.borderSize = 2;
 		add(scoreText);
-
-		if(song.chartOffset == null)
-			song.chartOffset = 0;
-
-		for(section in song.notes)
-		{
-			Conductor.recalculateStuff(songMultiplier);
-
-			for(songNotes in section.sectionNotes)
-			{
-				var daStrumTime:Float = songNotes[0] + song.chartOffset + (Options.getData('song-offset') * songMultiplier);
-				var daNoteData:Int = Std.int(songNotes[1] % 4);
-
-				var gottaHitNote:Bool = section.mustHitSection;
-
-				if(songNotes[1] >= 4)
-					gottaHitNote = !section.mustHitSection;
-
-				/*
-				var oldNote:Note;
-
-				if (unspawnNotes.length > 0)
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-				else
-					oldNote = null;*/
-
-				var swagNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime, gottaHitNote, song.ui_Skin);
-				swagNote.sustainLength = songNotes[2];
-				swagNote.scrollFactor.set(0,0);
-				swagNote.cameras = [hudCam];
-
-				var susLength:Float = swagNote.sustainLength;
-				susLength = susLength / Conductor.stepCrochet;
-
-				var floorSus:Int = Math.floor(susLength);
-
-				if(floorSus > 0)
-				{
-					for (susNote in 0...floorSus)
-					{
-						var sustainNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, gottaHitNote, song.ui_Skin, true, susNote == floorSus - 1);
-						sustainNote.cameras = [hudCam];
-
-						if(!sustainNote.isPixel)
-							sustainNote.x += sustainNote.width / 1;
-						else
-							sustainNote.x += sustainNote.width / 1.5;
-
-						if(susNote != 0)
-							sustainNote.lastNote = notes[notes.length - 1];
-
-						add(sustainNote);
-
-						notes.push(sustainNote);
-					}
-				}
-
-				add(swagNote);
-
-				notes.push(swagNote);
-			}
-		}
-
-		notes.sort(sortByShit);
-
-		Conductor.songPosition = 0 - (Conductor.crochet * 4.5); // leather i'm pretty sure whatever the fuck you did to this causes issues
 
 		var dialogueBoxTest:DialogueBox = new DialogueBox(100, FlxG.height * 0.65);
 		dialogueBoxTest.scrollFactor.set();
@@ -732,18 +735,10 @@ class PlayState extends BasicState
 			openSubState(new menus.PauseMenu());
 		}
 		
-		FlxG.camera.zoom = FlxMath.lerp(stageCamZoom, FlxG.camera.zoom, Util.boundTo(1 - (elapsed * 3.125), 0, 1));
-		hudCam.zoom = FlxMath.lerp(1, hudCam.zoom, Util.boundTo(1 - (elapsed * 3.125), 0, 1));
-		
-		// tween the fucking strum arrows lol
-		for(i in 0...4) {
-			opponentStrumArrows.members[i].y = FlxMath.lerp(opponentStrumArrows.members[i].y, strumArea.y, Math.max(0, Math.min(1, elapsed * 3)));
-			opponentStrumArrows.members[i].alpha = FlxMath.lerp(opponentStrumArrows.members[i].alpha, 1, Math.max(0, Math.min(1, elapsed * 3)));
-		}
-		
-		for(i in 0...4) {
-			playerStrumArrows.members[i].y = FlxMath.lerp(playerStrumArrows.members[i].y, strumArea.y, Math.max(0, Math.min(1, elapsed * 3)));
-			playerStrumArrows.members[i].alpha = FlxMath.lerp(playerStrumArrows.members[i].alpha, 1, Math.max(0, Math.min(1, elapsed * 3)));
+		if(cameraZooms)
+		{
+			FlxG.camera.zoom = FlxMath.lerp(stageCamZoom, FlxG.camera.zoom, Util.boundTo(1 - (elapsed * 3.125), 0, 1));
+			hudCam.zoom = FlxMath.lerp(1, hudCam.zoom, Util.boundTo(1 - (elapsed * 3.125), 0, 1));
 		}
 
 		// ratigns thign at the left of the scrnen!!!
@@ -821,6 +816,9 @@ class PlayState extends BasicState
 						notes.remove(note);
 						note.kill();
 						note.destroy();
+
+						if(Options.getData('camera-zooms'))
+							cameraZooms = true;
 
 						funnyNoteThingyIGuessLol.playAnim("confirm", true);
 
@@ -1057,7 +1055,10 @@ class PlayState extends BasicState
 
 	public function CalculateAccuracy()
 	{
-		accuracy = funnyHitStuffsLmao / totalNoteStuffs;
+		if(!Options.getData('botplay'))
+			accuracy = funnyHitStuffsLmao / totalNoteStuffs;
+		else
+			accuracy = 1;
 	}
 
 	override public function beatHit()
@@ -1411,8 +1412,11 @@ class PlayState extends BasicState
 						switch(sussyBallsRating) {
 							default:
 								changeHealth(true);
-							case 'shit': // anti spam...kinda
-								health -= 0.175; // maybe you shouldn't be able to die by spamming like twice?
+							case 'shit':
+								if(Options.getData('anti-mash'))
+									health -= 0.175;
+								else
+									changeHealth(true);
 						}
 
 						updateAccuracyStuff();

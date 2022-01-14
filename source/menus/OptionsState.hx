@@ -41,7 +41,8 @@ class OptionsState extends BasicState
 			["Back", "menu", ""],
 			["Anti-Aliasing", "checkbox", "Gives extra performance when disabled at the cost of\ngraphics not looking very smooth.", "anti-aliasing"],
 			["Optimization", "checkbox", "Removes all of the characters and background elements\nfor performance.", "optimization"],
-			["Note Splashes", "checkbox", "When enabled, a firework-like effect will show up\nIf you hit a note and get a \"SiCK!!\" from it.", "note-splashes"],
+			["Note Splashes", "checkbox", "When enabled, a firework-like effect will show up\nIf you get a \"SiCK!!\" rating.", "note-splashes"],
+			["Camera Zooms", "checkbox", "When disabled, The camera won't zoom to the beat.", "camera-zooms"],
 			["FPS Cap", "menu", "Change how low/high your FPS can go."],
 		],
 		"gameplay" => [
@@ -53,6 +54,7 @@ class OptionsState extends BasicState
 			["Downscroll", "checkbox", "Makes the notes scroll downwards instead of upwards.", "downscroll"],
 			["Middlescroll", "checkbox", "Makes the notes centered on-screen.", "middlescroll"],
 			["Ghost Tapping", "checkbox", "When disabled, If you try to hit a note that doesn't exist\nThen you will get a miss.", "ghost-tapping"],
+			["Anti Mash", "checkbox", "When disabled, If you get a \"SHiT\" rating, you won't lose any health.", "anti-mash"],
 			["Botplay", "checkbox", "When enabled, All notes will get hit for you.", "botplay"],
 			["FC Mode", "checkbox", "When enabled, you MUST get 0 misses on a song\nor else the game closes/you get blueballed.", "fc-mode"],
 		],
