@@ -32,7 +32,7 @@ class MainMenuState extends BasicState
 	var selectedMenu:Int = 0;
 	var menuButtons:FlxTypedGroup<FlxSprite>;
 	
-	var swagMenuButtons:Array<String> = ['StoryMode', 'Freeplay', 'Credits', 'Options', 'Mods'];
+	var swagMenuButtons:Array<String> = ['StoryMode', 'Freeplay', 'Credits', 'Options', 'Mods', 'Replays'];
 
 	var menuWatermarks:Array<String> = []; // because you can't access variables in variable initialization
 	var menuWatermarksText:FlxTypedGroup<FlxText>;
@@ -63,7 +63,7 @@ class MainMenuState extends BasicState
 		menuBG = new FlxSprite(-80).loadGraphic(Util.getImage('menuBG'));
 		menuBG.scrollFactor.x = 0;
 		menuBG.scrollFactor.y = 0.18;
-		menuBG.setGraphicSize(Std.int(menuBG.width * 1.275));
+		menuBG.setGraphicSize(Std.int(menuBG.width * 1.375));
 		menuBG.updateHitbox();
 		menuBG.screenCenter();
 		menuBG.antialiasing = Options.getData('anti-aliasing');
@@ -72,7 +72,7 @@ class MainMenuState extends BasicState
 		menuBGMagenta = new FlxSprite(-80).loadGraphic(Util.getImage('menuDesat'));
 		menuBGMagenta.scrollFactor.x = 0;
 		menuBGMagenta.scrollFactor.y = 0.18;
-		menuBGMagenta.setGraphicSize(Std.int(menuBGMagenta.width * 1.275));
+		menuBGMagenta.setGraphicSize(Std.int(menuBGMagenta.width * 1.375));
 		menuBGMagenta.updateHitbox();
 		menuBGMagenta.screenCenter();
 		menuBGMagenta.visible = false;
@@ -185,23 +185,27 @@ class MainMenuState extends BasicState
 								{
 									case 'StoryMode':
 										transitionState(new menus.StoryModeState());
-										trace("entered story mode");
+										trace("entered story mode menu");
 										
 									case 'Freeplay':
 										transitionState(new menus.FreeplayMenuState());
-										trace("entered freeplay");
+										trace("entered freeplay menu");
 										
 									case 'Credits':
 										transitionState(new menus.CreditsState());
-										trace("entered credits");
+										trace("entered credits menu");
 
 									case 'Options':
 										transitionState(new menus.OptionsState());
-										trace("entered options");
+										trace("entered options menu");
 
 									case 'Mods':
 										transitionState(new mods.ModsState());
-										trace("entered mods");
+										trace("entered mods menu");
+
+									case 'Replays':
+										transitionState(new menus.ReplayMenuState());
+										trace("entered replays menu");
 								}
 							});
 						}
