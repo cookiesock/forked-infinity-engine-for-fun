@@ -104,6 +104,8 @@ class PlayState extends BasicState
 	var comboGroup:FlxTypedGroup<ComboSprite>;
 
 	var msText:FlxText;
+
+	var scoreBar:FlxSprite;
 	var scoreText:FlxText;
 
 	var ratingsText:FlxText;
@@ -434,9 +436,12 @@ class PlayState extends BasicState
 			
 			var theRealStrumArrow:StrumArrow = new StrumArrow(funnyArrowX + i * 112, strumArea.y, i, song.ui_Skin);
 
+			var balls:Float = (0.2 * i % 4);
+			
 			theRealStrumArrow.y -= 10;
 			theRealStrumArrow.alpha = 0;
-			FlxTween.tween(theRealStrumArrow, {y: theRealStrumArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: (0.2 * i) - 0.4});
+
+			FlxTween.tween(theRealStrumArrow, {y: theRealStrumArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: balls});
 			
 			if(!isPlayerArrow) {
 				opponentStrumArrows.add(theRealStrumArrow);	
@@ -591,9 +596,13 @@ class PlayState extends BasicState
 		add(playerIcon);
 		add(opponentIcon);
 
-		scoreText = new FlxText(0, healthBarBG.y + 35, 0, "", 18);
+		scoreBar = new FlxSprite(0, healthBarBG.y + 32).loadGraphic(Util.getImage('scoreBar'));
+		scoreBar.setGraphicSize(Std.int(scoreBar.width), Std.int(scoreBar.height) - 10);
+		add(scoreBar);
+
+		scoreText = new FlxText(0, healthBarBG.y + 40, 0, "", 16);
 		scoreText.screenCenter(X);
-		scoreText.setFormat("assets/fonts/vcr.ttf", 18, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreText.setFormat("assets/fonts/vcr.ttf", 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreText.scrollFactor.set();
 		scoreText.borderSize = 2;
 		add(scoreText);
@@ -621,6 +630,7 @@ class PlayState extends BasicState
 		funnyRating.cameras = [hudCam];
 		comboGroup.cameras = [hudCam];
 		msText.cameras = [hudCam];
+		scoreBar.cameras = [hudCam];
 		scoreText.cameras = [hudCam];
 		botplayText.cameras = [hudCam];
 		ratingsText.cameras = [hudCam];
@@ -1056,13 +1066,13 @@ class PlayState extends BasicState
 
 	public function CalculateAccuracy()
 	{
-		if(!Options.getData('botplay'))
-			accuracy = funnyHitStuffsLmao / totalNoteStuffs;
-		else
-			accuracy = 1;
-
-		if(accuracy < 0)
-			accuracy = 0;
+		if(hits > 0)
+		{
+			if(!Options.getData('botplay'))
+				accuracy = funnyHitStuffsLmao / totalNoteStuffs;
+			else
+				accuracy = 1;
+		}
 	}
 
 	override public function beatHit()
@@ -1584,46 +1594,64 @@ class PlayState extends BasicState
 
 	function updateAccuracyStuff()
 	{
-		if(Options.getData('botplay'))
-			accuracyNum == 100;
+		if(hits > 0)
+		{
+			if(Options.getData('botplay') || rating1 == "N/A")
+				accuracyNum == 100;
+			
+			if(accuracyNum == 100)
+				rating1 = letterRatings[0];
+			
+			else if(accuracyNum >= 90)	
+				rating1 = letterRatings[1];
 
-		if(accuracyNum == 100)
-			rating1 = letterRatings[0];
-		
-		else if(accuracyNum >= 90)	
-			rating1 = letterRatings[1];
+			else if(accuracyNum >= 80)	
+				rating1 = letterRatings[2];
 
-		else if(accuracyNum >= 80)	
-			rating1 = letterRatings[2];
+			else if(accuracyNum >= 70)	
+				rating1 = letterRatings[3];
 
-		else if(accuracyNum >= 70)	
-			rating1 = letterRatings[3];
+			else if(accuracyNum >= 60)	
+				rating1 = letterRatings[4];
 
-		else if(accuracyNum >= 60)	
-			rating1 = letterRatings[4];
+			else if(accuracyNum >= 50)	
+				rating1 = letterRatings[5];
 
-		else if(accuracyNum >= 50)	
-			rating1 = letterRatings[5];
+			else if(accuracyNum >= 40)	
+				rating1 = letterRatings[6];
 
-		else if(accuracyNum >= 40)	
-			rating1 = letterRatings[6];
+			else if(accuracyNum >= 30)	
+				rating1 = letterRatings[7];
 
-		else if(accuracyNum >= 30)	
-			rating1 = letterRatings[7];
+			else if(accuracyNum >= 20)	
+				rating1 = letterRatings[8];
 
-		else if(accuracyNum >= 20)	
-			rating1 = letterRatings[8];
-
-		rating2 = swagRatings[0]; // just in case the shit below doesn't work
-		if (misses == 0 && goods == 0 && bads == 0 && shits == 0)
-			rating2 = swagRatings[4];
-		else if (misses == 0 && goods >= 1 && bads == 0 && shits == 0)
-			rating2 = swagRatings[3];
-		else if (misses == 0)
-			rating2 = swagRatings[2];
-		else if (misses < 10)
-			rating2 = swagRatings[1];
-		else
-			rating2 = swagRatings[0];
+			rating2 = swagRatings[0]; // just in case the shit below doesn't work
+			if (misses == 0 && goods == 0 && bads == 0 && shits == 0)
+			{
+				rating2 = swagRatings[4];
+				scoreBar.color = 0xFF4895fa;
+			}
+			else if (misses == 0 && goods >= 1 && bads == 0 && shits == 0)
+			{
+				rating2 = swagRatings[3];
+				scoreBar.color = 0xFF48fa72;
+			}
+			else if (misses == 0)
+			{
+				rating2 = swagRatings[2];
+				scoreBar.color = 0xFFfa9e48;
+			}
+			else if (misses < 10)
+			{
+				rating2 = swagRatings[1];
+				scoreBar.color = 0xFFfa485a;
+			}
+			else
+			{
+				rating2 = swagRatings[0];
+				scoreBar.color = 0xFF9e9697;
+			}
+		}
 	}
 }

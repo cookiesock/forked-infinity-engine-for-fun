@@ -166,13 +166,14 @@ class PauseMenu extends BasicSubState
 					changeSelection();
 				
 				case 'Exit To Menu':
-					FreeplayMenuState.curSpeed = game.PlayState.songMultiplier;
 					FlxG.sound.playMusic(Util.getSound('menus/freakyMenu', false));
 
 					if(game.PlayState.storyMode)
 						transitionState(new menus.StoryModeState());
 					else
 						transitionState(new menus.FreeplayMenuState());
+
+					FreeplayMenuState.curSpeed = PlayState.songMultiplier;
 				
 				// options Shit
 				case 'Back':
