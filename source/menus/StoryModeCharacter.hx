@@ -16,8 +16,6 @@ class StoryModeCharacter extends FlxSprite {
     public var anims:Array<Dynamic> = [];
     public var position:Array<Int> = [0,0];
     public var isPlayer:Bool = false;
-    public var origX:Float = 0;
-    public var origY:Float = 0;
 
     public function new(x, y, name, ?isPlayer:Bool)
     {
@@ -25,8 +23,6 @@ class StoryModeCharacter extends FlxSprite {
 
         this.name = name;
         this.isPlayer = isPlayer;
-        origX = x;
-        origY = y;
 
         changeChar(name);
     }
@@ -82,9 +78,6 @@ class StoryModeCharacter extends FlxSprite {
 
             antialiasing = Options.getData('anti-aliasing');
             position = json.position;
-
-            x = origX;
-            y = origY;
 
             offset.set(position[0], position[1]);
 
