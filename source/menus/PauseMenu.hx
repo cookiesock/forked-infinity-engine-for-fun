@@ -13,6 +13,7 @@ import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import ui.AlphabetText;
+import game.PlayState;
 
 using StringTools;
 
@@ -116,6 +117,15 @@ class PauseMenu extends BasicSubState
 		persistentDraw = true;
 		super.closeSubState();
 	}*/
+
+	override public function create()
+	{
+		super.create();
+
+		#if discord_rpc
+		DiscordRPC.changePresence("Paused | " + PlayState.song.song + " - " + PlayState.storedDifficulty.toUpperCase(), null);
+		#end
+	}
 
 	override public function update(elapsed:Float)
 	{

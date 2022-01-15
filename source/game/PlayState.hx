@@ -220,15 +220,16 @@ class PlayState extends BasicState
 	{
 		#if discord_rpc
 		if(!basic)
-        	DiscordRPC.changePresence("Playing " + song.song + " on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed", "Time Left: " + songTime);
+        	DiscordRPC.changePresence("Playing " + song.song + " - " + storedDifficulty.toUpperCase(), FlxMath.roundDecimal(songMultiplier, 2) + "x Speed | Time Left: " + songTime);
 		else
-        	DiscordRPC.changePresence("Playing " + song.song + " on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed", null);
+        	DiscordRPC.changePresence("Playing " + song.song + " - " + storedDifficulty.toUpperCase(), FlxMath.roundDecimal(songMultiplier, 2) + "x Speed", null);
         #end
 	}
 
 	override public function create()
 	{
-		BasicState.changeAppTitle(Util.engineName, "Playing " + song.song + " on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed");
+		BasicState.changeAppTitle(Util.engineName, "Playing " + song.song + " - " + storedDifficulty.toUpperCase() + " Mode on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed");
+		// should result in "Playing ExampleSong - HARD Mode on 1.05x Speed"
 
 		refreshDiscordRPC(true);
 
