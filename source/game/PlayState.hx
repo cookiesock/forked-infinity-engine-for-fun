@@ -1060,6 +1060,9 @@ class PlayState extends BasicState
 			accuracy = funnyHitStuffsLmao / totalNoteStuffs;
 		else
 			accuracy = 1;
+
+		if(accuracy < 0)
+			accuracy = 0;
 	}
 
 	override public function beatHit()
