@@ -1,5 +1,6 @@
 package game;
 
+import menus.AchievementThing;
 import flixel.addons.text.FlxTypeText;
 import openfl.display3D.Context3DProgramFormat;
 import menus.TitleScreenState;
@@ -252,6 +253,12 @@ class PlayState extends BasicState
 
 	override public function create()
 	{
+		missSounds = [
+			FlxG.sound.load(Util.getSound('gameplay/missnote1'), 0.6),
+			FlxG.sound.load(Util.getSound('gameplay/missnote2'), 0.6),
+			FlxG.sound.load(Util.getSound('gameplay/missnote3'), 0.6)
+		];
+		
 		BasicState.changeAppTitle(Util.engineName, "Playing " + song.song + " - " + storedDifficulty.toUpperCase() + " Mode on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed");
 		// should result in "Playing ExampleSong - HARD Mode on 1.05x Speed"
 
@@ -756,6 +763,8 @@ class PlayState extends BasicState
 		}
 	}
 
+	var missSounds:Array<FlxSound>;
+
 	function swagUpdate(elapsed:Float)
 	{
 		// really hope this doesn't crash, but it has a HIGH chance of doing so :(
@@ -1012,7 +1021,7 @@ class PlayState extends BasicState
 							player.playAnim(singAnims[note.noteID % 4] + "miss", true);
 						}
 
-						FlxG.sound.play(Util.getSound('gameplay/missnote' + FlxG.random.int(1, 3)), 0.6);
+						FlxG.random.getObject(missSounds).play(true);
 
 						score -= 10;
 
@@ -1087,7 +1096,7 @@ class PlayState extends BasicState
 			// song ends too early or late on certain speeds, this is fix
 			if (FlxG.sound.music.length - Conductor.songPosition <= 20)
 			{
-				endSong();
+				processAchievements();
 			}
 		}
 	}
@@ -1107,6 +1116,7 @@ class PlayState extends BasicState
 	function endSong()
 	{
 		canPause = false;
+
 		if(!endingSong && !canPause)
 		{
 			endingSong = true;
@@ -1144,6 +1154,8 @@ class PlayState extends BasicState
 		}
 	}
 
+	public var fromAch:Bool = false;
+
 	override public function closeSubState()
 	{
 		super.closeSubState();
@@ -1164,6 +1176,9 @@ class PlayState extends BasicState
 				paused = false;
 			}
 		}
+
+		if(fromAch)
+			endSong();
 	}
 
 	public function CalculateAccuracy()
@@ -1641,7 +1656,7 @@ class PlayState extends BasicState
 						player.playAnim(singAnims[i] + "miss", true);
 					}
 
-					FlxG.sound.play(Util.getSound('gameplay/missnote' + FlxG.random.int(1, 3)), 0.6);
+					FlxG.random.getObject(missSounds).play(true);
 		
 					score -= 10;
 					misses += 1;
@@ -1759,5 +1774,53 @@ class PlayState extends BasicState
 				scoreBar.color = 0xFF9e9697;
 			}
 		}
+	}
+
+	function processAchievements()
+	{ // TODO: add shit to make custom achievements a thing
+		fromAch = true;
+
+		var listOfNewAchievements:Array<String> = [];
+
+		switch(song.song.toLowerCase())
+		{
+			case "tutorial":
+				if(getAchievement("tutorial") == true)
+					listOfNewAchievements.push("tutorial");
+		}
+
+		if(FlxG.sound.music != null)
+			FlxG.sound.music.pause();
+
+		if(vocals != null)
+			vocals.pause();
+
+		persistentUpdate = false;
+
+		paused = true;
+
+		if(TitleScreenState.optionsInitialized)
+			Controls.refreshControls();
+
+		Controls.accept = false;
+
+		openSubState(new AchievementThing(listOfNewAchievements));
+	}
+
+	function getAchievement(achievement:String):Bool
+	{
+		var funnyList:Array<String> = Options.getData("achievements");
+
+		if(!funnyList.contains(achievement))
+		{
+			funnyList.push(achievement);
+			Options.saveData("achievements", funnyList);
+
+			return true;
+		}
+
+		Options.saveData("achievements", funnyList);
+
+		return false;
 	}
 }

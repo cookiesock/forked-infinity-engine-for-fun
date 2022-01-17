@@ -1,0 +1,9 @@
+{
+    "achievements": [
+        {
+            "file_name": "tutorial",
+            "name": "You can press keys!",
+            "description": "You beat the tutorial lol."
+        }
+    ]
+}

@@ -1,8 +1,6 @@
 package ui;
 
 import flixel.graphics.FlxGraphic;
-import mods.Mods;
-import lime.utils.Assets;
 import ui.TrackerSprite.TrackerDirection;
 import flixel.FlxSprite;
 
@@ -21,8 +19,6 @@ class Icon extends TrackerSprite
 			trace("Oops! Looks like the icon you tried to load: " + iconPath + " doesn't exist.");
 			iconPath = "characters/images/placeholder/icons";
 		}
-
-		trace(iconPath);
 
 		switch(swagChar)
 		{

@@ -91,6 +91,10 @@
         {
             "name": "fpsCap",
             "value": 60
+        },
+        {
+            "name": "achievements",
+            "value": []
         }
     ] 
 }

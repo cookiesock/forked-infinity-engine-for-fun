@@ -40,6 +40,8 @@
 	<assets path="assets/characters" />
 	<assets path="assets/credits" />
 	<assets path="assets/weeks" />
+	<assets path="assets/dialogue" />
+	<assets path="assets/achievements" />
 
 	<assets path="assets/songs" exclude="*.ogg" if="web"/>
 	<assets path="assets/songs" exclude="*.mp3" unless="web"/>
