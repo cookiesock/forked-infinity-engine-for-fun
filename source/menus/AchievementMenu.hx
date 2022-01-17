@@ -29,6 +29,7 @@ class AchievementMenu extends BasicState
 
     var songAlphabets:FlxTypedGroup<AlphabetText> = new FlxTypedGroup<AlphabetText>();
     var songIcons:FlxTypedGroup<AchievementIcon> = new FlxTypedGroup<AchievementIcon>();
+    var descriptions:Array<String> = [];
 
     var up = false;
     var down = false;
@@ -38,6 +39,8 @@ class AchievementMenu extends BasicState
     var rightP = false;
     var shiftP = false;
     var reset = false;
+
+    var descriptionText:FlxText;
     
     public function new()
     {
@@ -99,7 +102,24 @@ class AchievementMenu extends BasicState
 
             var icon = new AchievementIcon("achievements/images/" + achievementData.file_name + "-achievement", alphabet, null, null, LEFT);
             songIcons.add(icon);
+
+            descriptions.push(achievementData.description);
         }
+
+        var stupidBox = new FlxSprite(0, FlxG.height * 0.85).makeGraphic(FlxG.width, 300, FlxColor.BLACK);
+		stupidBox.alpha = 0.6;
+		add(stupidBox);
+
+        descriptionText = new FlxText(0, FlxG.height * 0.9, 0, "Haha funny test", 24);
+        descriptionText.font = "assets/fonts/vcr.ttf";
+		descriptionText.color = FlxColor.WHITE;
+		descriptionText.borderColor = FlxColor.BLACK;
+		descriptionText.borderSize = 2;
+		descriptionText.borderStyle = OUTLINE;
+		descriptionText.alignment = CENTER;
+        descriptionText.y = (stupidBox.y + 75) - descriptionText.height;
+        descriptionText.screenCenter(X);
+		add(descriptionText);
 
         updateSelection();
 
@@ -202,6 +222,9 @@ class AchievementMenu extends BasicState
             bg.color = 0xFF60CCFF;
         else
             bg.color = 0xFF545454;
+
+        descriptionText.text = descriptions[selectedSong];
+        descriptionText.screenCenter(X);
 
         FlxG.sound.play(Util.getSound('menus/scrollMenu'));
     }
