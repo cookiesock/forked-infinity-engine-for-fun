@@ -132,16 +132,6 @@ class NoteColorMenu extends BasicSubState
 				colorTypeText.text = "Hue       Sat       Brt";
 				colorTypeText.screenCenter(X);
 
-				for(i in 0...daColorTypes.members.length)
-				{
-					daColorTypes.members[i].text = colors[selectedKey][i];
-					daColorTypes.members[i].visible = true;
-					daColorTypes.members[i].color = (colorType == i) ? FlxColor.CYAN : FlxColor.WHITE;
-
-					daColorTypes.members[i].screenCenter(X);
-					daColorTypes.members[i].x -= daNotes.members[i].x / 2;
-				}
-
 				noteColorWarning.text = "Press LEFT & RIGHT to select a value to set\nPress ACCEPT to edit the value\n";
 
 				if(left)
@@ -149,6 +139,16 @@ class NoteColorMenu extends BasicSubState
 
 				if(right)
 					changeColorTypeSelection(1);
+
+				for(i in 0...daColorTypes.members.length)
+				{
+					daColorTypes.members[i].text = colors[selectedKey][i];
+					daColorTypes.members[i].visible = true;
+					daColorTypes.members[i].color = (colorType == i) ? FlxColor.CYAN : FlxColor.WHITE;
+
+					daColorTypes.members[i].screenCenter(X);
+					daColorTypes.members[i].x -= (daNotes.members[i].width * (i + 1)) - (125 * (i + 1));
+				}
 
 				if(accept)
 				{
@@ -163,14 +163,10 @@ class NoteColorMenu extends BasicSubState
 				{
 					daColorTypes.members[i].text = colors[selectedKey][i];
 					daColorTypes.members[i].visible = true;
-
-					if(colorType == i)
-						daColorTypes.members[i].color = FlxColor.CYAN;
-					else
-						daColorTypes.members[i].color = FlxColor.WHITE;
+					daColorTypes.members[i].color = (colorType == i) ? FlxColor.CYAN : FlxColor.WHITE;
 
 					daColorTypes.members[i].screenCenter(X);
-					daColorTypes.members[i].x -= daNotes.members[i].x / 2;
+					daColorTypes.members[i].x -= (daNotes.members[i].width * (i + 1)) - (125 * (i + 1));
 				}
 
 				if(leftP || rightP)
