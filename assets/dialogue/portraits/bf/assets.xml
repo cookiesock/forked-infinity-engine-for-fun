@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="assets.png">
+	<!-- Created with Adobe Animate version 21.0.6.41649 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="angry idle0000" x="1405" y="1" width="467" height="456"/>
+	<SubTexture name="angry idle0001" x="1405" y="1" width="467" height="456"/>
+	<SubTexture name="angry talk0000" x="1" y="1" width="467" height="456"/>
+	<SubTexture name="angry talk0001" x="1" y="1" width="467" height="456"/>
+	<SubTexture name="angry talk0002" x="469" y="1" width="467" height="456"/>
+	<SubTexture name="angry talk0003" x="469" y="1" width="467" height="456"/>
+	<SubTexture name="angry talk0004" x="937" y="1" width="467" height="456"/>
+	<SubTexture name="angry talk0005" x="937" y="1" width="467" height="456"/>
+	<SubTexture name="confused idle0000" x="3249" y="915" width="463" height="456"/>
+	<SubTexture name="confused idle0001" x="3249" y="915" width="463" height="456"/>
+	<SubTexture name="confused talk0000" x="1857" y="915" width="463" height="456"/>
+	<SubTexture name="confused talk0001" x="1857" y="915" width="463" height="456"/>
+	<SubTexture name="confused talk0002" x="2321" y="915" width="463" height="456"/>
+	<SubTexture name="confused talk0003" x="2321" y="915" width="463" height="456"/>
+	<SubTexture name="confused talk0004" x="2785" y="915" width="463" height="456"/>
+	<SubTexture name="confused talk0005" x="2785" y="915" width="463" height="456"/>
+	<SubTexture name="excited idle0000" x="1393" y="915" width="463" height="456"/>
+	<SubTexture name="excited idle0001" x="1393" y="915" width="463" height="456"/>
+	<SubTexture name="excited talk0000" x="3265" y="1" width="463" height="456"/>
+	<SubTexture name="excited talk0001" x="3265" y="1" width="463" height="456"/>
+	<SubTexture name="excited talk0002" x="1" y="458" width="463" height="456"/>
+	<SubTexture name="excited talk0003" x="1" y="458" width="463" height="456"/>
+	<SubTexture name="excited talk0004" x="465" y="458" width="463" height="456"/>
+	<SubTexture name="excited talk0005" x="465" y="458" width="463" height="456"/>
+	<SubTexture name="normal idle0000" x="929" y="915" width="463" height="456"/>
+	<SubTexture name="normal idle0001" x="929" y="915" width="463" height="456"/>
+	<SubTexture name="normal talk0000" x="1873" y="1" width="463" height="456"/>
+	<SubTexture name="normal talk0001" x="1873" y="1" width="463" height="456"/>
+	<SubTexture name="normal talk0002" x="2337" y="1" width="463" height="456"/>
+	<SubTexture name="normal talk0003" x="2337" y="1" width="463" height="456"/>
+	<SubTexture name="normal talk0004" x="2801" y="1" width="463" height="456"/>
+	<SubTexture name="normal talk0005" x="2801" y="1" width="463" height="456"/>
+	<SubTexture name="shocked idle0000" x="1" y="915" width="463" height="456"/>
+	<SubTexture name="shocked idle0001" x="465" y="915" width="463" height="456"/>
+	<SubTexture name="shocked talk0000" x="929" y="458" width="463" height="456"/>
+	<SubTexture name="shocked talk0001" x="1393" y="458" width="463" height="456"/>
+	<SubTexture name="shocked talk0002" x="1857" y="458" width="463" height="456"/>
+	<SubTexture name="shocked talk0003" x="2321" y="458" width="463" height="456"/>
+	<SubTexture name="shocked talk0004" x="2785" y="458" width="463" height="456"/>
+	<SubTexture name="shocked talk0005" x="3249" y="458" width="463" height="456"/>
+</TextureAtlas>

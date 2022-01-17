@@ -20,30 +20,42 @@ using StringTools;
 
 class FreeplayMenuState extends BasicState
 {
-    private var songs:Array<SongMetadata> = [];
+    var songs:Array<SongMetadata> = [];
 
-    private var selectedSong:Int = 0;
-    private var selectedDifIndex:Int = 1;
+    var selectedSong:Int = 0;
+    var selectedDifIndex:Int = 1;
 
-    private var bg:FlxSprite;
+    var bg:FlxSprite;
 
-    private var colorTween:FlxTween;
-    private var selectedColor:Int = 0xFF7F1833;
+    var colorTween:FlxTween;
+    var selectedColor:Int = 0xFF7F1833;
 
-    private var songAlphabets:FlxTypedGroup<AlphabetText> = new FlxTypedGroup<AlphabetText>();
-    private var songIcons:FlxTypedGroup<Icon> = new FlxTypedGroup<Icon>();
+    var songAlphabets:FlxTypedGroup<AlphabetText> = new FlxTypedGroup<AlphabetText>();
+    var songIcons:FlxTypedGroup<Icon> = new FlxTypedGroup<Icon>();
 
-    private var selectedDifficulty:String = "normal";
+    var selectedDifficulty:String = "normal";
 
-    private var box:FlxSprite;
+    var box:FlxSprite;
 
-    private var scoreText:FlxText;
-    private var difText:FlxText;
-    private var speedText:FlxText;
+    var scoreText:FlxText;
+    var difText:FlxText;
+    var speedText:FlxText;
 
     public static var curSpeed:Float = 1;
 
-    private var vocals:FlxSound = new FlxSound();
+    var vocals:FlxSound = new FlxSound();
+
+    var holdTime:Float = 0;
+    var elapsedVar:Float = 0;
+
+    var up = false;
+    var down = false;
+    var left = false;
+    var leftP = false;
+    var right = false;
+    var rightP = false;
+    var shiftP = false;
+    var reset = false;
     
     public function new()
     {
@@ -167,6 +179,8 @@ class FreeplayMenuState extends BasicState
     {
         super.update(elapsed);
 
+        elapsedVar = elapsed;
+
         if(Controls.back)
         {
             FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
@@ -206,12 +220,14 @@ class FreeplayMenuState extends BasicState
             refreshSpeed();
         }
 
-        var up = Controls.UI_UP;
-        var down = Controls.UI_DOWN;
-        var left = Controls.UI_LEFT;
-        var right = Controls.UI_RIGHT;
-        var shiftP = Controls.shiftP;
-        var reset = Controls.reset;
+        up = Controls.UI_UP;
+        down = Controls.UI_DOWN;
+        left = Controls.UI_LEFT;
+        leftP = Controls.UI_LEFT_P;
+        right = Controls.UI_RIGHT;
+        rightP = Controls.UI_RIGHT_P;
+        shiftP = Controls.shiftP;
+        reset = Controls.reset;
 
         if(up || down)
         {
@@ -241,7 +257,7 @@ class FreeplayMenuState extends BasicState
             updateSelection();
         }
 
-        if(left && shiftP || right && shiftP)
+        /*if(left && shiftP || right && shiftP)
         {
             var daMultiplier:Float = 0.05;
 
@@ -252,7 +268,14 @@ class FreeplayMenuState extends BasicState
                 changeSpeed(daMultiplier);
 
             refreshSpeed();
-        }
+        }*/
+
+		if((leftP || rightP) && shiftP) {
+			var daMultiplier:Float = leftP ? -0.05 : 0.05;
+			changeSpeed(daMultiplier);
+		} else {
+			holdTime = 0;
+		}
 
         if(reset && shiftP)
             curSpeed = 1;
@@ -348,10 +371,15 @@ class FreeplayMenuState extends BasicState
 
     function changeSpeed(?change:Float = 0)
     {
-        curSpeed += change;
+        holdTime += elapsedVar;
 
-        if(curSpeed < 0.1)
-            curSpeed = 0.1;
+        if(holdTime > 0.5 || left || right)
+        {
+            curSpeed += change;
+
+            if(curSpeed < 0.1)
+                curSpeed = 0.1;
+        }
     }
 
     function refreshSpeed()

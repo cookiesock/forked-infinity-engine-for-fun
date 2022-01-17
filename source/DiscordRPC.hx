@@ -60,7 +60,7 @@ class DiscordRPC
 			details: "In Title Screen",
 			state: null,
 			largeImageKey: 'logo',
-			largeImageText: "Project Re-Funked"
+			largeImageText: Util.engineName
 		});
 	}
 
@@ -98,15 +98,12 @@ class DiscordRPC
 			details: details,
 			state: state,
 			largeImageKey: 'logo',
-			largeImageText: "Project Re-Funked",
+			largeImageText: Util.engineName,
 			smallImageKey : smallImageKey,
 			// Obtained times are in milliseconds so they are divided so Discord can use it
 			startTimestamp : Std.int(startTimestamp / 1000),
             endTimestamp : Std.int(endTimestamp / 1000)
 		});
-
-		//trace('Discord RPC Updated. Arguments: $details, $state, $smallImageKey, $hasStartTimestamp, $endTimestamp');
-		// no trace because lag
 	}
 	#end
 }

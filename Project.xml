@@ -4,7 +4,7 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Project Re-Funked" file="Project-ReFunked" packageName="com.refunkedteam.projectrefunked" package="com.refunkedteam.projectrefunked" main="Main" version="0.0.1" company="ReFunkedTeam" />
+	<app title="Infinity Engine" file="InfinityEngine" packageName="com.infinityteam.infinityengine" package="com.infinityteam.infinityengine" main="Main" version="0.1.0" company="InfinityTeam" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->

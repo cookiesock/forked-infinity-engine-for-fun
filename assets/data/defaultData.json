@@ -41,6 +41,10 @@
             "value": false
         },
         {
+            "name": "engine-watermarks",
+            "value": true
+        },
+        {
             "name": "noteskin",
             "value": "default"
         },
@@ -63,6 +67,10 @@
         {
             "name": "uiBindsAlt",
             "value": ["A", "S", "W", "D", "ESCAPE", "SHIFT", "ENTER", "X"]
+        },
+        {
+            "name": "note-colors",
+            "value": [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
         },
         {
             "name": "scroll-speed",

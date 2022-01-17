@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="assets.png">
+	<!-- Created with Adobe Animate version 21.0.6.41649 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="cheer talk instance 10000" x="1" y="1007" width="464" height="458"/>
+	<SubTexture name="cheer talk instance 10001" x="1" y="1007" width="464" height="458"/>
+	<SubTexture name="cheer talk instance 10002" x="466" y="1007" width="464" height="458"/>
+	<SubTexture name="cheer talk instance 10003" x="466" y="1007" width="464" height="458"/>
+	<SubTexture name="cheer talk instance 10004" x="553" y="1" width="464" height="458"/>
+	<SubTexture name="cheer talk instance 10005" x="553" y="460" width="464" height="458"/>
+	<SubTexture name="confused talk instance 10000" x="1" y="1" width="551" height="502"/>
+	<SubTexture name="confused talk instance 10001" x="1" y="1" width="551" height="502"/>
+	<SubTexture name="confused talk instance 10002" x="1" y="504" width="551" height="502"/>
+	<SubTexture name="confused talk instance 10003" x="1" y="504" width="551" height="502"/>
+	<SubTexture name="confused talk instance 10004" x="1" y="504" width="551" height="502"/>
+	<SubTexture name="confused talk instance 10005" x="1" y="504" width="551" height="502"/>
+	<SubTexture name="normal talk instance 10000" x="1" y="1466" width="464" height="458"/>
+	<SubTexture name="normal talk instance 10001" x="1" y="1466" width="464" height="458"/>
+	<SubTexture name="normal talk instance 10002" x="466" y="1466" width="464" height="458"/>
+	<SubTexture name="normal talk instance 10003" x="466" y="1466" width="464" height="458"/>
+	<SubTexture name="normal talk instance 10004" x="1396" y="919" width="464" height="458"/>
+	<SubTexture name="normal talk instance 10005" x="1396" y="1378" width="464" height="458"/>
+	<SubTexture name="shocked talk instance 10000" x="931" y="919" width="464" height="458"/>
+	<SubTexture name="shocked talk instance 10001" x="931" y="919" width="464" height="458"/>
+	<SubTexture name="shocked talk instance 10002" x="1018" y="1" width="464" height="458"/>
+	<SubTexture name="shocked talk instance 10003" x="1018" y="1" width="464" height="458"/>
+	<SubTexture name="shocked talk instance 10004" x="1018" y="460" width="464" height="458"/>
+	<SubTexture name="shocked talk instance 10005" x="931" y="1378" width="464" height="458"/>
+</TextureAtlas>

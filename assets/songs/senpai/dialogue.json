@@ -1,0 +1,23 @@
+{
+    "dialogueSkin": "pixel",
+    "dialogue": [
+        {
+            "text": "Ah, a new fair maiden has come\nin search of true love!",
+            "char": "senpai",
+            "emotion": "normal",
+            "speed": 0.05
+        },
+        {
+            "text": "A serenade between gentlemen\nshall decide where her\nbeautiful heart shall reside.",
+            "char": "senpai",
+            "emotion": "normal",
+            "speed": 0.05
+        },
+        {
+            "text": "Beep bo bop",
+            "char": "bf-pixel",
+            "emotion": "normal",
+            "speed": 0.05
+        }
+    ]
+}

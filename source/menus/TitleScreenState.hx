@@ -1,5 +1,6 @@
 package menus;
 
+import game.Conductor;
 import openfl.system.System;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.graphics.FlxGraphic;
@@ -31,9 +32,13 @@ class TitleScreenState extends BasicState
 	static public var optionsInitialized:Bool = false;
 	var accepted:Bool = false; // controls the ability to spam enter lol
 
+	var boppedLeft:Bool = false;
+
 	override public function create():Void
 	{
 		super.create();
+
+		funkyBpm(102);
 
 		optionsInitialized = false;
 
@@ -66,19 +71,29 @@ class TitleScreenState extends BasicState
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
 		}
 
-		logo = new FlxSprite(25, 1000);
-		logo.frames = Util.getSparrow('titlescreen/logoBumpin');
-		logo.animation.addByPrefix('idle', 'logo bumpin', 24, true);
-		logo.animation.play('idle');
-		logo.antialiasing = true;
-		add(logo);
-
-		gf = new FlxSprite(750, 1500);
+		gf = new FlxSprite(FlxG.width * 0.4, 2000);
 		gf.frames = Util.getSparrow('titlescreen/titleGF');
-		gf.animation.addByPrefix('idle', 'titleGF', 24, true);
-		gf.animation.play('idle');
-		gf.antialiasing = true;
+		gf.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+		gf.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+		gf.animation.play('danceLeft');
+		gf.antialiasing = Options.getData('anti-aliasing');
 		add(gf);
+
+		if(Options.getData('engine-watermarks'))
+		{
+			logo = new FlxSprite(-90, 1000);
+			logo.frames = Util.getSparrow('titlescreen/logoBumpinInfinity');
+		}
+		else
+		{
+			logo = new FlxSprite(-90, 1000);
+			logo.frames = Util.getSparrow('titlescreen/logoBumpin');
+		}
+		
+		logo.animation.addByPrefix('idle', 'logo bumpin', 24, false);
+		logo.animation.play('idle');
+		logo.antialiasing = Options.getData('anti-aliasing');
+		add(logo);
 
 		pressAccept = new FlxSprite();
 		pressAccept.frames = Util.getSparrow('titlescreen/titleEnter');
@@ -87,7 +102,7 @@ class TitleScreenState extends BasicState
 		pressAccept.animation.play('idle');
 		pressAccept.screenCenter(X);
 		pressAccept.y = FlxG.height - 145;
-		pressAccept.antialiasing = true;
+		pressAccept.antialiasing = Options.getData('anti-aliasing');
 		add(pressAccept);
 
 		#if debug
@@ -128,10 +143,26 @@ class TitleScreenState extends BasicState
 			});
 		}
 
-		logo.y = FlxMath.lerp(logo.y, 50, Math.max(0, Math.min(1, elapsed * 3)));
-		gf.y = FlxMath.lerp(gf.y, 200, Math.max(0, Math.min(1, elapsed * 3)));
+		logo.y = FlxMath.lerp(logo.y, -100, Math.max(0, Math.min(1, elapsed * 3)));
+		gf.y = FlxMath.lerp(gf.y, FlxG.height * 0.07, Math.max(0, Math.min(1, elapsed * 3)));
 		
+		Conductor.songPosition = FlxG.sound.music.time;
+
 		super.update(elapsed);
+	}
+
+	override public function beatHit()
+	{
+		super.beatHit();
+
+		logo.animation.play('idle');
+
+		if(!boppedLeft)
+			gf.animation.play('danceLeft');
+		else
+			gf.animation.play('danceRight');
+
+		boppedLeft = !boppedLeft;
 	}
 }
 
