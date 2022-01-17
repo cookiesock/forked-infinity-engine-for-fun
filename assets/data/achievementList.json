@@ -1,0 +1,14 @@
+{
+    "achievements": [
+        {
+            "file_name": "tutorial",
+            "name": "You can press keys!",
+            "description": "You beat the tutorial lol."
+        },
+        {
+            "file_name": "coolswag",
+            "name": "coolswag",
+            "description": "nah this ain't cool, or swag >:((((("
+        }
+    ]
+}

@@ -32,7 +32,7 @@ class MainMenuState extends BasicState
 	var selectedMenu:Int = 0;
 	var menuButtons:FlxTypedGroup<FlxSprite>;
 	
-	var swagMenuButtons:Array<String> = ['StoryMode', 'Freeplay', 'Credits', 'Options', 'Mods', 'Replays'];
+	var swagMenuButtons:Array<String> = ['StoryMode', 'Freeplay', 'Credits', 'Options', 'Mods', 'Achievements', 'Replays'];
 
 	var menuWatermarks:Array<String> = []; // because you can't access variables in variable initialization
 	var menuWatermarksText:FlxTypedGroup<FlxText>;
@@ -208,6 +208,10 @@ class MainMenuState extends BasicState
 
 									case 'Replays':
 										transitionState(new menus.ReplayMenuState());
+										trace("entered replays menu");
+
+									case 'Achievements':
+										transitionState(new menus.AchievementMenu());
 										trace("entered replays menu");
 								}
 							});
