@@ -42,10 +42,13 @@ class PauseMenu extends BasicSubState
 
 	var selectedOption:Int = 0;
 	var pauseMusic:FlxSound;
-	var practiceText:FlxText;
-	var botplayText:FlxText;
 	var descText:FlxText;
 	var warningText:FlxText; // shows up if you've changed smth like note splashes
+
+	var songText:FlxText;
+	var difficultyText:FlxText;
+	var practiceText:FlxText;
+
 	var bg:FlxSprite;
 
 	public function new(?x:Float, ?y:Float)
@@ -71,6 +74,25 @@ class PauseMenu extends BasicSubState
 		warningText.borderSize = 2;
 		warningText.borderColor = FlxColor.BLACK;
 		add(warningText);
+
+		songText = new FlxText(0, 10, 0, PlayState.song.song, 32);
+		songText.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, RIGHT);
+		songText.alpha = 0;
+		add(songText);
+
+		difficultyText = new FlxText(0, 40, 0, PlayState.storedDifficulty.toUpperCase(), 32);
+		difficultyText.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, RIGHT);
+		difficultyText.alpha = 0;
+		add(difficultyText);
+
+		practiceText = new FlxText(0, 70, 0, "PRACTICE MODE", 32);
+		practiceText.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, RIGHT);
+		practiceText.alpha = 0;
+		add(practiceText);
+
+		FlxTween.tween(songText, {y: songText.y + 10, alpha: 1}, 0.4, {ease: FlxEase.circOut, startDelay: 0.4});
+		FlxTween.tween(difficultyText, {y: difficultyText.y + 10, alpha: 1}, 0.4, {ease: FlxEase.circOut, startDelay: 0.6});
+		FlxTween.tween(practiceText, {y: practiceText.y + 10, alpha: 1}, 0.4, {ease: FlxEase.circOut, startDelay: 0.8});
 
 		grpOptions = new FlxTypedGroup<AlphabetText>();
 		add(grpOptions);
@@ -98,12 +120,12 @@ class PauseMenu extends BasicSubState
 		}
 
 		for (i in 0...pauseOptions.length)
-			{
-				var songText:AlphabetText = new AlphabetText(0, (70 * i) + 30, pauseOptions[i]);
-				songText.isMenuItem = true;
-				songText.targetY = i;
-				grpOptions.add(songText);
-			}
+		{
+			var songText:AlphabetText = new AlphabetText(0, (70 * i) + 30, pauseOptions[i]);
+			songText.isMenuItem = true;
+			songText.targetY = i;
+			grpOptions.add(songText);
+		}
 	}
 
 	/*override public function openSubState(SubState:flixel.FlxSubState)
@@ -144,6 +166,12 @@ class PauseMenu extends BasicSubState
 		if (-1 * Math.floor(FlxG.mouse.wheel) != 0)
 			changeSelection(-1 * Math.floor(FlxG.mouse.wheel));
 
+		practiceText.visible = PlayState.practiceMode;
+
+		songText.x = (FlxG.width - songText.width) - 20;
+		difficultyText.x = (FlxG.width - difficultyText.width) - 20;
+		practiceText.x = (FlxG.width - practiceText.width) - 20;
+
 		if(accept)
 		{
 			var selectedItem:String = pauseOptions[selectedOption];
@@ -157,7 +185,8 @@ class PauseMenu extends BasicSubState
 					FlxG.resetState();
 
 				case 'Toggle Practice Mode':
-					// do nothing yet, i'm tired aaadfgiserh
+					PlayState.practiceMode = !PlayState.practiceMode;
+					showOptionWarning(3);
 
 				case 'Options':
 					pauseOptions = funnyOptions;
@@ -225,6 +254,9 @@ class PauseMenu extends BasicSubState
 			case 2:
 				swagText = Options.getData('note-splashes') ? "On" : "Off";
 				daString = "Note Splashes are now " + swagText.toLowerCase() + "!";
+			case 3:
+				swagText = PlayState.practiceMode ? "On" : "Off";
+				daString = "Practice Mode is now " + swagText.toLowerCase() + "!";
 		}
 
 		warningText.text = daString;

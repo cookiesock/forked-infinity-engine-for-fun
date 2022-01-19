@@ -53,6 +53,9 @@ class PlayState extends BasicState
 
 	public static var song:Song;
 
+	public static var practiceMode:Bool = false;
+	public static var usedPractice:Bool = false;
+
 	private var camFollow:FlxObject;
 	
 	// stage shit
@@ -62,9 +65,9 @@ class PlayState extends BasicState
 	//var stage:Stage;
 	
 	// character shit
-	var opponent:Character;
-	var speakers:Character;
-	var player:Character;	
+	public var opponent:Character;
+	public var speakers:Character;
+	public var player:Character;	
 	
 	// arrow shit
 	var opponentStrumArrows:FlxTypedGroup<StrumArrow>;
@@ -197,6 +200,9 @@ class PlayState extends BasicState
 		dialogue = [];
 
 		inCutscene = false;
+
+		practiceMode = false;
+		usedPractice = false;
 
 		super();
 
@@ -349,10 +355,7 @@ class PlayState extends BasicState
 			speed = 0.1;
 
 		Conductor.recalculateStuff(songMultiplier);
-		//Conductor.safeZoneOffset *= songMultiplier;
-		
-		// commented out speakers/gf because my pc sucks rn - swordcube
-		// that should hopefully no longer be the case on christmas - also swordcube
+		Conductor.safeZoneOffset *= songMultiplier;
 
 		switch(song.song.toLowerCase()) // gf char
 		{
@@ -883,6 +886,29 @@ class PlayState extends BasicState
 
 		if (health > 2)
 			health = 2;
+
+		if(health <= 0 && !PlayState.practiceMode)
+		{
+			persistentUpdate = false;
+			persistentDraw = false;
+			paused = true;
+
+			vocals.stop();
+			FlxG.sound.music.stop();
+
+			var gameOverX:Float = 700;
+			var gameOverY:Float = 100;
+			var deathCharacter:String = "bf";
+
+			if(player != null && player.active)
+			{
+				gameOverX = player.getScreenPosition().x;
+				gameOverY = player.getScreenPosition().y;
+				deathCharacter = player.name;
+			}
+			
+			openSubState(new GameOverSubstate(gameOverX, gameOverY, deathCharacter));
+		}
 			
 		if (healthBar.percent < 20)
 			playerIcon.animation.play('dead', true);
@@ -1782,12 +1808,13 @@ class PlayState extends BasicState
 
 		var listOfNewAchievements:Array<String> = [];
 
-		switch(song.song.toLowerCase())
+		// add achievements here
+		if(storedSong == "tutorial" && storyMode)
 		{
-			case "tutorial":
-				if(getAchievement("tutorial") == true)
-					listOfNewAchievements.push("tutorial");
+			if(getAchievement("tutorial") == true)
+				listOfNewAchievements.push("tutorial");
 		}
+		// don't modify shit below
 
 		if(FlxG.sound.music != null)
 			FlxG.sound.music.pause();

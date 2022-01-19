@@ -42,25 +42,21 @@ class Util
 		}
 		#end
 	}
-	static public function getText(path:String):Dynamic {
+	
+	static public function getText(filePath:String)
+	{
 		#if sys
-		if(!Assets.exists(path))
+		for(mod in Mods.activeMods)
 		{
-			if(sys.FileSystem.exists(Sys.getCwd() + path))
-				return sys.io.File.getContent(Sys.getCwd() + path);
-
-			return "File couldn't be found!";
-		}
-		else
-		{
-		#end
-		if(Assets.exists(path))
-			return (Assets.getText(path));
-		else 
-			return null;
-		#if sys
+			if(sys.FileSystem.exists(Sys.getCwd() + "mods/" + mod + "/" + filePath))
+				return sys.io.File.getContent(Sys.getCwd() + "mods/" + mod + "/" + filePath);
 		}
 		#end
+		
+		if(Assets.exists("assets/" + filePath))
+			return Assets.getText("assets/" + filePath);
+		
+		return "";
 	}
 
 	static public function getSparrow(filePath:String, ?fromImagesFolder:Bool = true, ?xmlPath:String)
