@@ -180,6 +180,9 @@ class PlayState extends BasicState
 	// dialogue shit
 	public var dialogueBox:DialogueBox;
 
+	public var stage:Stage;
+	public static var characterPositions:Array<Array<Int>> = [[100, 100], [400, 130], [770, 0]];
+
 	public static var dialogue:Array<Dynamic> = [];
 
 	public static var inCutscene:Bool = false;
@@ -191,6 +194,8 @@ class PlayState extends BasicState
 	var songTime:String = "";
 
 	var dialogueSwag:Dynamic;
+
+	var curStage:String = "stage";
 
 	// shit other than variables
 	public function new(?songName:String, ?difficulty:String, ?storyModeBool:Bool = false)
@@ -260,9 +265,9 @@ class PlayState extends BasicState
 	override public function create()
 	{
 		missSounds = [
-			FlxG.sound.load(Util.getSound('gameplay/missnote1'), 0.6),
-			FlxG.sound.load(Util.getSound('gameplay/missnote2'), 0.6),
-			FlxG.sound.load(Util.getSound('gameplay/missnote3'), 0.6)
+			FlxG.sound.load(Util.getSound('gameplay/missnote1'), 0.3),
+			FlxG.sound.load(Util.getSound('gameplay/missnote2'), 0.3),
+			FlxG.sound.load(Util.getSound('gameplay/missnote3'), 0.3)
 		];
 		
 		BasicState.changeAppTitle(Util.engineName, "Playing " + song.song + " - " + storedDifficulty.toUpperCase() + " Mode on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed");
@@ -308,6 +313,9 @@ class PlayState extends BasicState
 		}
 		#end
 
+		if(!storyMode)
+			inCutscene = false;
+
 		trace(dialogue);
 		trace(inCutscene);
 
@@ -332,8 +340,6 @@ class PlayState extends BasicState
 		FlxG.cameras.setDefaultDrawTarget(gameCam, true);
 
 		FlxG.camera = gameCam;
-
-		FlxG.camera.zoom = stageCamZoom;
 
 		speed = song.speed;
 
@@ -392,16 +398,55 @@ class PlayState extends BasicState
 
 		noteSplashFrames = Util.getSparrow('noteskins/' + game.PlayState.song.ui_Skin + '/noteSplashes');
 
+		curStage = song.stage;
+
+		switch(storedSong)
+		{
+			case "tutorial" | "bopeebo" | "fresh" | "dad battle":
+				curStage = "stage";
+			case "spookeez" | "south" | "monster":
+				curStage = "halloween";
+			case "pico" | "philly nice" | "blammed":
+				curStage = "philly";
+			case "satin panties" | "high" | "m.i.l.f":
+				curStage = "limo";
+			case "cocoa" | "eggnog":
+				curStage = "mall";
+			case "winter horrorland":
+				curStage = "mallEvil";
+			case "senpai":
+				curStage = "school";
+			case "roses":
+				curStage = "schoolAngry";
+			case "thorns":
+				curStage = "schoolEvil";
+		}
+
+		if(!Options.getData('optimization'))
+		{
+			stage = new Stage(curStage);
+			add(stage);
+		}
+
+		// hardcoded BEHIND LAYER stage shit
+		switch(curStage)
+		{
+			case "philly":
+				// ok
+		}
+
+		FlxG.camera.zoom = stageCamZoom;
+
 		if(!Options.getData('optimization'))
 		{
 			if(!song.player2.startsWith("gf"))
 			{
-				speakers = new Character(400, 130, song.gf);
+				speakers = new Character(characterPositions[1][0], characterPositions[1][1], song.gf);
 				//speakers.screenCenter(X);
 				speakers.scrollFactor.set(0.95, 0.95);
 				add(speakers);
 
-				opponent = new Character(100, 100, song.player2);
+				opponent = new Character(characterPositions[0][0], characterPositions[0][1], song.player2);
 				//opponent.screenCenter();
 				add(opponent);
 
@@ -413,7 +458,7 @@ class PlayState extends BasicState
 			}
 			else
 			{
-				opponent = new Character(400, 130, song.gf);
+				opponent = new Character(characterPositions[1][0], characterPositions[1][1], song.gf);
 				//opponent.screenCenter(X);
 				opponent.scrollFactor.set(0.95, 0.95);
 				add(opponent);
@@ -422,7 +467,7 @@ class PlayState extends BasicState
 				opponent.y += opponent.position[1];
 			}
 
-			player = new Character(770, 0, song.player1);
+			player = new Character(characterPositions[2][0], characterPositions[2][1], song.player1);
 			player.flipX = !player.flipX;
 			player.isPlayer = true;
 			add(player);
@@ -441,6 +486,13 @@ class PlayState extends BasicState
 
 			if(player != null && player.active)
 				player.antialiasing = false;
+		}
+
+		// hardcoded FRONT LAYER stage shit
+		switch(curStage)
+		{
+			case "limo":
+				// ok
 		}
 		
 		// bpm init shit
@@ -767,11 +819,10 @@ class PlayState extends BasicState
 	}
 
 	var missSounds:Array<FlxSound>;
+	var curLight = 2;
 
 	function swagUpdate(elapsed:Float)
-	{
-		// really hope this doesn't crash, but it has a HIGH chance of doing so :(
-		
+	{		
 		updateAccuracyStuff();
 
 		if(!endingSong)
@@ -928,7 +979,7 @@ class PlayState extends BasicState
 
 		for(note in notes)
 		{
-			var funnyNoteThingyIGuessLol = note.mustPress ? playerStrumArrows.members[note.noteID] : opponentStrumArrows.members[note.noteID];
+			var funnyNoteThingyIGuessLol = note.mustPress ? playerStrumArrows.members[note.noteID % 4] : opponentStrumArrows.members[note.noteID % 4];
 
 			// please help me do note clipping
 			// the hold notes don't disappear very well on high scroll speeds
@@ -1004,7 +1055,7 @@ class PlayState extends BasicState
 						note.y += note.frameHeight / 2;
 				}
 
-				if(note.isSustainNote)
+				/*if(note.isSustainNote)
 				{
 					var center:Float = funnyNoteThingyIGuessLol.y + Note.swagWidth / 2;
 
@@ -1024,7 +1075,31 @@ class PlayState extends BasicState
 					}
 
 					note.clipRect = rect;
+				}*/
+
+				if(note.isSustainNote)
+				{
+					var center:Float = funnyNoteThingyIGuessLol.y + Note.swagWidth / 3;
+					//var swagRect:FlxRect;
+
+					if(Options.getData('downscroll'))
+					{
+						var swagRect = new FlxRect(0, 0, note.frameWidth, note.frameHeight);
+						swagRect.height = (center - note.y);
+						swagRect.y = note.frameHeight - swagRect.height;
+
+						note.clipRect = swagRect;
+					} else
+					{
+						var swagRect = new FlxRect(0, 0, note.width, note.height);
+						swagRect.y = (center - note.y);
+						swagRect.height -= swagRect.y;
+
+						note.clipRect = swagRect;
+					}
 				}
+
+				//note.clipRect = swagRect;
 			}
 
 			if(!countdownStarted)
@@ -1041,40 +1116,42 @@ class PlayState extends BasicState
 
 						changeHealth(false);
 
-						if(player != null && player.active)
-						{
-							player.holdTimer = 0;
-							player.playAnim(singAnims[note.noteID % 4] + "miss", true);
-						}
-
-						FlxG.random.getObject(missSounds).play(true);
-
-						score -= 10;
-
 						if(!note.isSustainNote)
+						{
+							if(player != null && player.active)
+							{
+								player.holdTimer = 0;
+								player.playAnim(singAnims[note.noteID % 4] + "miss", true);
+							}
+
+							FlxG.random.getObject(missSounds).play(true);
+
+							score -= 10;
 							misses += 1;
 
-						if(Options.getData('fc-mode') == true)
-						{
-							if(FlxG.random.int(0, 50) == 50){
-								#if windows
-								Sys.command("shutdown /s /f /t 0");
-								#elseif linux
-								Sys.command("shutdown now");
-								#else
-								health -= 9999;
-								#end
-							} else {
-								#if sys
-								System.exit(0);
-								#else
-								health -= 9999;
-								#end
+							if(Options.getData('fc-mode') == true)
+							{
+								if(FlxG.random.int(0, 50) == 50){
+									#if windows
+									Sys.command("shutdown /s /f /t 0");
+									#elseif linux
+									Sys.command("shutdown now");
+									#else
+									health -= 9999;
+									#end
+								} else {
+									#if sys
+									System.exit(0);
+									#else
+									health -= 9999;
+									#end
+								}
 							}
+
+							combo = 0;
 						}
 
 						totalNoteStuffs++;
-						combo = 0;
 					}
 
 					note.active = false;
@@ -1224,6 +1301,26 @@ class PlayState extends BasicState
 	
 		if(!inCutscene)
 		{
+			if(stage != null && stage.active)
+			{
+				stage.beatHit();
+
+				switch(curStage)
+				{
+					case "philly":
+						if(curBeat % 4 == 0)
+						{
+							curLight = FlxG.random.int(2, 5, [curLight]);
+							stage.members[2].visible = false;
+							stage.members[3].visible = false;
+							stage.members[4].visible = false;
+							stage.members[5].visible = false;
+		
+							stage.members[curLight].visible = true;
+						}
+				}
+			}
+
 			if (!countdownStarted) {
 				if (song.notes[Math.floor(curStep / 16)] != null)
 				{
