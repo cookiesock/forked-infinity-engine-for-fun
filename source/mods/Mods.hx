@@ -35,6 +35,8 @@ class Mods
         {
             for(modDir in modDirStuffs)
             {
+                var goodMod:Bool = false;
+
                 if(sys.FileSystem.isDirectory(Sys.getCwd() + 'mods/$modDir'))
                 {
                     var baseModPath = Sys.getCwd() + 'mods/$modDir/';
@@ -44,6 +46,8 @@ class Mods
                     if(sys.FileSystem.exists(baseModPath + "_mod_info.json"))
                     {
                         trace(modDir + " is a valid mod!");
+
+                        goodMod = true;
 
                         if(sys.FileSystem.exists(baseModPath + "_mod_icon.png"))
                             trace(modDir + " has a valid mod icon!");
@@ -62,6 +66,9 @@ class Mods
                             mods.push([modDir, false]);
                     }
                 }
+
+                if(!goodMod && activeMods.contains(modDir))
+                    activeMods.remove(modDir);
             }
         }
         #end
