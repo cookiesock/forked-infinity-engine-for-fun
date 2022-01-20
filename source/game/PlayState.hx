@@ -1091,7 +1091,7 @@ class PlayState extends BasicState
 						note.clipRect = swagRect;
 					} else
 					{
-						var swagRect = new FlxRect(0, 0, note.width, note.height);
+						var swagRect = new FlxRect(0, 0, note.frameWidth, note.frameHeight);
 						swagRect.y = (center - note.y);
 						swagRect.height -= swagRect.y;
 
