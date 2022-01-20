@@ -277,6 +277,8 @@ class StoryModeState extends BasicState {
             trace(swagSongs[selectedWeek][0].toLowerCase());
             trace(difficulties[selectedDifficulty].toLowerCase());
             transitionState(new game.PlayState(swagSongs[selectedWeek][0].toLowerCase(), difficulties[selectedDifficulty].toLowerCase(), true));
+
+            game.PlayState.songMultiplier = 1;
         }
 
         if(up) changeSelectedWeek(-1);

@@ -1,0 +1,29 @@
+{
+    "dialogueSkin": "normal",
+    "dialogue": [
+        {
+            "text": "Welcome to the Test arena! I'm going to test your skill in a direct 1v1 rap battle against you.",
+            "char": "bf-pixel",
+            "emotion": "normal",
+            "speed": 0.05
+        },
+        {
+            "text": "lmao ok",
+            "char": "bf",
+            "emotion": "normal",
+            "speed": 0.05
+        },
+        {
+            "text": "Let's start the test.",
+            "char": "bf-pixel",
+            "emotion": "normal",
+            "speed": 0.05
+        },
+        {
+            "text": "fitness gram pacer test type beat",
+            "char": "bf",
+            "emotion": "normal",
+            "speed": 0.2
+        }
+    ]
+}

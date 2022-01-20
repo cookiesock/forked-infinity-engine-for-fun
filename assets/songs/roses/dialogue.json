@@ -1,0 +1,23 @@
+{
+    "dialogueSkin": "pixel",
+    "dialogue": [
+        {
+            "text": "Not bad for an ugly worm.",
+            "char": "senpai",
+            "emotion": "angry",
+            "speed": 0.05
+        },
+        {
+            "text": "But this time I'll rip your nuts\noff right after your\ngirlfriend finishes gargling mine.",
+            "char": "senpai",
+            "emotion": "angry",
+            "speed": 0.05
+        },
+        {
+            "text": "Bop beep be be skdoo bep",
+            "char": "bf-pixel",
+            "emotion": "normal",
+            "speed": 0.05
+        }
+    ]
+}

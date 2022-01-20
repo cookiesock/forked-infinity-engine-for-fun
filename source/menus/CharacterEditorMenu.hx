@@ -171,7 +171,7 @@ class CharacterEditorMenu extends BasicState
             changeAnim(1);
 
         if(FlxG.keys.justPressed.SPACE)
-            character.playAnim(animList[curAnim], null, null, null, animOffsets[curAnim][0], animOffsets[curAnim][1]);
+            character.playAnim(animList[curAnim], true, null, null, animOffsets[curAnim][0], animOffsets[curAnim][1]);
 
 		if(up || left || down || right)
         {

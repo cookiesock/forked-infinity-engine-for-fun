@@ -42,8 +42,10 @@ class OptionsState extends BasicState
 			["Anti-Aliasing", "checkbox", "Gives extra performance when disabled at the cost of\ngraphics not looking very smooth.", "anti-aliasing"],
 			["Optimization", "checkbox", "Removes all of the characters and background elements\nfor performance.", "optimization"],
 			["Note Splashes", "checkbox", "When enabled, a firework-like effect will show up\nIf you get a \"SiCK!!\" rating.", "note-splashes"],
+			["Engine Watermarks", "checkbox", "When enabled, some menus like the title screen will have\n" + Util.engineName + " branding/watermarks.", "engine-watermarks"],
 			["Camera Zooms", "checkbox", "When disabled, The camera won't zoom to the beat.", "camera-zooms"],
-			["FPS Cap", "menu", "Change how low/high your FPS can go."],
+			["Note Colors", "menu", "Change the color of your notes."],
+			["UI Skin", "menu", "Change how things such as ratings/notes look."],
 		],
 		"gameplay" => [
 			["Back", "menu", ""],
@@ -51,6 +53,7 @@ class OptionsState extends BasicState
 			["Adjust Offset", "menu", "Change how early/late notes appear on-screen."],
 			["Manage Keybinds", "menu", "Change the keys used to press arrows."],
 			["Adjust Scroll Speed", "menu", "Change how fast your notes fall on-screen."],
+			["FPS Cap", "menu", "Change how low/high your FPS can go."],
 			["Downscroll", "checkbox", "Makes the notes scroll downwards instead of upwards.", "downscroll"],
 			["Middlescroll", "checkbox", "Makes the notes centered on-screen.", "middlescroll"],
 			["Ghost Tapping", "checkbox", "When disabled, If you try to hit a note that doesn't exist\nThen you will get a miss.", "ghost-tapping"],
@@ -176,6 +179,11 @@ class OptionsState extends BasicState
 							reloadOptionsList(true);
 							selectedOption = 0;
 							changeSelection();
+						// graphics
+						case "Note Colors":
+							openSubState(new NoteColorMenu());
+						case "UI Skin":
+							// not yet
 						// gameplay
 						case "Adjust Offset":
 							openSubState(new OffsetMenu());

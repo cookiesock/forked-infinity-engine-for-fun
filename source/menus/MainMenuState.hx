@@ -32,7 +32,7 @@ class MainMenuState extends BasicState
 	var selectedMenu:Int = 0;
 	var menuButtons:FlxTypedGroup<FlxSprite>;
 	
-	var swagMenuButtons:Array<String> = ['StoryMode', 'Freeplay', 'Credits', 'Options', 'Mods', 'Replays'];
+	var swagMenuButtons:Array<String> = ['StoryMode', 'Freeplay', 'Credits', 'Options', 'Mods', 'Achievements', 'Replays'];
 
 	var menuWatermarks:Array<String> = []; // because you can't access variables in variable initialization
 	var menuWatermarksText:FlxTypedGroup<FlxText>;
@@ -42,9 +42,9 @@ class MainMenuState extends BasicState
 		menuWatermarks = [
 			'Press SHIFT+C to see the changelog for this version!',
 			#if debug
-			'Project Re-Funked v' + Util.engineVersion + ' (DEBUG)',
+			Util.engineName + ' v' + Util.engineVersion + ' (DEBUG)',
 			#else
-			'Project Re-Funked Release v' + Util.engineVersion,
+			Util.engineName + ' Release v' + Util.engineVersion,
 			#end
 		];
 
@@ -110,13 +110,16 @@ class MainMenuState extends BasicState
 
 		for(i in 0...menuWatermarks.length)
 		{
-			var watermark:FlxText = new FlxText(8, FlxG.height - (30 + i * 20), 0, menuWatermarks[i], 16);
-			watermark.setFormat("assets/fonts/vcr.ttf", 16, FlxColor.WHITE, LEFT);
-			watermark.borderStyle = OUTLINE;
-			watermark.borderSize = 1.5;
-			watermark.borderColor = FlxColor.BLACK;
-			watermark.scrollFactor.set();
-			menuWatermarksText.add(watermark);	
+			if(Options.getData('engine-watermarks'))
+			{
+				var watermark:FlxText = new FlxText(8, FlxG.height - (30 + i * 20), 0, menuWatermarks[i], 16);
+				watermark.setFormat("assets/fonts/vcr.ttf", 16, FlxColor.WHITE, LEFT);
+				watermark.borderStyle = OUTLINE;
+				watermark.borderSize = 1.5;
+				watermark.borderColor = FlxColor.BLACK;
+				watermark.scrollFactor.set();
+				menuWatermarksText.add(watermark);	
+			}
 		}
 
 		changeSelection();
@@ -205,6 +208,10 @@ class MainMenuState extends BasicState
 
 									case 'Replays':
 										transitionState(new menus.ReplayMenuState());
+										trace("entered replays menu");
+
+									case 'Achievements':
+										transitionState(new menus.AchievementMenu());
 										trace("entered replays menu");
 								}
 							});

@@ -41,6 +41,10 @@
             "value": false
         },
         {
+            "name": "engine-watermarks",
+            "value": true
+        },
+        {
             "name": "noteskin",
             "value": "default"
         },
@@ -65,6 +69,10 @@
             "value": ["A", "S", "W", "D", "ESCAPE", "SHIFT", "ENTER", "X"]
         },
         {
+            "name": "note-colors",
+            "value": [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        },
+        {
             "name": "scroll-speed",
             "value": 1
         },
@@ -83,6 +91,10 @@
         {
             "name": "fpsCap",
             "value": 60
+        },
+        {
+            "name": "achievements",
+            "value": []
         }
     ] 
 }

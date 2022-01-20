@@ -1,0 +1,35 @@
+{
+    "dialogueSkin": "pixel",
+    "dialogue": [
+        {
+            "text": "Direct contact with real humans..\nafter being trapped in here for so long...",
+            "char": "spirit",
+            "emotion": "normal",
+            "speed": 0.05
+        },
+        {
+            "text": "and HER of all people.",
+            "char": "spirit",
+            "emotion": "normal",
+            "speed": 0.05
+        },
+        {
+            "text": "I'll make her father pay for\nwhat he's done to me\nand all the others....",
+            "char": "spirit",
+            "emotion": "normal",
+            "speed": 0.05
+        },
+        {
+            "text": "I'll beat you and make you take my place.",
+            "char": "spirit",
+            "emotion": "normal",
+            "speed": 0.05
+        },
+        {
+            "text": "You don't mind your bodies being\nborrowed right? It's only fair...",
+            "char": "spirit",
+            "emotion": "normal",
+            "speed": 0.05
+        }
+    ]
+}

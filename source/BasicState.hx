@@ -1,5 +1,6 @@
 package;
 
+import game.PlayState;
 import menus.TitleScreenState;
 import flixel.FlxG;
 import game.Conductor;

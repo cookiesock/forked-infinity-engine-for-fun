@@ -1,0 +1,27 @@
+{
+    "character_Positions":[
+        [100, 100, "opponent"],
+        [400, 130, "speakers"],
+        [770, 100, "player"]
+    ],
+    "camera_Zoom": 1.05,
+    "objects": [
+        {
+            "position":[-200, -100],
+            "scroll_Factor": [0.9, 0.9],
+            "scale": 1,
+            "antialiasing": true,
+            "file_Name": "halloween_bg",
+            "is_Animated": true,
+            "animations": [
+                ["idle", "halloweem bg0"],
+                ["lightning", "halloweem bg lightning strike"]
+            ],
+            "fps": 24,
+            "looped": false,
+            "flipX": false,
+            "danceLeftRight": false,
+            "visible": true
+        }
+    ]
+}

@@ -1,0 +1,180 @@
+{
+    "character_Positions":[
+        [100, 100, "opponent"],
+        [400, 130, "speakers"],
+        [770, 100, "player"]
+    ],
+    "camera_Zoom": 1.05,
+    "objects": [
+        {
+            "position":[-100, 0],
+            "scroll_Factor": [0.1, 0.1],
+            "scale": 1,
+            "antialiasing": true,
+            "file_Name": "sky",
+            "is_Animated": false,
+            "animations": [
+                ["no", "no"],
+                ["no", "no"]
+            ],
+            "fps": 24,
+            "looped": false,
+            "flipX": false,
+            "danceLeftRight": false,
+            "visible": true
+        },
+        {
+            "position":[-10, 0],
+            "scroll_Factor": [0.3, 0.3],
+            "scale": 0.85,
+            "antialiasing": true,
+            "file_Name": "city",
+            "is_Animated": false,
+            "animations": [
+                ["no", "no"],
+                ["no", "no"]
+            ],
+            "fps": 24,
+            "looped": false,
+            "flipX": false,
+            "danceLeftRight": false,
+            "visible": true
+        },
+        {
+            "position":[-10, 0],
+            "scroll_Factor": [0.3, 0.3],
+            "scale": 0.85,
+            "antialiasing": true,
+            "file_Name": "win0",
+            "is_Animated": false,
+            "animations": [
+                ["no", "no"],
+                ["no", "no"]
+            ],
+            "fps": 24,
+            "looped": false,
+            "flipX": false,
+            "danceLeftRight": false,
+            "visible": false
+        },
+        {
+            "position":[-10, 0],
+            "scroll_Factor": [0.3, 0.3],
+            "scale": 0.85,
+            "antialiasing": true,
+            "file_Name": "win1",
+            "is_Animated": false,
+            "animations": [
+                ["no", "no"],
+                ["no", "no"]
+            ],
+            "fps": 24,
+            "looped": false,
+            "flipX": false,
+            "danceLeftRight": false,
+            "visible": false
+        },
+        {
+            "position":[-10, 0],
+            "scroll_Factor": [0.3, 0.3],
+            "scale": 0.85,
+            "antialiasing": true,
+            "file_Name": "win2",
+            "is_Animated": false,
+            "animations": [
+                ["no", "no"],
+                ["no", "no"]
+            ],
+            "fps": 24,
+            "looped": false,
+            "flipX": false,
+            "danceLeftRight": false,
+            "visible": false
+        },
+        {
+            "position":[-10, 0],
+            "scroll_Factor": [0.3, 0.3],
+            "scale": 0.85,
+            "antialiasing": true,
+            "file_Name": "win3",
+            "is_Animated": false,
+            "animations": [
+                ["no", "no"],
+                ["no", "no"]
+            ],
+            "fps": 24,
+            "looped": false,
+            "flipX": false,
+            "danceLeftRight": false,
+            "visible": false
+        },
+        {
+            "position":[-10, 0],
+            "scroll_Factor": [0.3, 0.3],
+            "scale": 0.85,
+            "antialiasing": true,
+            "file_Name": "win4",
+            "is_Animated": false,
+            "animations": [
+                ["no", "no"],
+                ["no", "no"]
+            ],
+            "fps": 24,
+            "looped": false,
+            "flipX": false,
+            "danceLeftRight": false,
+            "visible": false
+        },
+        {
+            "position":[-40, 50],
+            "scroll_Factor": [1, 1],
+            "scale": 1,
+            "antialiasing": true,
+            "file_Name": "behindTrain",
+            "is_Animated": false,
+            "animations": [
+                ["no", "no"],
+                ["no", "no"]
+            ],
+            "fps": 24,
+            "looped": false,
+            "flipX": false,
+            "danceLeftRight": false,
+            "visible": true
+        },
+        {
+            "position":[2000, 360],
+            "scroll_Factor": [1, 1],
+            "scale": 1,
+            "antialiasing": true,
+            "file_Name": "train",
+            "is_Animated": false,
+            "animations": [
+                ["no", "no"],
+                ["no", "no"]
+            ],
+            "fps": 24,
+            "looped": false,
+            "flipX": false,
+            "danceLeftRight": false,
+            "visible": true
+        },
+        {
+            "position":[-40, 50],
+            "scroll_Factor": [1, 1],
+            "scale": 1,
+            "antialiasing": true,
+            "file_Name": "street",
+            "is_Animated": false,
+            "animations": [
+                ["no", "no"],
+                ["no", "no"]
+            ],
+            "fps": 24,
+            "looped": false,
+            "flipX": false,
+            "danceLeftRight": false,
+            "visible": true
+        }
+    ]
+}

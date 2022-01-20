@@ -22,7 +22,7 @@ class NoteSplash extends FlxSprite
 	{
 		var theFunny:String = 'note splash ' + directions[noteID % 4];
 		frames = game.PlayState.noteSplashFrames;
-		animation.addByPrefix('splash', theFunny + "0", 30, false);
+		animation.addByPrefix('splash', theFunny + "0", 35, false);
 		animation.play('splash');
 		doingThe = true;
 

@@ -122,7 +122,7 @@ class KeybindMenu extends BasicSubState
 		if(isEditingKey) {
 			keybindWarning.text = "Press any key to continue.";
 		} else {
-			keybindWarning.text = "Press LEFT & RIGHT to select an arrow\nPress ENTER to change the keybind for the arrow";
+			keybindWarning.text = "Press LEFT & RIGHT to select an arrow\nPress ACCEPT to change the keybind for the arrow";
 		}
 
 		keybindWarning.screenCenter(X);

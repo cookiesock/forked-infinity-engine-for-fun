@@ -1,0 +1,52 @@
+{
+    "scale": 1,
+    "alignment": "middle",
+    "antialiasing": true,
+
+    "emotions": [
+        {
+            "name": "normal",
+            "talk_offsets": [
+                0,
+                0
+            ],
+            "idle_offsets": [
+                0,
+                0
+            ]
+        },
+        {
+            "name": "shocked",
+            "talk_offsets": [
+                0,
+                0
+            ],
+            "idle_offsets": [
+                0,
+                0
+            ]
+        },
+        {
+            "name": "cheer",
+            "talk_offsets": [
+                0,
+                0
+            ],
+            "idle_offsets": [
+                0,
+                0
+            ]
+        },
+        {
+            "name": "confused",
+            "talk_offsets": [
+                0,
+                0
+            ],
+            "idle_offsets": [
+                0,
+                0
+            ]
+        }
+    ]
+}

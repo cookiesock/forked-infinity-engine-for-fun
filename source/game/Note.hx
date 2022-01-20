@@ -15,6 +15,7 @@ class Note extends FlxSprite {
 	public var mustPress:Bool = false;
 	public var isSustainNote:Bool = false;
 	public var isEndNote:Bool = false;
+	public var shouldHit:Bool = true;
 	public var sustainLength:Float = 0;
 
 	public var canBeHit:Bool = false;
@@ -215,19 +216,41 @@ class Note extends FlxSprite {
 			{
 				if (isSustainNote)
 				{
-					if (strum > Conductor.songPosition - (Conductor.safeZoneOffset * 1.5)
-						&& strum < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
-						canBeHit = true;
+					if(shouldHit)
+					{
+						if (strum > Conductor.songPosition - (Conductor.safeZoneOffset * 1.5)
+							&& strum < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
+							canBeHit = true;
+						else
+							canBeHit = false;
+					}
 					else
-						canBeHit = false;
+					{
+						if (strum > Conductor.songPosition - Conductor.safeZoneOffset * 0.3
+							&& strum < Conductor.songPosition + Conductor.safeZoneOffset * 0.2)
+							canBeHit = true;
+						else
+							canBeHit = false;
+					}
 				}
 				else
 				{
-					if (strum > Conductor.songPosition - Conductor.safeZoneOffset
-						&& strum < Conductor.songPosition + Conductor.safeZoneOffset)
-						canBeHit = true;
+					if(shouldHit)
+					{
+						if (strum > Conductor.songPosition - Conductor.safeZoneOffset
+							&& strum < Conductor.songPosition + Conductor.safeZoneOffset)
+							canBeHit = true;
+						else
+							canBeHit = false;
+					}
 					else
-						canBeHit = false;
+					{
+						if (strum > Conductor.songPosition - Conductor.safeZoneOffset * 0.3
+							&& strum < Conductor.songPosition + Conductor.safeZoneOffset * 0.2)
+							canBeHit = true;
+						else
+							canBeHit = false;
+					}
 				}
 	
 				if (strum < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
