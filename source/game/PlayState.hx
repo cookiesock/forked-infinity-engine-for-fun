@@ -1055,7 +1055,7 @@ class PlayState extends BasicState
 						note.y += note.frameHeight / 2;
 				}
 
-				/*if(note.isSustainNote)
+				if(note.isSustainNote)
 				{
 					var center:Float = funnyNoteThingyIGuessLol.y + Note.swagWidth / 2;
 
@@ -1075,31 +1075,7 @@ class PlayState extends BasicState
 					}
 
 					note.clipRect = rect;
-				}*/
-
-				if(note.isSustainNote)
-				{
-					var center:Float = funnyNoteThingyIGuessLol.y + Note.swagWidth / 3;
-					//var swagRect:FlxRect;
-
-					if(Options.getData('downscroll'))
-					{
-						var swagRect = new FlxRect(0, 0, note.frameWidth, note.frameHeight);
-						swagRect.height = (center - note.y);
-						swagRect.y = note.frameHeight - swagRect.height;
-
-						note.clipRect = swagRect;
-					} else
-					{
-						var swagRect = new FlxRect(0, 0, note.frameWidth, note.frameHeight);
-						swagRect.y = (center - note.y);
-						swagRect.height -= swagRect.y;
-
-						note.clipRect = swagRect;
-					}
 				}
-
-				//note.clipRect = swagRect;
 			}
 
 			if(!countdownStarted)
@@ -1794,7 +1770,7 @@ class PlayState extends BasicState
 			{
 				if(note.isSustainNote && note.mustPress)
 				{
-					if(pressed[note.noteID] && Conductor.songPosition >= (!note.isSustainNote ? note.strum : note.strum - 83))
+					if(pressed[note.noteID] && Conductor.songPosition >= (!note.isSustainNote ? note.strum : note.strum - (Conductor.safeZoneOffset / 2)))
 					{
 						hits += 1;
 						funnyHitStuffsLmao += 1;
