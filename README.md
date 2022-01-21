@@ -1,6 +1,6 @@
 # About
 -----
-![](https://cdn.discordapp.com/attachments/782707705792954388/933882941929570375/fgard.png)
+![](https://media.discordapp.net/attachments/782707705792954388/931918337989029948/Untitled108_20220115083034.png)
 -----
 Made by 3 people literally out of pure boredom, Aiming to rewrite Friday Night Funkin' in HaxeFlixel.
 With (hopefully) easier modding with slightly more organized folder layouts, new features, etc.
