@@ -185,6 +185,7 @@ class PauseMenu extends BasicSubState
 					FlxG.resetState();
 
 				case 'Toggle Practice Mode':
+					PlayState.usedPractice = true;
 					PlayState.practiceMode = !PlayState.practiceMode;
 					showOptionWarning(3);
 
@@ -212,6 +213,7 @@ class PauseMenu extends BasicSubState
 					changeSelection();
 
 				case 'Botplay':
+					PlayState.usedPractice = true;
 					Options.saveData('botplay', !Options.getData('botplay'));
 					game.PlayState.botplayText.visible = Options.getData('botplay');
 					showOptionWarning(0);

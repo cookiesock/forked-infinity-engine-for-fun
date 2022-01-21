@@ -56,6 +56,8 @@ class PlayState extends BasicState
 	public static var practiceMode:Bool = false;
 	public static var usedPractice:Bool = false;
 
+	var changedSpeed:Bool = false;
+
 	private var camFollow:FlxObject;
 	
 	// stage shit
@@ -72,6 +74,10 @@ class PlayState extends BasicState
 	// arrow shit
 	var opponentStrumArrows:FlxTypedGroup<StrumArrow>;
 	var playerStrumArrows:FlxTypedGroup<StrumArrow>;
+
+	var speedText:FlxText;
+	var keybindReminders:FlxTypedGroup<FlxText>;
+
 	var notes:Array<Note> = [];
 
 	var strumArea:FlxSprite;
@@ -94,7 +100,10 @@ class PlayState extends BasicState
 
 	// score shit
 	static public var score:Int = 0;
+
 	static public var sickScore:Int = 0;
+	static public var storyScore:Int = 0;
+	
 	static public var misses:Int = 0;
 	static public var combo:Int = 0;
 
@@ -164,6 +173,8 @@ class PlayState extends BasicState
 	var funnyHitStuffsLmao:Float = 0.0;
 	var totalNoteStuffs:Int = 0;
 
+	public static var weekName:String = "tutorial";
+
 	// replay shit
 	public var savedReplay:Array<Dynamic> = [];
 	public var isReplayMode:Bool = false;
@@ -208,6 +219,9 @@ class PlayState extends BasicState
 
 		practiceMode = false;
 		usedPractice = false;
+
+		if(Options.getData('botplay'))
+			usedPractice = true;
 
 		super();
 
@@ -262,6 +276,12 @@ class PlayState extends BasicState
         #end
 	}
 
+	function refreshAppTitle()
+	{
+		BasicState.changeAppTitle(Util.engineName, "Playing " + song.song + " - " + storedDifficulty.toUpperCase() + " Mode on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed");
+		// should result in "Playing ExampleSong - HARD Mode on 1.05x Speed"
+	}
+
 	override public function create()
 	{
 		missSounds = [
@@ -270,8 +290,7 @@ class PlayState extends BasicState
 			FlxG.sound.load(Util.getSound('gameplay/missnote3'), 0.3)
 		];
 		
-		BasicState.changeAppTitle(Util.engineName, "Playing " + song.song + " - " + storedDifficulty.toUpperCase() + " Mode on " + FlxMath.roundDecimal(songMultiplier, 2) + "x Speed");
-		// should result in "Playing ExampleSong - HARD Mode on 1.05x Speed"
+		refreshAppTitle();
 
 		refreshDiscordRPC(true);
 
@@ -529,6 +548,9 @@ class PlayState extends BasicState
 		add(opponentStrumArrows);
 		add(playerStrumArrows);
 
+		keybindReminders = new FlxTypedGroup<FlxText>();
+		add(keybindReminders);
+
 		for(i in 0...8) { // add strum arrows
 			var isPlayerArrow:Bool = i > 3;
 			var funnyArrowX:Float = 0;
@@ -552,7 +574,7 @@ class PlayState extends BasicState
 			
 			var theRealStrumArrow:StrumArrow = new StrumArrow(funnyArrowX + i * 112, strumArea.y, i, song.ui_Skin);
 
-			var balls:Float = (0.2 * i % 4);
+			var balls:Float = Options.getData('middlescroll') ? (0.2 * i % 4) : (0.2 * i);
 			
 			theRealStrumArrow.y -= 10;
 			theRealStrumArrow.alpha = 0;
@@ -564,6 +586,42 @@ class PlayState extends BasicState
 			} else {
 				playerStrumArrows.add(theRealStrumArrow);
 			}
+		}
+
+		for(i in 0...playerStrumArrows.members.length)
+		{
+			var daKeybindText:FlxText = new FlxText(playerStrumArrows.members[i].x, playerStrumArrows.members[i].y, 48, "A", 48, true);
+			daKeybindText.scrollFactor.set();
+			daKeybindText.alpha = 0;
+
+			daKeybindText.color = FlxColor.WHITE;
+			daKeybindText.borderStyle = OUTLINE;
+			daKeybindText.borderColor = FlxColor.BLACK;
+			//daKeybindText.setFormat("assets/fonts/vcr.ttf", 48, FlxColor.WHITE, null, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+
+			daKeybindText.borderSize = 3;
+
+			daKeybindText.text = Options.getData('mainBinds')[i];
+			daKeybindText.x = (playerStrumArrows.members[i].x + 55 - (24 /* text size / 2 */)) + 5;
+
+			daKeybindText.cameras = [hudCam];
+
+			keybindReminders.add(daKeybindText);
+
+			var balls = Options.getData('middlescroll') ? (0.2 * i % 4) : (0.2 * (i + 4));
+
+			FlxTween.tween(keybindReminders.members[i], {y: keybindReminders.members[i].y + 25, alpha: 1}, 1, {
+				ease: FlxEase.cubeOut,
+				startDelay: balls,
+				onComplete: function(twn:FlxTween)
+				{
+					FlxTween.tween(keybindReminders.members[i], {alpha: 0}, 1, {
+						ease: FlxEase.cubeInOut,
+						startDelay: 1
+					});
+	
+				}
+			});
 		}
 
 		if(song.chartOffset == null)
@@ -670,6 +728,13 @@ class PlayState extends BasicState
 
 		if(!inCutscene)
 			generateNotes();
+		
+		speedText = new FlxText(0, FlxG.height - 32, 0, "", 24);
+		speedText.setFormat("assets/fonts/vcr.ttf", 24, FlxColor.WHITE, RIGHT);
+		speedText.borderColor = FlxColor.BLACK;
+		speedText.borderStyle = OUTLINE;
+		speedText.borderSize = 2;
+		add(speedText);
 
 		if(inCutscene)
 		{
@@ -691,6 +756,7 @@ class PlayState extends BasicState
 		scoreText.cameras = [hudCam];
 		botplayText.cameras = [hudCam];
 		ratingsText.cameras = [hudCam];
+		speedText.cameras = [hudCam];
 		
 		super.create();
 
@@ -700,6 +766,40 @@ class PlayState extends BasicState
 	function resetSongPos()
 	{
 		Conductor.songPosition = 0 - (Conductor.crochet * 4.5);
+	}
+
+	function changeSpeed(?change:Float = 0, ?changeVarLol:Bool = true)
+	{
+		if(changeVarLol)
+			changedSpeed = true;
+
+		speed = song.speed;
+
+		if(Options.getData('scroll-speed') > 1)
+			speed = Options.getData('scroll-speed');
+
+		songMultiplier += change;
+
+		#if !sys
+		songMultiplier = 1;
+		#end
+
+		if(songMultiplier < 0.1)
+			songMultiplier = 0.1;
+
+		Conductor.changeBPM(song.bpm, songMultiplier);
+
+		speed /= songMultiplier;
+
+		if(speed < 0.1 && songMultiplier > 1)
+			speed = 0.1;
+
+		Conductor.recalculateStuff(songMultiplier);
+		Conductor.safeZoneOffset *= songMultiplier;
+
+		resyncVocals(true);
+
+		refreshAppTitle();
 	}
 
 	public function msTextFade()
@@ -821,6 +921,16 @@ class PlayState extends BasicState
 	var missSounds:Array<FlxSound>;
 	var curLight = 2;
 
+	var shiftP:Bool = false;
+
+	var left:Bool = false;
+	var leftP:Bool = false;
+
+	var right:Bool = false;
+	var rightP:Bool = false;
+
+	var speed_holdTime:Float = 0;
+
 	function swagUpdate(elapsed:Float)
 	{		
 		updateAccuracyStuff();
@@ -912,6 +1022,31 @@ class PlayState extends BasicState
 			FlxG.camera.zoom = FlxMath.lerp(stageCamZoom, FlxG.camera.zoom, Util.boundTo(1 - (elapsed * 3.125), 0, 1));
 			hudCam.zoom = FlxMath.lerp(1, hudCam.zoom, Util.boundTo(1 - (elapsed * 3.125), 0, 1));
 		}
+
+		shiftP = Controls.shiftP;
+		
+		left = Controls.UI_LEFT;
+		leftP = Controls.UI_LEFT_P;
+
+		right = Controls.UI_RIGHT;
+		rightP = Controls.UI_RIGHT_P;
+
+		if(shiftP)
+		{
+			if(leftP || rightP)
+				speed_holdTime += elapsed;
+			else
+				speed_holdTime = 0;
+
+			if(speed_holdTime > 0.5 || left || right)
+			{
+				var daMultiplier:Float = leftP ? -0.05 : 0.05;
+				changeSpeed(daMultiplier);
+			}
+		}
+		
+		speedText.text = "Speed: " + FlxMath.roundDecimal(songMultiplier, 2);
+		speedText.x = (FlxG.width - speedText.width) - 18;
 
 		// ratigns thign at the left of the scrnen!!!
 		ratingsText.text = "Marvelous: " + marvelous + "\nSick: " + sicks + "\nGood: " + goods + "\nBad: " + bads + "\nShit: " + shits + "\nMisses: " + misses + "\n";
@@ -1138,8 +1273,23 @@ class PlayState extends BasicState
 			}
 		}
 
-		if(!countdownStarted)
+		if(/*!countdownStarted && */!shiftP || Options.getData('botplay'))
 			inputFunction();
+
+		if(shiftP)
+		{
+			for(i in 0...playerStrumArrows.members.length)
+			{
+				playerStrumArrows.members[i].alpha = 0.6;
+			}
+		}
+		else
+		{
+			for(i in 0...playerStrumArrows.members.length)
+			{
+				playerStrumArrows.members[i].alpha = 1;
+			}
+		}
 
 		CalculateAccuracy();
 
@@ -1203,6 +1353,11 @@ class PlayState extends BasicState
 			if(!storyMode)
 			{
 				FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
+
+				trace('$storedSong-$storedDifficulty');
+
+				if(songMultiplier >= 1 && !usedPractice && !changedSpeed)
+					Highscores.saveSongScore(storedSong, storedDifficulty, [score, FlxMath.roundDecimal(accuracyNum, 2)]);
 	
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
@@ -1220,13 +1375,20 @@ class PlayState extends BasicState
 					transOut = FlxTransitionableState.defaultTransOut;
 					FlxTransitionableState.skipNextTransIn = false;
 					FlxTransitionableState.skipNextTransOut = false;
+					
+					if(songMultiplier >= 1 && !usedPractice && !changedSpeed)
+						Highscores.saveWeekScore(weekName, storedDifficulty, [storyScore, FlxMath.roundDecimal(accuracyNum, 2)]);
+					
 					FlxG.sound.playMusic(Util.getSound("menus/freakyMenu", false));
 					transitionState(new menus.StoryModeState());
+
+					storyScore = 0;
 				}
 				else
 				{
 					FlxTransitionableState.skipNextTransIn = true;
 					FlxTransitionableState.skipNextTransOut = true;
+					storyScore = storyScore + score;
 					transitionState(new PlayState(storyPlaylist[0].toLowerCase(), storedDifficulty, storyMode));
 				}
 			}
