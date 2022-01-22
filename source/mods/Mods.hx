@@ -62,8 +62,18 @@ class Mods
                                 mods.remove(mod);
                         }
 
-                        if(canPush)
+                        if(canPush && goodMod)
                             mods.push([modDir, false]);
+
+                        for(mod in mods)
+                        {
+                            var swagModPath = Sys.getCwd() + 'mods/' + mod[0] + '/';
+
+                            trace("MEGA FUNNIES: " + mod[0]);
+                            trace("SWAG FUNNIES: " + swagModPath);
+                            if(!sys.FileSystem.exists(swagModPath + "_mod_info.json"))
+                                mods.remove(mod);
+                        }
                     }
                 }
 

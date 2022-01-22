@@ -46,7 +46,7 @@ class ModsState extends BasicState
         Mods.getAllMods();
         
         if(Mods.mods.length < 1) // lmao get outta there
-            FlxG.switchState(new MainMenuState());
+            transitionState(new MainMenuState());
         
         for(modIndex in 0...Mods.mods.length)
         {
