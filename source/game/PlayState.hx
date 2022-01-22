@@ -53,6 +53,8 @@ class PlayState extends BasicState
 
 	public static var song:Song;
 
+	public static var keyCount:Int = 4;
+
 	public static var practiceMode:Bool = false;
 	public static var usedPractice:Bool = false;
 
@@ -78,7 +80,8 @@ class PlayState extends BasicState
 	var speedText:FlxText;
 	var keybindReminders:FlxTypedGroup<FlxText>;
 
-	var notes:Array<Note> = [];
+	var notes:FlxTypedGroup<Note>;
+	var spawnNotes:Array<Note> = [];
 
 	var strumArea:FlxSprite;
 	
@@ -551,8 +554,8 @@ class PlayState extends BasicState
 		keybindReminders = new FlxTypedGroup<FlxText>();
 		add(keybindReminders);
 
-		for(i in 0...8) { // add strum arrows
-			var isPlayerArrow:Bool = i > 3;
+		for(i in 0...keyCount * 2) { // add strum arrows
+			var isPlayerArrow:Bool = i > /*3*/(keyCount - 1);
 			var funnyArrowX:Float = 0;
 
 			if(!Options.getData('middlescroll'))
@@ -726,6 +729,9 @@ class PlayState extends BasicState
 		ratingsText.screenCenter(Y);
 		add(ratingsText);
 
+		notes = new FlxTypedGroup<Note>();
+		add(notes);
+
 		if(!inCutscene)
 			generateNotes();
 		
@@ -825,20 +831,19 @@ class PlayState extends BasicState
 			for(songNotes in section.sectionNotes)
 			{
 				var daStrumTime:Float = songNotes[0] + song.chartOffset + (Options.getData('song-offset') * songMultiplier);
-				var daNoteData:Int = Std.int(songNotes[1] % 4);
+				var daNoteData:Int = Std.int(songNotes[1] % keyCount);
+
+				var oldNote:Note;
+
+				if (spawnNotes.length > 0)
+					oldNote = spawnNotes[Std.int(spawnNotes.length - 1)];
+				else
+					oldNote = null;
 
 				var gottaHitNote:Bool = section.mustHitSection;
 
-				if(songNotes[1] >= 4)
+				if(songNotes[1] >= keyCount)
 					gottaHitNote = !section.mustHitSection;
-
-				/*
-				var oldNote:Note;
-
-				if (unspawnNotes.length > 0)
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-				else
-					oldNote = null;*/
 
 				var swagNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime, gottaHitNote, song.ui_Skin);
 				swagNote.sustainLength = songNotes[2];
@@ -847,6 +852,7 @@ class PlayState extends BasicState
 
 				var susLength:Float = swagNote.sustainLength;
 				susLength = susLength / Conductor.stepCrochet;
+				spawnNotes.push(swagNote);
 
 				var floorSus:Int = Math.floor(susLength);
 
@@ -854,6 +860,8 @@ class PlayState extends BasicState
 				{
 					for (susNote in 0...floorSus)
 					{
+						oldNote = spawnNotes[Std.int(spawnNotes.length - 1)];
+
 						var sustainNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, gottaHitNote, song.ui_Skin, true, susNote == floorSus - 1);
 						sustainNote.cameras = [hudCam];
 
@@ -863,21 +871,23 @@ class PlayState extends BasicState
 							sustainNote.x += sustainNote.width / 1.5;
 
 						if(susNote != 0)
-							sustainNote.lastNote = notes[notes.length - 1];
+							sustainNote.lastNote = notes.members[notes.members.length - 1];
 
-						add(sustainNote);
+						spawnNotes.push(sustainNote);
 
-						notes.push(sustainNote);
+						//add(sustainNote);
+
+						//notes.add(sustainNote);
 					}
 				}
 
-				add(swagNote);
+				//add(swagNote);
 
-				notes.push(swagNote);
+				//notes.add(swagNote);
 			}
 		}
 		
-		notes.sort(sortByShit);
+		spawnNotes.sort(sortByShit);
 	}
 
 	override public function update(elapsed:Float)
@@ -1094,6 +1104,18 @@ class PlayState extends BasicState
 			}
 			
 			openSubState(new GameOverSubstate(gameOverX, gameOverY, deathCharacter));
+		}
+
+		if (spawnNotes[0] != null)
+		{
+			while (spawnNotes.length > 0 && spawnNotes[0].strum - Conductor.songPosition < (1500 * songMultiplier))
+			{
+				var dunceNote:Note = spawnNotes[0];
+				notes.add(dunceNote);
+
+				var index:Int = spawnNotes.indexOf(dunceNote);
+				spawnNotes.splice(index, 1);
+			}
 		}
 			
 		if (healthBar.percent < 20)
