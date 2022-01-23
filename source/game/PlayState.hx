@@ -1691,10 +1691,10 @@ class PlayState extends BasicState
 			vocals.pause();
 			FlxG.sound.music.pause();
 
-			if(FlxG.sound.music.time >= FlxG.sound.music.length)
+			/*if(FlxG.sound.music.time >= FlxG.sound.music.length)
 				Conductor.songPosition = FlxG.sound.music.length;
 			else
-				Conductor.songPosition = FlxG.sound.music.time;
+				Conductor.songPosition = FlxG.sound.music.time;*/
 
 			FlxG.sound.music.time = Conductor.songPosition;
 			vocals.time = Conductor.songPosition;
