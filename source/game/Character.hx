@@ -24,8 +24,21 @@ class Character extends FlxSprite {
     public function new(x, y, name)
     {
         super(x, y);
+        loadCharacter(name);
+    }
 
+    public function loadCharacter(name:String = "bf", ?resetAnims:Bool = false)
+    {
         this.name = name;
+        json = null;
+
+        if(resetAnims)
+        {
+            for(anim in anims)
+            {
+                animation.remove(anim.name);
+            }
+        }
 
         #if sys
         if(Assets.exists('assets/characters/$name.json'))
@@ -56,42 +69,52 @@ class Character extends FlxSprite {
             frames = Util.getSparrow('characters/images/$name/assets', false);
         #end
 
-        setGraphicSize(Std.int(width * json.scale));
-        updateHitbox();
+        if(json != null)
+        {
+            setGraphicSize(Std.int(width * json.scale));
+            updateHitbox();
 
-        flipX = json.flip_x;
-        
-        antialiasing = !json.no_antialiasing;
-        
-        if(antialiasing == true)
-            antialiasing = Options.getData('anti-aliasing');
+            flipX = json.flip_x;
+            
+            antialiasing = !json.no_antialiasing;
+            
+            if(antialiasing == true)
+                antialiasing = Options.getData('anti-aliasing');
 
-        camOffsets = json.camera_position;
-        healthColor = FlxColor.fromRGB(json.healthbar_colors[0], json.healthbar_colors[1], json.healthbar_colors[2]);
-        position = json.position;
+            camOffsets = json.camera_position;
+            healthColor = FlxColor.fromRGB(json.healthbar_colors[0], json.healthbar_colors[1], json.healthbar_colors[2]);
+            position = json.position;
 
-        anims = json.animations;
+            anims = json.animations;
 
-        if(json.healthicon != null)
-            healthIcon = json.healthicon;
-        else
-            healthIcon = name;
-        
-        for (anim in anims) {
-            if (anim.indices == null || anim.indices.length < 1) {
-                animation.addByPrefix(anim.anim, anim.name, anim.fps, anim.loop);
-            } else {
-                animation.addByIndices(anim.anim, anim.name, anim.indices, "", anim.fps, anim.loop);
+            if(json.healthicon != null)
+                healthIcon = json.healthicon;
+            else
+                healthIcon = name;
+            
+            for (anim in anims) {
+                if (anim.indices == null || anim.indices.length < 1) {
+                    animation.addByPrefix(anim.anim, anim.name, anim.fps, anim.loop);
+                } else {
+                    animation.addByIndices(anim.anim, anim.name, anim.indices, "", anim.fps, anim.loop);
+                }
+
+                offsetMap.set(anim.anim, anim.offsets);
             }
+            
+            bopLeftRight = (animation.getByName('danceLeft') != null && animation.getByName('danceRight') != null);
 
-            offsetMap.set(anim.anim, anim.offsets);
+            //playAnim('idle');
+            dance();
         }
-        
-        bopLeftRight = (animation.getByName('danceLeft') != null && animation.getByName('danceRight') != null);
-
-        //playAnim('idle');
-        dance();
+        else
+        {
+            healthIcon = "placeholder";
+            position = [0, 0];
+            offset.set(0, 0);
+        }
     }
+
     override public function update(elapsed) {
         super.update(elapsed);
 

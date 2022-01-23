@@ -1,5 +1,6 @@
 package menus;
 
+import flixel.input.keyboard.FlxKey;
 import flixel.group.FlxGroup;
 import ui.AlphabetText;
 import game.Conductor;
@@ -47,6 +48,10 @@ class TitleScreenState extends BasicState
 	var ngLogo:FlxSprite;
 
 	var curText:Array<String>;
+
+	public static var muteKeys:Array<FlxKey> = [FlxKey.ZERO];
+	public static var volumeDownKeys:Array<FlxKey> = [FlxKey.NUMPADMINUS, FlxKey.MINUS];
+	public static var volumeUpKeys:Array<FlxKey> = [FlxKey.NUMPADPLUS, FlxKey.PLUS];
 
 	override public function create()
 	{

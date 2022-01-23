@@ -1,5 +1,13 @@
 package menus;
 
+import ui.CustomDropdown;
+import flixel.addons.ui.FlxUICheckBox;
+import game.PlayState;
+import lime.system.Clipboard;
+import flixel.ui.FlxButton;
+import flixel.addons.ui.FlxUIInputText;
+import flixel.addons.ui.FlxUITabMenu;
+import flixel.addons.ui.FlxUI;
 import flixel.FlxObject;
 import flixel.FlxCamera;
 import flixel.addons.display.FlxGridOverlay;
@@ -10,12 +18,14 @@ import lime.utils.Assets;
 import mods.Mods;
 import flixel.text.FlxText;
 import ui.Icon;
+import flixel.group.FlxGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
 import game.Character;
+import game.Stage;
 
 using StringTools;
 
@@ -32,6 +42,9 @@ class CharacterEditorMenu extends BasicState
 
     var character:Character;
 
+    var uiGroup:FlxGroup = new FlxGroup();
+    var uiBase:FlxUI;
+
     var gameCam:FlxCamera;
     var hudCam:FlxCamera;
     var camFollow:FlxObject;
@@ -39,10 +52,76 @@ class CharacterEditorMenu extends BasicState
     var animListText:FlxText;
 
     var curAnimText:FlxText;
+
+    var charNamePos:Array<Dynamic> = [];
+
+    var characterList:Array<String> = [];
+
+    var charNameBox:FlxUIInputText;
+
+    var stage:Stage;
+
+    #if sys
+    var jsonDirs = sys.FileSystem.readDirectory(Sys.getCwd() + "assets/characters/");
+    #else
+    var jsonDirs:Array<String> = [
+        "bf.json", 
+        "bf-car.json", 
+        "bf-christmas.json", 
+        "bf-pixel.json", 
+        "bf-pixel-dead.json", 
+        "dad.json", 
+        "gf.json", 
+        "gf-car.json", 
+        "gf-christmas.json", 
+        "gf-pixel.json",
+        "mom.json",
+        "mom-car.json",
+        "monster.json",
+        "monster-christmas.json",
+        "parents-christmas.json",
+        "pico.json",
+        "placeholder.json",
+        "senpai.json",
+        "senpai-angry.json",
+        "spirit.json",
+        "spooky.json"
+    ];
+    #end
+
+    var jsons:Array<String> = [];
     
     override public function create()
     {
         super.create();
+
+        trace("OLD JSON SHIT: " + jsons);
+
+        #if sys
+        if(Mods.activeMods.length > 0)
+        {
+            for(mod in Mods.activeMods)
+            {
+                if(sys.FileSystem.exists(Sys.getCwd() + 'mods/$mod/characters/'))
+                {
+                    var funnyArray = sys.FileSystem.readDirectory(Sys.getCwd() + 'mods/$mod/characters/');
+                    
+                    for(jsonThingy in funnyArray)
+                    {
+                        jsonDirs.push(jsonThingy);
+                    }
+                }
+            }
+        }
+        #end
+
+        for(dir in jsonDirs)
+        {
+            if(dir.endsWith(".json"))
+                jsons.push(dir.split(".json")[0]);
+        }
+
+        trace("NEW JSON SHIT: " + jsons);
 
         BasicState.changeAppTitle(Util.engineName, "Character Editor - Editing Character: " + curChar);
 
@@ -61,9 +140,12 @@ class CharacterEditorMenu extends BasicState
 
 		FlxG.camera = gameCam;
 
-		var gridBG:FlxSprite = FlxGridOverlay.create(10, 10);
+		/*var gridBG:FlxSprite = FlxGridOverlay.create(10, 10);
 		gridBG.scrollFactor.set(0, 0);
-		add(gridBG);
+		add(gridBG);*/
+
+        stage = new Stage('stage');
+        add(stage);
 
         character = new Character(0, 0, curChar);
         character.screenCenter();
@@ -98,10 +180,113 @@ class CharacterEditorMenu extends BasicState
 
         changeAnim(1);
 
+        character.x = PlayState.characterPositions[1][0];
+        character.y = PlayState.characterPositions[1][1];
+
+        character.x += character.position[0];
+        character.y += character.position[1];
+
         offsetX = character.offset.x;
         offsetY = character.offset.y;
 
         refreshDiscordRPC();
+
+        uiGroup.cameras = [hudCam];
+        add(uiGroup);
+
+        getCharacterList();
+
+        create_UI();
+    }
+
+    function getCharacterList()
+    {
+        characterList = [];
+
+        for(json in jsons)
+        {
+            characterList.push(json);
+        }
+
+        trace(characterList);
+    }
+
+    function create_UI()
+    {
+        uiBase = new FlxUI(null, null);
+        var uiBox = new FlxUITabMenu(null, [], false);
+
+        uiBox.resize(300, 400);
+        uiBox.x = (FlxG.width - uiBox.width) - 20;
+        uiBox.y = 10;
+
+        var charName:FlxText = new FlxText(uiBox.x + 10, 20, 0, "Character Name");
+
+        charNamePos = [];
+        charNamePos.push(charName.x);
+        charNamePos.push(charName.y);
+
+        trace(charNamePos);
+
+        var charNameTextBox:FlxUIInputText = new FlxUIInputText(charName.x, charName.y + 20, 100, curChar, 8);
+        charNameBox = charNameTextBox;
+
+        var charListMenu:CustomDropdown = new CustomDropdown(charName.x, charName.y + 20, CustomDropdown.makeStrIdLabelArray(characterList, true), function(id:String){
+            character.loadCharacter(characterList[Std.parseInt(id)]);
+
+            character.x = PlayState.characterPositions[1][0];
+            character.y = PlayState.characterPositions[1][1];
+    
+            character.x += character.position[0];
+            character.y += character.position[1];
+
+            updateCharacter();
+
+            updateAnimList();
+
+            changeAnim();
+        });
+
+        var saveCharBTN:FlxButton = new FlxButton(charListMenu.x + (charListMenu.width + 10), charListMenu.y, "Save Character", function(){
+
+        });
+
+        var charNameWarn:FlxText = new FlxText(charName.x, charName.y + 40, 0, "Click \"Save Character\" to save your current character.");
+
+        var charFlipBox:FlxUICheckBox = new FlxUICheckBox(charName.x, charNameWarn.y + 30, null, null, "Flip Character Horizontally", 250);
+        charFlipBox.checked = character.flipX;
+
+        charFlipBox.callback = function()
+        {
+            character.flipX = charFlipBox.checked;
+        };
+
+        var charLoopAnimBox:FlxUICheckBox = new FlxUICheckBox(charName.x, charFlipBox.y + 30, null, null, "Loop Animation", 250);
+        charLoopAnimBox.checked = character.animation.curAnim.looped;
+
+        charLoopAnimBox.callback = function()
+        {
+            // idk yet lol
+        };
+
+        uiBase.add(uiBox);
+        // TEXT/TEXTBOXES
+        uiBase.add(charName);
+        //uiBase.add(charNameTextBox);
+        uiBase.add(charNameWarn);
+
+        // BUTTONS
+        uiBase.add(saveCharBTN);
+
+        // CHECKBOXES
+        uiBase.add(charFlipBox);
+        uiBase.add(charLoopAnimBox);
+
+        // DROPDOWNS
+        uiBase.add(charListMenu);
+
+        // add the shit
+        uiGroup.add(uiBase);
     }
 
     override public function update(elapsed:Float)
@@ -111,7 +296,7 @@ class CharacterEditorMenu extends BasicState
         curAnimText.text = animList[curAnim];
         curAnimText.screenCenter(X);
 
-        if(FlxG.keys.justPressed.BACKSPACE)
+        if((Controls.back && !charNameBox.hasFocus) || FlxG.keys.justPressed.ESCAPE)
             transitionState(new OptionsState());
 
         var leftP = FlxG.keys.pressed.J;
@@ -125,80 +310,105 @@ class CharacterEditorMenu extends BasicState
         var right = FlxG.keys.justPressed.RIGHT;
         var shiftP = FlxG.keys.pressed.SHIFT;
 
+		var inputTexts:Array<FlxUIInputText> = [charNameBox];
+		for (i in 0...inputTexts.length) {
+			if(inputTexts[i].hasFocus) {
+				if(FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.V && Clipboard.text != null) { //Copy paste
+					inputTexts[i].text = ClipboardAdd(inputTexts[i].text);
+					inputTexts[i].caretIndex = inputTexts[i].text.length;
+					getEvent(FlxUIInputText.CHANGE_EVENT, inputTexts[i], null, []);
+				}
+				if(FlxG.keys.justPressed.ENTER) {
+					inputTexts[i].hasFocus = false;
+				}
+				FlxG.sound.muteKeys = [];
+				FlxG.sound.volumeDownKeys = [];
+				FlxG.sound.volumeUpKeys = [];
+				super.update(elapsed);
+				return;
+			}
+		}
+		FlxG.sound.muteKeys = TitleScreenState.muteKeys;
+		FlxG.sound.volumeDownKeys = TitleScreenState.volumeDownKeys;
+		FlxG.sound.volumeUpKeys = TitleScreenState.volumeUpKeys;
+
         var offsetMultiplier:Float = 0;
 
         var camVelocity:Float = 190;
 
-		if (FlxG.keys.justPressed.E)
+        if(!charNameBox.hasFocus)
         {
-            FlxG.camera.zoom += 0.1;
+            if (FlxG.keys.justPressed.E)
+            {
+                FlxG.camera.zoom += 0.1;
 
-            if(FlxG.camera.zoom > 10)
-                FlxG.camera.zoom = 10;
-        }
+                if(FlxG.camera.zoom > 10)
+                    FlxG.camera.zoom = 10;
+            }
 
-		if (FlxG.keys.justPressed.Q)
-        {
-			FlxG.camera.zoom -= 0.1;
+            if (FlxG.keys.justPressed.Q)
+            {
+                FlxG.camera.zoom -= 0.1;
 
-            if(FlxG.camera.zoom < 0.1)
-                FlxG.camera.zoom = 0.1;
-        }
+                if(FlxG.camera.zoom < 0.1)
+                    FlxG.camera.zoom = 0.1;
+            }
 
-		if(upP || leftP || downP || rightP)
-        {
-            if(upP)
-                camFollow.velocity.y = camVelocity;
-            else if (downP)
-                camFollow.velocity.y = camVelocity * -1;
+            if(upP || leftP || downP || rightP)
+            {
+                if(upP)
+                    camFollow.velocity.y = camVelocity;
+                else if (downP)
+                    camFollow.velocity.y = camVelocity * -1;
+                else
+                    camFollow.velocity.y = 0;
+
+                if(leftP)
+                    camFollow.velocity.x = camVelocity;
+                else if(rightP)
+                    camFollow.velocity.x = camVelocity * -1;
+                else
+                    camFollow.velocity.x = 0;
+            }
             else
-                camFollow.velocity.y = 0;
+                camFollow.velocity.set();
 
-            if(leftP)
-                camFollow.velocity.x = camVelocity;
-            else if(rightP)
-                camFollow.velocity.x = camVelocity * -1;
-            else
-                camFollow.velocity.x = 0;
-        }
-        else
-            camFollow.velocity.set();
+            if(FlxG.keys.justPressed.W)
+                changeAnim(-1);
 
-        if(FlxG.keys.justPressed.W)
-            changeAnim(-1);
+            if(FlxG.keys.justPressed.S)
+                changeAnim(1);
 
-        if(FlxG.keys.justPressed.S)
-            changeAnim(1);
+            if(FlxG.keys.justPressed.SPACE)
+                character.playAnim(animList[curAnim], true, null, null, animOffsets[curAnim][0], animOffsets[curAnim][1]);
 
-        if(FlxG.keys.justPressed.SPACE)
-            character.playAnim(animList[curAnim], true, null, null, animOffsets[curAnim][0], animOffsets[curAnim][1]);
+            if(up || left || down || right)
+            {
+                if(shiftP)
+                    offsetMultiplier = 18;
+                else
+                    offsetMultiplier = 1;
 
-		if(up || left || down || right)
-        {
-            if(shiftP)
-                offsetMultiplier = 18;
-            else
-                offsetMultiplier = 1;
+                if(up)
+                    offsetY += offsetMultiplier;
+                else if(down)
+                    offsetY -= offsetMultiplier;
+                else if(left)
+                    offsetX += offsetMultiplier;
+                else if(right)
+                    offsetX -= offsetMultiplier;
 
-            if(up)
-                offsetY += offsetMultiplier;
-            else if(down)
-                offsetY -= offsetMultiplier;
-            else if(left)
-                offsetX += offsetMultiplier;
-            else if(right)
-                offsetX -= offsetMultiplier;
+                character.offset.set(offsetX, offsetY);
 
-            character.offset.set(offsetX, offsetY);
+                trace("Before Offset Change: [" + animOffsets[curAnim][0] + ", " + animOffsets[curAnim][1] + "]");
 
-            trace("Before Offset Change: [" + animOffsets[curAnim][0] + ", " + animOffsets[curAnim][1] + "]");
+                animOffsets[curAnim][0] = offsetX;
+                animOffsets[curAnim][1] = offsetY;
 
-            animOffsets[curAnim][0] = offsetX;
-            animOffsets[curAnim][1] = offsetY;
+                trace("After Offset Change: [" + animOffsets[curAnim][0] + ", " + animOffsets[curAnim][1] + "]");
 
-            trace("After Offset Change: [" + animOffsets[curAnim][0] + ", " + animOffsets[curAnim][1] + "]");
-
-            updateAnimList();
+                updateAnimList();
+            }
         }
     }
 
@@ -260,4 +470,14 @@ class CharacterEditorMenu extends BasicState
 
         animListText.text = fuckYou;
     }
+
+	function ClipboardAdd(prefix:String = ''):String {
+		if(prefix.toLowerCase().endsWith('v')) //probably copy paste attempt
+		{
+			prefix = prefix.substring(0, prefix.length-1);
+		}
+
+		var text:String = prefix + Clipboard.text.replace('\n', '');
+		return text;
+	}
 }
