@@ -19,10 +19,11 @@ class NoteColorMenu extends BasicSubState
 
 	var colorType:Int = 0;
 	var holdTime:Float = 0;
+
+	var colorNumbers:FlxTypedGroup<FlxText>;
+	var shaderArray:Array<ColorSwap> = [];
 	
 	var daNotes:FlxTypedGroup<Note>;
-
-	var daColorTypes:FlxTypedGroup<FlxText>;
 
 	var colors:Array<Dynamic> = [];
 
@@ -60,13 +61,14 @@ class NoteColorMenu extends BasicSubState
 		colorTypeText.borderSize = 2.4;
 		add(colorTypeText);
 
-		daColorTypes = new FlxTypedGroup<FlxText>();
-		add(daColorTypes);
-
 		daNotes = new FlxTypedGroup<Note>();
 		add(daNotes);
 
-		for (i in 0...4) {
+		colorNumbers = new FlxTypedGroup<FlxText>();
+		add(colorNumbers);
+
+		for(i in 0...4)
+		{
 			var note:Note = new Note((125 * i) + 395, 0, i, 0, false, Options.getData('noteskin'));
 			note.antialiasing = true;
 			note.centerOffsets();
@@ -75,17 +77,23 @@ class NoteColorMenu extends BasicSubState
 			note.screenCenter(Y);
 			note.ID = i;
 			daNotes.add(note);
+
+			var newShader:ColorSwap = new ColorSwap();
+			note.shader = newShader.shader;
+			newShader.hue = colors[i][0] / 360;
+			newShader.saturation = colors[i][1] / 100;
+			newShader.brightness = colors[i][2] / 100;
+			shaderArray.push(newShader);
 		}
 
 		for(i in 0...3)
 		{
-			var swagNumber:FlxText = new FlxText(0, colorTypeText.y + 48, 0, "", 48);
-			swagNumber.setFormat("assets/fonts/vcr.ttf", 48, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			swagNumber.scrollFactor.set();
-			swagNumber.screenCenter(X);
-			swagNumber.x += daNotes.members[i].x;
-			swagNumber.borderSize = 2.4;
-			daColorTypes.add(swagNumber);
+			var number:FlxText = new FlxText(0, 135, 0, "", 32);
+			number.setFormat("assets/fonts/vcr.ttf", 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			number.scrollFactor.set();
+			number.screenCenter(X);
+			number.borderSize = 2.4;
+			colorNumbers.add(number);
 		}
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
@@ -104,13 +112,37 @@ class NoteColorMenu extends BasicSubState
 		accept = Controls.accept;
 
 		if(Controls.back)
+		{
+			Options.saveData('note-colors', colors);
 			close();
+		}
+
+		var numberMultiplier:Int = 190;
+
+		for(i in 0...colorNumbers.members.length)
+		{
+			colorNumbers.members[i].text = colors[selectedKey][i];
+			colorNumbers.members[i].screenCenter(X);
+
+			switch(i)
+			{
+				case 0:
+					colorNumbers.members[i].x -= numberMultiplier;
+				case 2:
+					colorNumbers.members[i].x += numberMultiplier;
+			}
+		}
 
 		switch(menuState)
 		{
 			case 'selectKey':
 				colorTypeText.text = "";
 				noteColorWarning.text = "Press LEFT & RIGHT to select an arrow";
+
+				for(i in 0...colorNumbers.members.length)
+				{
+					colorNumbers.members[i].visible = false;
+				}
 
 				if(left)
 					changeSelection(-1);
@@ -123,32 +155,23 @@ class NoteColorMenu extends BasicSubState
 					FlxG.sound.play(Util.getSound('menus/confirmMenu'));
 					menuState = 'selectType';
 				}
-
-				for(i in 0...daColorTypes.members.length)
-				{
-					daColorTypes.members[i].visible = false;
-				}
 			case 'selectType':
 				colorTypeText.text = "Hue       Sat       Brt";
 				colorTypeText.screenCenter(X);
 
 				noteColorWarning.text = "Press LEFT & RIGHT to select a value to set\nPress ACCEPT to edit the value\n";
 
+				for(i in 0...colorNumbers.members.length)
+				{
+					colorNumbers.members[i].visible = true;
+					colorNumbers.members[i].color = (colorType == i) ? FlxColor.CYAN : FlxColor.WHITE;
+				}
+
 				if(left)
 					changeColorTypeSelection(-1);
 
 				if(right)
 					changeColorTypeSelection(1);
-
-				for(i in 0...daColorTypes.members.length)
-				{
-					daColorTypes.members[i].text = colors[selectedKey][i];
-					daColorTypes.members[i].visible = true;
-					daColorTypes.members[i].color = (colorType == i) ? FlxColor.CYAN : FlxColor.WHITE;
-
-					daColorTypes.members[i].screenCenter(X);
-					daColorTypes.members[i].x -= (daNotes.members[i].width * (i + 1)) - (125 * (i + 1));
-				}
 
 				if(accept)
 				{
@@ -158,16 +181,6 @@ class NoteColorMenu extends BasicSubState
 			case 'changeType':
 				colorTypeText.text = "Hue       Sat       Brt";
 				colorTypeText.screenCenter(X);
-
-				for(i in 0...daColorTypes.members.length)
-				{
-					daColorTypes.members[i].text = colors[selectedKey][i];
-					daColorTypes.members[i].visible = true;
-					daColorTypes.members[i].color = (colorType == i) ? FlxColor.CYAN : FlxColor.WHITE;
-
-					daColorTypes.members[i].screenCenter(X);
-					daColorTypes.members[i].x -= (daNotes.members[i].width * (i + 1)) - (125 * (i + 1));
-				}
 
 				if(leftP || rightP)
 				{
@@ -229,17 +242,29 @@ class NoteColorMenu extends BasicSubState
 
 	function changeColorTypeValue(?change:Int = 0, elapsed:Float)
 	{
+		var comedy:Int = 360;
+
+		switch(colorType)
+		{
+			case 1 | 2:
+				comedy = 100;
+		}
+
 		holdTime += elapsed;
 
 		if(holdTime > 0.5 || left || right)
 		{
 			colors[selectedKey][colorType] += change;
 
-			if(colors[selectedKey][colorType] < -360)
-				colors[selectedKey][colorType] = -360;
+			if(colors[selectedKey][colorType] < (comedy * -1))
+				colors[selectedKey][colorType] = (comedy * -1);
 
-			if(colors[selectedKey][colorType] > 360)
-				colors[selectedKey][colorType] = 360;
+			if(colors[selectedKey][colorType] > comedy)
+				colors[selectedKey][colorType] = comedy;
+
+			shaderArray[selectedKey].hue = colors[selectedKey][0] / 360;
+			shaderArray[selectedKey].saturation = colors[selectedKey][1] / 100;
+			shaderArray[selectedKey].brightness = colors[selectedKey][2] / 100;
 		}
 	}
 }

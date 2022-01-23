@@ -15,13 +15,13 @@ class Mods
 
         mods = Options.getData("mods");
 
-        trace(mods);
-
         updateActiveMods();
 
         getAllMods();
 
         saveData();
+
+        trace(mods);
     }
 
     public static function getAllMods()

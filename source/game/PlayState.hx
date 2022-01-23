@@ -60,7 +60,13 @@ class PlayState extends BasicState
 
 	var changedSpeed:Bool = false;
 
-	private var camFollow:FlxObject;
+	var arrowsLoaded:Bool = false;
+
+	var shaderArray:Array<ColorSwap> = [];
+
+	var colors:Array<Dynamic> = Options.getData('note-colors');
+
+	var camFollow:FlxObject;
 	
 	// stage shit
 	static public var stageCamZoom:Float = 0.9;
@@ -577,12 +583,22 @@ class PlayState extends BasicState
 			
 			var theRealStrumArrow:StrumArrow = new StrumArrow(funnyArrowX + i * 112, strumArea.y, i, song.ui_Skin);
 
-			var balls:Float = Options.getData('middlescroll') ? (0.2 * i % 4) : (0.2 * i);
-			
 			theRealStrumArrow.y -= 10;
 			theRealStrumArrow.alpha = 0;
 
-			FlxTween.tween(theRealStrumArrow, {y: theRealStrumArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: balls});
+			var balls:Float = Options.getData('middlescroll') ? (0.2 * i % keyCount) : (0.2 * i);
+
+			var newShader:ColorSwap = new ColorSwap();
+			theRealStrumArrow.shader = newShader.shader;
+			newShader.hue = 0;
+			newShader.saturation = 0;
+			newShader.brightness = 0;
+			shaderArray.push(newShader);
+
+			FlxTween.tween(theRealStrumArrow, {y: theRealStrumArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: balls, onComplete: function(twn:FlxTween){
+				if(i == ((keyCount * 2) - 1))
+					arrowsLoaded = true;
+			}});
 			
 			if(!isPlayerArrow) {
 				opponentStrumArrows.add(theRealStrumArrow);	
@@ -611,7 +627,7 @@ class PlayState extends BasicState
 
 			keybindReminders.add(daKeybindText);
 
-			var balls = Options.getData('middlescroll') ? (0.2 * i % 4) : (0.2 * (i + 4));
+			var balls = Options.getData('middlescroll') ? (0.2 * i % keyCount) : (0.2 * (i + keyCount));
 
 			FlxTween.tween(keybindReminders.members[i], {y: keybindReminders.members[i].y + 25, alpha: 1}, 1, {
 				ease: FlxEase.cubeOut,
@@ -850,6 +866,12 @@ class PlayState extends BasicState
 				swagNote.scrollFactor.set(0,0);
 				swagNote.cameras = [hudCam];
 
+				var newShader:ColorSwap = new ColorSwap();
+				swagNote.shader = newShader.shader;
+				newShader.hue = colors[daNoteData][0] / 360;
+				newShader.saturation = colors[daNoteData][1] / 100;
+				newShader.brightness = colors[daNoteData][2] / 100;
+
 				var susLength:Float = swagNote.sustainLength;
 				susLength = susLength / Conductor.stepCrochet;
 				spawnNotes.push(swagNote);
@@ -864,6 +886,11 @@ class PlayState extends BasicState
 
 						var sustainNote:Note = new Note((gottaHitNote ? playerStrumArrows.members[daNoteData].x : opponentStrumArrows.members[daNoteData].x), 0, daNoteData, daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, gottaHitNote, song.ui_Skin, true, susNote == floorSus - 1);
 						sustainNote.cameras = [hudCam];
+
+						sustainNote.shader = newShader.shader;
+						newShader.hue = colors[daNoteData][0] / 360;
+						newShader.saturation = colors[daNoteData][1] / 100;
+						newShader.brightness = colors[daNoteData][2] / 100;
 
 						if(!sustainNote.isPixel)
 							sustainNote.x += sustainNote.width / 1;
@@ -1136,7 +1163,7 @@ class PlayState extends BasicState
 
 		for(note in notes)
 		{
-			var funnyNoteThingyIGuessLol = note.mustPress ? playerStrumArrows.members[note.noteID % 4] : opponentStrumArrows.members[note.noteID % 4];
+			var funnyNoteThingyIGuessLol = note.mustPress ? playerStrumArrows.members[note.noteID % keyCount] : opponentStrumArrows.members[note.noteID % keyCount];
 
 			// please help me do note clipping
 			// the hold notes don't disappear very well on high scroll speeds
@@ -1156,7 +1183,7 @@ class PlayState extends BasicState
 
 				if(!countdownStarted)
 				{
-					if(Conductor.songPosition >= (!note.isSustainNote ? note.strum : note.strum - (Conductor.safeZoneOffset / 2)))
+					if(Conductor.songPosition >= (!note.isSustainNote ? note.strum : note.strum - Conductor.safeZoneOffset))
 					{
 						if(vocals != null)
 							vocals.volume = 1;
@@ -1174,9 +1201,18 @@ class PlayState extends BasicState
 
 						funnyNoteThingyIGuessLol.playAnim("confirm", true);
 
+						shaderArray[note.noteID % keyCount].hue = colors[note.noteID % keyCount][0] / 360;
+						shaderArray[note.noteID % keyCount].saturation = colors[note.noteID % keyCount][1] / 100;
+						shaderArray[note.noteID % keyCount].brightness = colors[note.noteID % keyCount][2] / 100;
+
 						funnyNoteThingyIGuessLol.animation.finishCallback = function(name:String) {
 							if(name == "confirm")
+							{
 								funnyNoteThingyIGuessLol.playAnim("strum", true);
+								shaderArray[note.noteID].hue = 0;
+								shaderArray[note.noteID].saturation = 0;
+								shaderArray[note.noteID].brightness = 0;
+							}
 						};
 
 						if(opponent != null && opponent.active)
@@ -1298,18 +1334,21 @@ class PlayState extends BasicState
 		if(/*!countdownStarted && */!shiftP || Options.getData('botplay'))
 			inputFunction();
 
-		if(shiftP)
+		if(arrowsLoaded)
 		{
-			for(i in 0...playerStrumArrows.members.length)
+			if(shiftP)
 			{
-				playerStrumArrows.members[i].alpha = 0.6;
+				for(i in 0...playerStrumArrows.members.length)
+				{
+					playerStrumArrows.members[i].alpha = 0.6;
+				}
 			}
-		}
-		else
-		{
-			for(i in 0...playerStrumArrows.members.length)
+			else
 			{
-				playerStrumArrows.members[i].alpha = 1;
+				for(i in 0...playerStrumArrows.members.length)
+				{
+					playerStrumArrows.members[i].alpha = 1;
+				}
 			}
 		}
 
@@ -1652,10 +1691,10 @@ class PlayState extends BasicState
 			vocals.pause();
 			FlxG.sound.music.pause();
 
-			/*if(FlxG.sound.music.time >= FlxG.sound.music.length)
+			if(FlxG.sound.music.time >= FlxG.sound.music.length)
 				Conductor.songPosition = FlxG.sound.music.length;
 			else
-				Conductor.songPosition = FlxG.sound.music.time;*/
+				Conductor.songPosition = FlxG.sound.music.time;
 
 			FlxG.sound.music.time = Conductor.songPosition;
 			vocals.time = Conductor.songPosition;
@@ -1691,9 +1730,16 @@ class PlayState extends BasicState
 		var testBinds:Array<String> = Options.getData('mainBinds');
 		var testBindsAlt:Array<String> = Options.getData('altBinds');
 
-		var justPressed:Array<Bool> = [false, false, false, false];
-		var pressed:Array<Bool> = [false, false, false, false];
-		var released:Array<Bool> = [false, false, false, false];
+		var justPressed:Array<Bool> = [];
+		var pressed:Array<Bool> = [];
+		var released:Array<Bool> = [];
+
+		for(i in 0...keyCount)
+		{
+			justPressed.push(false);
+			pressed.push(false);
+			released.push(false);
+		}
 
 		if(!Options.getData('botplay'))
 		{
@@ -1714,13 +1760,25 @@ class PlayState extends BasicState
 			for(i in 0...justPressed.length)
 			{
 				if(justPressed[i])
+				{
 					playerStrumArrows.members[i].playAnim("tap", true);
+
+					shaderArray[i + keyCount].hue = colors[i][0] / 360;
+					shaderArray[i + keyCount].saturation = colors[i][1] / 100;
+					shaderArray[i + keyCount].brightness = colors[i][2] / 100;
+				}
 			}
 	
 			for(i in 0...released.length)
 			{
 				if(released[i])
+				{
 					playerStrumArrows.members[i].playAnim("strum");
+
+					shaderArray[i + keyCount].hue = 0;
+					shaderArray[i + keyCount].saturation = 0;
+					shaderArray[i + keyCount].brightness = 0;
+				}
 			}
 		}
 		else
@@ -1728,7 +1786,13 @@ class PlayState extends BasicState
 			for(i in 0...released.length)
 			{
 				if(playerStrumArrows.members[i].animation.curAnim.name == "confirm" && playerStrumArrows.members[i].animation.curAnim.finished)
+				{
 					playerStrumArrows.members[i].playAnim("strum");
+
+					shaderArray[i + keyCount].hue = 0;
+					shaderArray[i + keyCount].saturation = 0;
+					shaderArray[i + keyCount].brightness = 0;
+				}
 			}
 		}
 
@@ -1745,7 +1809,7 @@ class PlayState extends BasicState
 			}
 			else
 			{
-				if((!note.isSustainNote ? note.strum : note.strum - (Conductor.safeZoneOffset / 2)) <= Conductor.songPosition && note.mustPress)
+				if((!note.isSustainNote ? note.strum : note.strum - Conductor.safeZoneOffset) <= Conductor.songPosition && note.mustPress)
 					possibleNotes.push(note);
 			}
 		}
@@ -1865,6 +1929,10 @@ class PlayState extends BasicState
 
 					playerStrumArrows.members[note.noteID].playAnim("confirm", true);
 
+					shaderArray[(note.noteID % keyCount) + keyCount].hue = colors[note.noteID % keyCount][0] / 360;
+					shaderArray[(note.noteID % keyCount) + keyCount].saturation = colors[note.noteID % keyCount][1] / 100;
+					shaderArray[(note.noteID % keyCount) + keyCount].brightness = colors[note.noteID % keyCount][2] / 100;
+
 					if(vocals != null)
 						vocals.volume = 1;
 
@@ -1954,7 +2022,7 @@ class PlayState extends BasicState
 			{
 				if(note.isSustainNote && note.mustPress)
 				{
-					if(pressed[note.noteID] && Conductor.songPosition >= (!note.isSustainNote ? note.strum : note.strum - (Conductor.safeZoneOffset / 2)))
+					if(pressed[note.noteID] && Conductor.songPosition >= (!note.isSustainNote ? note.strum : note.strum - Conductor.safeZoneOffset))
 					{
 						hits += 1;
 						funnyHitStuffsLmao += 1;
@@ -1970,6 +2038,10 @@ class PlayState extends BasicState
 						}
 
 						playerStrumArrows.members[note.noteID].playAnim("confirm", true);
+
+						shaderArray[(note.noteID % keyCount) + keyCount].hue = colors[note.noteID % keyCount][0] / 360;
+						shaderArray[(note.noteID % keyCount) + keyCount].saturation = colors[note.noteID % keyCount][1] / 100;
+						shaderArray[(note.noteID % keyCount) + keyCount].brightness = colors[note.noteID % keyCount][2] / 100;
 
 						note.active = false;
 						notes.remove(note);
