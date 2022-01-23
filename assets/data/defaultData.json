@@ -17,6 +17,10 @@
             "value": false
         },
         {
+            "name": "keybind-reminders",
+            "value": true
+        },
+        {
             "name": "hitsound",
             "value": 0
         },

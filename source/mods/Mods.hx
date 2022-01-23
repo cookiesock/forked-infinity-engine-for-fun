@@ -15,13 +15,13 @@ class Mods
 
         mods = Options.getData("mods");
 
-        trace(mods);
-
         updateActiveMods();
 
         getAllMods();
 
         saveData();
+
+        trace(mods);
     }
 
     public static function getAllMods()
@@ -35,6 +35,8 @@ class Mods
         {
             for(modDir in modDirStuffs)
             {
+                var goodMod:Bool = false;
+
                 if(sys.FileSystem.isDirectory(Sys.getCwd() + 'mods/$modDir'))
                 {
                     var baseModPath = Sys.getCwd() + 'mods/$modDir/';
@@ -44,6 +46,8 @@ class Mods
                     if(sys.FileSystem.exists(baseModPath + "_mod_info.json"))
                     {
                         trace(modDir + " is a valid mod!");
+
+                        goodMod = true;
 
                         if(sys.FileSystem.exists(baseModPath + "_mod_icon.png"))
                             trace(modDir + " has a valid mod icon!");
@@ -58,10 +62,23 @@ class Mods
                                 mods.remove(mod);
                         }
 
-                        if(canPush)
+                        if(canPush && goodMod)
                             mods.push([modDir, false]);
+
+                        for(mod in mods)
+                        {
+                            var swagModPath = Sys.getCwd() + 'mods/' + mod[0] + '/';
+
+                            trace("MEGA FUNNIES: " + mod[0]);
+                            trace("SWAG FUNNIES: " + swagModPath);
+                            if(!sys.FileSystem.exists(swagModPath + "_mod_info.json"))
+                                mods.remove(mod);
+                        }
                     }
                 }
+
+                if(!goodMod && activeMods.contains(modDir))
+                    activeMods.remove(modDir);
             }
         }
         #end

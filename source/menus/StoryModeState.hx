@@ -41,6 +41,7 @@ class StoryModeState extends BasicState {
     var weekQuotes:Array<String> = [];
     var swagSongs:Array<Dynamic> = [];
     var swagChars:Array<Dynamic> = [];
+    var swagWeeks:Array<Dynamic> = [];
 
     // difficulty shit
     var swagDifficulties:Array<Dynamic> = [];
@@ -49,6 +50,9 @@ class StoryModeState extends BasicState {
 
     var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
+
+    var realScore:Int;
+    var swagScore:Int;
 
     var tutorialData:Dynamic;
 
@@ -61,6 +65,8 @@ class StoryModeState extends BasicState {
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
+
+        Highscores.init();
 
         // week shit
         funnyWeeks = new FlxTypedGroup<FlxSprite>();
@@ -131,6 +137,7 @@ class StoryModeState extends BasicState {
         
             //trace('Week Data Output: ' + data);
             swagSongs.push(data.songs);
+            swagWeeks.push(data.fileName);
             swagChars.push(data.characters);
             swagDifficulties.push(data.difficulties);
 
@@ -234,6 +241,9 @@ class StoryModeState extends BasicState {
     }
 
     var daRawSongs:Dynamic;
+    var bigBalls:Float = 0;
+
+    var hasAccepted:Bool = false;
 
     var trackList:String;
     var tracksArray:Array<Dynamic>;
@@ -264,8 +274,10 @@ class StoryModeState extends BasicState {
             transitionState(new MainMenuState());
         }
 
-        if(accept)
+        if(accept && !hasAccepted)
         {
+            bigBalls = 0;
+            hasAccepted = true;
             game.PlayState.storyPlaylist = [];
     
             for(i in 0...swagSongs[selectedWeek].length)
@@ -276,9 +288,22 @@ class StoryModeState extends BasicState {
 
             trace(swagSongs[selectedWeek][0].toLowerCase());
             trace(difficulties[selectedDifficulty].toLowerCase());
-            transitionState(new game.PlayState(swagSongs[selectedWeek][0].toLowerCase(), difficulties[selectedDifficulty].toLowerCase(), true));
 
-            game.PlayState.songMultiplier = 1;
+            weekChars.members[1].playAnim('confirm', true);
+        }
+
+        if(hasAccepted)
+        {
+            bigBalls += 0.5;
+
+            if(bigBalls >= 3)
+            {
+                transitionState(new game.PlayState(swagSongs[selectedWeek][0].toLowerCase(), difficulties[selectedDifficulty].toLowerCase(), true));
+
+                game.PlayState.songMultiplier = 1;
+                game.PlayState.storyScore = 0;
+                game.PlayState.weekName = swagWeeks[selectedWeek];
+            }
         }
 
         if(up) changeSelectedWeek(-1);
@@ -297,7 +322,10 @@ class StoryModeState extends BasicState {
             grpDifficulty.members[2].alpha = 0;
         }
 
-        scoreText.text = "PERSONAL BEST: " + "0";
+        realScore = Math.floor(Highscores.getWeekScore(swagWeeks[selectedWeek], difficulties[selectedDifficulty])[0]);
+        swagScore = Math.floor(FlxMath.lerp(swagScore, realScore, Math.max(0, Math.min(1, elapsed * 10))));
+
+        scoreText.text = "PERSONAL BEST: " + swagScore;
 
         for(i in 0...weekChars.members.length)
         {

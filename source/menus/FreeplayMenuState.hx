@@ -48,6 +48,9 @@ class FreeplayMenuState extends BasicState
     var holdTime:Float = 0;
     var elapsedVar:Float = 0;
 
+    var realScore:Float = 0;
+    var swagScore:Float = 0;
+
     var up = false;
     var down = false;
     var left = false;
@@ -62,6 +65,8 @@ class FreeplayMenuState extends BasicState
         super();
 
         Util.clearMemoryStuff();
+
+        Highscores.init();
 
         transIn = FlxTransitionableState.defaultTransIn;
         transOut = FlxTransitionableState.defaultTransOut;
@@ -181,6 +186,9 @@ class FreeplayMenuState extends BasicState
 
         elapsedVar = elapsed;
 
+        realScore = Highscores.getSongScore(songs[selectedSong].songName.toLowerCase(), selectedDifficulty.toLowerCase())[0];
+        swagScore = FlxMath.lerp(swagScore, realScore, Math.max(0, Math.min(1, elapsed * 20)));
+
         if(Controls.back)
         {
             FlxG.sound.play(Util.getSound("menus/cancelMenu", true));
@@ -257,19 +265,6 @@ class FreeplayMenuState extends BasicState
             updateSelection();
         }
 
-        /*if(left && shiftP || right && shiftP)
-        {
-            var daMultiplier:Float = 0.05;
-
-            if(left)
-                changeSpeed(daMultiplier * -1);
-
-            if(right)
-                changeSpeed(daMultiplier);
-
-            refreshSpeed();
-        }*/
-
 		if((leftP || rightP) && shiftP) {
 			var daMultiplier:Float = leftP ? -0.05 : 0.05;
 			changeSpeed(daMultiplier);
@@ -300,7 +295,7 @@ class FreeplayMenuState extends BasicState
 			box.makeGraphic(Std.int(funnyObject.width + 6), 90, FlxColor.BLACK);
 
 		scoreText.x = FlxG.width - scoreText.width;
-		scoreText.text = "PERSONAL BEST:" + "0" /*lerpScore*/;
+		scoreText.text = "PERSONAL BEST:" + Math.floor(swagScore);
 
 		difText.x = FlxG.width - difText.width;
 
