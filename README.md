@@ -1,12 +1,12 @@
-# About
+# ♾️ Infinity Engine
 -----
 ![](https://media.discordapp.net/attachments/782707705792954388/931918337989029948/Untitled108_20220115083034.png)
 -----
-Made by 3 people literally out of pure boredom, Aiming to rewrite Friday Night Funkin' in HaxeFlixel.
-With (hopefully) easier modding with slightly more organized folder layouts, new features, etc.
+Made by 3 people literally out of pure boredom, Aiming to rewrite Friday Night Funkin' to include
+easier modding, cool features, and little quality of life shits
 -----
-# Preparing Libraries for Compiling
-If you want to compile Infinity Engine from source, Here's what you need to do:\
+# ℹ️ Preparing Libraries for Compiling
+If you want to compile Infinity Engine from source, Here's what you need to do:
 
 - Install [Haxe](https://haxe.org/download/)
 - Install [HaxeFlixel](https://haxeflixel.com/documentation/install-haxeflixel/)
@@ -16,36 +16,49 @@ If you want to compile Infinity Engine from source, Here's what you need to do:\
 If you're too lazy to read the HaxeFlixel install docs then here's the fuckin commands:
 
 **Installing the basics**
-`haxelib install lime
+--
+```
+haxelib install lime
 haxelib install openfl
-haxelib install flixel`
+haxelib install flixel
+```
 
 **Setup**
-`haxelib run lime setup flixel
+--
+```
+haxelib run lime setup flixel
 haxelib run lime setup (IF THIS ASKS TO MAKE LIME A COMMAND, TYPE Y)
 haxelib install flixel-tools
-haxelib run flixel-tools setup`
+haxelib run flixel-tools setup
+```
 
 **Updating**
+--
 In order to update a library (which you should try to do somewhat often)
 
 You just do:
 `haxelib update [library]`
+
 Example:
 `haxelib update flixel`
 
 **Libraries**
+--
 These are libraries you need for the game to correctly compile:
 (Copy the commands to install them)
 
-`haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons
+```
+haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
 haxelib git linc_luajit https://github.com/AndreiRudenko/linc_luajit
 haxelib install flixel-ui
-haxelib install hscript`
+haxelib install hscript
+```
+
 -----
-# Compiling
+# 💻 Compiling
 **If you see ANY deprecated warnings, Don't worry, They won't affect compiling.**
+--
 ## HTML5 Compiling
 All you need to do here is run `lime test html5` in the root folder of the source code. (or wherever project.xml is)
 
@@ -62,6 +75,7 @@ This will install like 5GB of bullshit, but it is needed to compile.
 After all of that shit's done run `lime test windows`.
 
 ## Mac Compiling
+--
 I (swordcube) do not own a Mac myself and can't confirm this but this might work:
 Open a terminal in the root source code folder and run `lime test mac`.
 
@@ -75,18 +89,18 @@ Executable file will be in `export/release/linux/bin`.
 **NOTE:** Compiling is going to take a long time for the first time, and maybe even in general.
 The compiling speed depends on your hardware.
 -----
-# What we have planned
+# ℹ️ What we have planned
 - Easy Modding (Working on it)
 - Modcharts/Lua Scripting
 - Custom Notes (Using LUA or smth, could have a json for storing shit like "act like death note or use lua file")
 - Extra Keys (1k to 9k, Could change eventually)
 
-# Finished/Almost Finished
+# ✅ Finished/Almost Finished
 - Basic Gameplay (Characters, Health, Score/Accuracy/Misses, Notes)
 - Stages/Backgrounds (Only Week 1 - 3 stages exist at the moment)
 - Menus
 
-## Credits
+## 📖 Credits
 - Raf - Project Owner, Coder and Artist ([GitHub](https://github.com/RafaelGiacom)) ([GameJolt](https://gamejolt.com/@RafaelGiacom)) ([GameBanana](https://gamebanana.com/members/1739332))
 - SwordCube - mega dumbass (True Facts), Coder, Artist ([GitHub](https://github.com/swordcube)) ([GameJolt](https://gamejolt.com/@swordcube)) ([Twitter](https://twitter.com/swordcube))
 - ZonianDX - Coder, Gamer 😎, Artist ([GitHub](https://github.com/timeless13GH)) ([Twitter](https://twitter.com/ZonianDX)) ([GameBanana](https://gamebanana.com/members/2029461))
